@@ -1,0 +1,69 @@
+name: raaste
+description: "Raaste — your personal travel guide for Indian domestic travel."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI
+  cupertino_icons: ^1.0.8
+  flutter_svg: ^2.0.17
+  shimmer: ^3.0.0
+
+  # State management
+  flutter_bloc: ^9.1.0
+  equatable: ^2.0.7
+
+  # Navigation
+  go_router: ^14.8.1
+
+  # Networking
+  dio: ^5.8.0+1
+  connectivity_plus: ^6.1.3
+
+  # Local storage & offline
+  shared_preferences: ^2.5.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Location
+  geolocator: ^13.0.2
+
+  # Dependency injection
+  get_it: ^8.0.3
+
+  # Functional programming utilities
+  dartz: ^0.10.1
+
+  # Environment config
+  flutter_dotenv: ^5.2.1
+
+  # Auth & backend
+  supabase_flutter: ^2.8.4
+
+  # Logging
+  logger: ^2.5.0
+
+  # Maps (optional — enable when needed)
+  # google_maps_flutter: ^2.10.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/raaste_logo.png
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/
+    - .env
+

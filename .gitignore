@@ -1,0 +1,55 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# Flutter / Dart
+apps/mobile/.dart_tool/
+apps/mobile/.flutter-plugins
+apps/mobile/.flutter-plugins-dependencies
+apps/mobile/.packages
+apps/mobile/build/
+apps/mobile/ios/Pods/
+apps/mobile/ios/.symlinks/
+apps/mobile/android/.gradle/
+apps/mobile/android/app/debug/
+apps/mobile/android/app/profile/
+apps/mobile/android/app/release/
+apps/mobile/android/local.properties
+apps/mobile/android/*.iml
+apps/mobile/*.iml
+apps/mobile/*.keystore
+apps/mobile/*.jks
+apps/mobile/*.g.dart
+apps/mobile/*.freezed.dart
+apps/mobile/coverage/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.eggs/
+*.env
+!.env.example
+.venv/
+venv/
+ENV/
+env/
+*.sqlite3
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Logs
+*.log
+
+# Docker volumes
+data/
+postgres_data/
+redis_data/
