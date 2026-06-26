@@ -4,6 +4,7 @@ import 'package:raaste/config/routes.dart';
 import 'package:raaste/core/constants/app_constants.dart';
 import 'package:raaste/core/di/injection.dart';
 import 'package:raaste/features/destination/data/repositories/destination_guide_store.dart';
+import 'package:raaste/features/destination/data/services/destination_research_service.dart';
 import 'package:raaste/features/destination/data/services/open_ai_destination_service.dart';
 import 'package:raaste/features/destination/data/services/overpass_service.dart';
 import 'package:raaste/features/destination/domain/models/destination_guide.dart';
@@ -57,6 +58,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   final _scrollController = ScrollController();
   final _guideStore = getIt<DestinationGuideStore>();
   final _openAi = getIt<OpenAiDestinationService>();
+  final _research = getIt<DestinationResearchService>();
   final _overpass = getIt<OverpassService>();
   final _savedTrips = getIt<SavedTripRepository>();
 
@@ -244,15 +246,49 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
       _isLoading = true;
       _messages.add(
         _ChatMessage.assistant(
-          'I\'m checking nearby OpenStreetMap places and building your itinerary now.',
+          'I\'m checking curated research and map places to build your itinerary now.',
         ),
       );
     });
     _scrollToEnd();
 
     try {
-      final places = await _fetchOverpassPlaces(intake);
-      final guide = await _openAi.generateGuide(intake, places);
+      final research = await _research.loadForIntake(intake);
+      DestinationGuide guide;
+
+      if (research != null) {
+        if (mounted) {
+          setState(
+            () => _messages.add(
+              _ChatMessage.assistant(
+                'Using Raaste\'s curated Hyderabad research for a richer itinerary.',
+              ),
+            ),
+          );
+          _scrollToEnd();
+        }
+
+        try {
+          guide = await _openAi.generateGuideFromResearch(intake, research);
+        } on OpenAiGuideException {
+          if (mounted) {
+            setState(
+              () => _messages.add(
+                _ChatMessage.assistant(
+                  'Curated research generation did not complete, so I\'m falling back to OpenStreetMap places.',
+                ),
+              ),
+            );
+            _scrollToEnd();
+          }
+          final places = await _fetchOverpassPlaces(intake);
+          guide = await _openAi.generateGuide(intake, places);
+        }
+      } else {
+        final places = await _fetchOverpassPlaces(intake);
+        guide = await _openAi.generateGuide(intake, places);
+      }
+
       final guideId = await _guideStore.saveGuide(guide);
       if (mounted) context.go('${AppRoutes.destination}?id=$guideId');
     } on OpenAiGuideException catch (e) {

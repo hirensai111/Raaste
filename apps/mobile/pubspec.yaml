@@ -1,5 +1,5 @@
 name: raaste
-description: "Raaste — your personal travel guide for Indian domestic travel."
+description: "Raaste â€” your personal travel guide for Indian domestic travel."
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -49,7 +49,7 @@ dependencies:
   # Logging
   logger: ^2.5.0
 
-  # Maps (optional — enable when needed)
+  # Maps (optional â€” enable when needed)
   # google_maps_flutter: ^2.10.1
 
 dev_dependencies:
@@ -63,7 +63,9 @@ flutter:
   assets:
     - assets/images/raaste_logo.png
     - assets/images/
+    - assets/research/
     - assets/icons/
     - assets/fonts/
     - .env
+
 

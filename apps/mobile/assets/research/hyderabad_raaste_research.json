@@ -1,0 +1,979 @@
+{
+  "destination": {
+    "name": "Hyderabad",
+    "state": "Telangana",
+    "tagline": "Where Nizami grandeur meets tech city swagger",
+    "description": "Hyderabad is a city of striking contrasts — the 400-year-old Old City around Charminar, with its narrow lanes, pearl bazaars and legendary biryani, sits 30km away from HITEC City's gleaming IT campuses and cosmopolitan nightlife. Best for food lovers, history buffs and city explorers who want heritage and modernity in one trip. The defining experience is eating kacchi biryani in the Old City at dawn.",
+    "best_for": [
+      "food lovers",
+      "history buffs",
+      "families",
+      "friend groups",
+      "couples"
+    ],
+    "not_ideal_for": "Those seeking beach/nature getaways — it's a metropolitan city with limited green spaces. Avoid in April-May when 45°C heat makes outdoor sightseeing miserable. Not ideal for travellers who find crowds and chaos overwhelming (Old City is intense)."
+  },
+  "when_to_visit": {
+    "best_months": [
+      "november",
+      "december",
+      "january",
+      "february"
+    ],
+    "avoid_months": [
+      "april",
+      "may",
+      "june"
+    ],
+    "peak_season": "November to February — pleasant 15-30°C weather, clear skies, ideal for sightseeing. Hotels cost 30-50% more. Book 2-4 weeks ahead.",
+    "off_season": "April to June — extreme heat (40-45°C), heat waves, miserable for outdoor activity. Hotels offer heavy discounts but not worth the discomfort. June sees pre-monsoon humidity.",
+    "shoulder_season": "July to October — monsoon rains (July-August heaviest), post-monsoon greenery in September-October. Fewer crowds, hotel discounts available. October is particularly pleasant.",
+    "monthly_breakdown": {
+      "january": {
+        "weather": "Pleasant winter, 16-31°C, dry",
+        "crowd_level": "low",
+        "notes": "Ideal sightseeing weather. Lowest crowds of peak season. Great time for Golconda Fort and outdoor attractions."
+      },
+      "february": {
+        "weather": "Pleasant, 18-33°C, warming up",
+        "crowd_level": "low",
+        "notes": "Deccan Festival (5-day cultural event) happens this month. Great weather continues."
+      },
+      "march": {
+        "weather": "Warming, 21-37°C, Holi festival",
+        "crowd_level": "medium",
+        "notes": "Holi celebrations. Temperature rises sharply by month-end. Still manageable for sightseeing."
+      },
+      "april": {
+        "weather": "Hot, 25-40°C, dry",
+        "crowd_level": "low",
+        "notes": "AVOID. 40°C+ days common. Outdoor sightseeing is draining. Only visit if necessary, stick to early mornings."
+      },
+      "may": {
+        "weather": "Very hot, 27-41°C, hottest month",
+        "crowd_level": "low",
+        "notes": "AVOID. Peak summer, heat waves. Schools closed. Unbearable for outdoor activities."
+      },
+      "june": {
+        "weather": "Hot and humid, 24-35°C, pre-monsoon",
+        "crowd_level": "medium",
+        "notes": "Monsoon begins mid-month. Humidity spikes. Some relief from heat but sticky."
+      },
+      "july": {
+        "weather": "Monsoon, 23-32°C, heavy rains",
+        "crowd_level": "medium",
+        "notes": "Bonalu festival (Telangana state festival) with colourful temple processions. Wet but culturally vibrant."
+      },
+      "august": {
+        "weather": "Monsoon, 23-32°C, wettest month",
+        "crowd_level": "medium",
+        "notes": "Ganesh Chaturthi (massive in Hyderabad — Khairatabad Ganesh is one of India's tallest). Book months ahead. Heavy traffic."
+      },
+      "september": {
+        "weather": "End monsoon, 22-32°C, green city",
+        "crowd_level": "medium",
+        "notes": "City is lush green. Post-monsoon pleasantness begins. Good time with lower hotel rates."
+      },
+      "october": {
+        "weather": "Post-monsoon pleasant, 21-32°C",
+        "crowd_level": "medium",
+        "notes": "Diwali celebrations. Good weather returns. Excellent shoulder season value."
+      },
+      "november": {
+        "weather": "Pleasant winter begins, 18-31°C",
+        "crowd_level": "high",
+        "notes": "Peak season starts. Lumbini Festival (Dec, but prep begins). Ideal weather. Book hotels early."
+      },
+      "december": {
+        "weather": "Pleasant, 16-30°C, coolest month",
+        "crowd_level": "high",
+        "notes": "Peak season. Coolest temperatures. Most crowded at tourist spots. Highest hotel prices."
+      }
+    },
+    "festival_calendar": [
+      {
+        "name": "Bonalu",
+        "month": "July/August",
+        "impact_on_travel": "MEDIUM — Telangana state festival with temple processions, road closures around Ujjaini Mahankali Temple"
+      },
+      {
+        "name": "Ganesh Chaturthi",
+        "month": "August/September",
+        "impact_on_travel": "HIGH — Massive celebrations, Khairatabad Ganesh (one of tallest idols in India), immersion at Hussain Sagar, extreme traffic jams. Book months ahead."
+      },
+      {
+        "name": "Ramzan / Eid",
+        "month": "Varies (lunar calendar)",
+        "impact_on_travel": "MEDIUM-HIGH — Old City transforms into a night food paradise with haleem everywhere. Very crowded but magical. Shops open late."
+      },
+      {
+        "name": "Deccan Festival",
+        "month": "February/March",
+        "impact_on_travel": "LOW — 5-day cultural festival with qawwalis, ghazals, pearls/bangles fair. Good cultural experience."
+      },
+      {
+        "name": "Diwali",
+        "month": "October/November",
+        "impact_on_travel": "MODERATE — City lights up with decorations and firecrackers. Manageable travel impact."
+      },
+      {
+        "name": "Lumbini Festival",
+        "month": "December (2nd Friday)",
+        "impact_on_travel": "LOW — Buddhist festival at Nagarjuna Sagar, minimal city impact."
+      }
+    ]
+  },
+  "how_to_reach": {
+    "from_major_cities": {
+      "mumbai": {
+        "distance_km": "700",
+        "by_road": "Via NH65 through Pune-Solapur, 10-12 hours by car, tolls ~₹750",
+        "by_train": "Konark Express, Rajdhani, Duronto — 14-16 hours. Sleeper ₹600, AC 2-tier ₹3,500",
+        "by_bus": "Multiple operators (Orange, Dolphin), AC Sleeper ₹800-2,500, 15-16 hours",
+        "by_air": "1h 15m, ₹2,200-4,000 regular fare",
+        "recommended_mode": "Flight (fastest) or overnight train (economical)",
+        "travel_time": "1h 15m (flight) / 14-16h (train)"
+      },
+      "delhi": {
+        "distance_km": "1,560",
+        "by_road": "Via NH44 through Agra-Nagpur, 21-23 hours. Not recommended for driving",
+        "by_train": "Telangana Express, Rajdhani — 21-26 hours. Sleeper ₹700, AC 1st ₹4,500",
+        "by_bus": "AC Sleeper ₹3,000-4,500, 40+ hours. Not recommended",
+        "by_air": "2h 0m, ₹3,000-6,000 regular fare",
+        "recommended_mode": "Flight — only practical option for most travellers",
+        "travel_time": "2h (flight) / 21-26h (train)"
+      },
+      "bangalore": {
+        "distance_km": "570",
+        "by_road": "Via NH44 through Kurnool-Anantapur, one of India's best highway stretches, 8-10 hours, tolls ~₹800",
+        "by_train": "Vande Bharat (8h 15m), Kacheguda Express — 8-13 hours. ₹400 general to ₹3,500 AC Executive",
+        "by_bus": "280+ daily buses (KSRTC, TSRTC), AC Sleeper ₹500-2,500, 9-10 hours",
+        "by_air": "1h 10m, ₹2,500-5,000",
+        "recommended_mode": "Overnight AC Sleeper Bus (convenient) or Vande Bharat train (fastest rail)",
+        "travel_time": "8-10h (road) / 8h15m (Vande Bharat)"
+      },
+      "hyderabad": {
+        "distance_km": "0",
+        "by_road": "N/A — this is the destination",
+        "by_train": "N/A",
+        "by_bus": "N/A",
+        "by_air": "N/A",
+        "recommended_mode": "N/A",
+        "travel_time": "N/A"
+      },
+      "pune": {
+        "distance_km": "500",
+        "by_road": "Via NH65 through Solapur, 7-8 hours",
+        "by_train": "Pune-Hyderabad Express, Shatabdi — 10-11 hours. Sleeper ₹600, AC 2-tier ₹2,000",
+        "by_bus": "TSRTC, Zingbus — AC Sleeper ₹600-1,200, 8-10 hours",
+        "by_air": "1h 5m, limited direct flights, ₹2,900-4,500",
+        "recommended_mode": "Overnight bus (most convenient) or train",
+        "travel_time": "7-8h (road) / 10-11h (train)"
+      },
+      "chennai": {
+        "distance_km": "625",
+        "by_road": "Via NH16 through Nellore-Vijayawada, 12-14 hours",
+        "by_train": "Charminar Express (overnight, departs 18:10 arrives 08:00), MAS-CHZ Express — 13-14 hours. Sleeper ₹500",
+        "by_bus": "TSRTC, private operators — ₹800-2,000, 14-16 hours",
+        "by_air": "1h 15m, ₹2,500-5,000",
+        "recommended_mode": "Charminar Express overnight train (iconic, convenient) or flight",
+        "travel_time": "13-14h (train) / 1h15m (flight)"
+      }
+    },
+    "nearest_airport": {
+      "name": "Rajiv Gandhi International Airport (HYD), Shamshabad",
+      "distance_from_destination": "25-30 km south of city center",
+      "cab_cost_from_airport": "VERIFY: ₹600-1,000 by Uber/Ola to city center; Pushpak airport bus ₹150-250 (cheapest option)"
+    },
+    "nearest_railway_station": {
+      "name": "Secunderabad Junction (SC) — best connected; OR Hyderabad Deccan/Nampally (HYB) — most central",
+      "distance_from_main_area": "Secunderabad is 8km from Old City; Nampally is 3km from Charminar and most central",
+      "auto_cab_cost": "VERIFY: ₹100-200 by auto from Nampally to central areas; ₹150-300 by cab from Secunderabad"
+    },
+    "entry_permits_required": false,
+    "permit_details": "No permits required for domestic travellers. Foreign nationals must carry valid passport and visa."
+  },
+  "local_transport": {
+    "uber_available": true,
+    "ola_available": true,
+    "rapido_available": true,
+    "auto_rickshaw_available": true,
+    "local_taxi_available": true,
+    "bus_service": "TSRTC operates 3,600+ buses on 2,200+ routes. Metro Express, Deluxe and ordinary buses. Monthly pass ₹2,100. Starting fare ₹35. TSRTC app for live tracking.",
+    "bike_rental_available": true,
+    "car_rental_available": true,
+    "primary_recommendation": "Metro + Uber/Ola combination covers 90% of Hyderabad efficiently. Metro for IT corridor and major interchanges; app cabs for Old City and areas not covered by metro yet.",
+    "cab_rates": {
+      "local_sightseeing_full_day": "VERIFY: ₹2,000-3,000 for sedan (8hrs/80km); ₹3,500-4,500 for SUV/Innova",
+      "per_km_sedan": "VERIFY: ₹11-13/km for outstation sedan",
+      "per_km_suv": "VERIFY: ₹16-20/km for Innova/Innova Crysta",
+      "airport_transfer": "VERIFY: ₹600-1,000 by Uber/Ola to city center; ₹150-250 Pushpak bus"
+    },
+    "negotiation_tips": "Autos NEVER use meters — always agree fare BEFORE boarding: ₹30-50 (1-2km), ₹50-100 (3-5km), ₹100-200 (5-8km). Night charges (post 10pm) 1.5x. Use Uber Auto for fair metered pricing. Old City autos charge premium due to narrow streets.",
+    "scam_warnings": [
+      "Auto drivers quote 2-3x actual fare to non-locals — use Google Maps to know distance before negotiating",
+      "Charminar area: self-appointed 'guides' demanding money — no official guides exist, explore on your own",
+      "Auto drivers take longer routes — use Google Maps navigation and insist on shortest path",
+      "Parking near Charminar: unofficial 'attendants' demand money — park only at designated spots",
+      "Airport touts in arrivals hall offering 'cheap' rides — ignore all, use pre-paid counter or Uber/Ola"
+    ],
+    "transport_reality_check": "Hyderabad Metro is clean and efficient (69km, 3 lines) but does NOT reach major tourist spots — Golconda Fort, Charminar, Hussain Sagar, Birla Mandir and Salar Jung all require auto/cab from nearest metro. Last metro is 11 PM. Traffic congestion is severe 8-10:30 AM and 5:30-8:30 PM. Old City roads are extremely narrow — never take your own car. The city is spread out (30km+ from HITEC City to Charminar), so plan days around one area at a time. Airport is 30+ km from city — always plan 1-1.5 hours for transfers. No metro to airport yet (Phase 2 expected ~2030)."
+  },
+  "connectivity": {
+    "overall_rating": "excellent",
+    "jio_coverage": "Excellent citywide including Old City, HITEC City, outskirts. Full 5G coverage (standalone). ~14 Mbps avg 4G speed.",
+    "airtel_coverage": "Excellent across most areas. Full 5G coverage. ~16 Mbps avg 4G speed. Best 5G download speeds.",
+    "vi_coverage": "Good in city center, patchy in outskirts. 5G launched March 2025 but expanding slowly. Good 4G speeds where available.",
+    "bsnl_coverage": "Available citywide, works in most areas. No 5G. Slower data speeds than private operators.",
+    "specific_dead_zones": [
+      "Golconda Fort top may have weaker signal",
+      "Ananthagiri Hills (day trip) has patchy to poor signal on all networks",
+      "Nagarjuna Sagar area has spotty coverage",
+      "Some indoor areas in Old City's dense buildings may have reduced signal"
+    ],
+    "wifi_availability": "3,500+ free public WiFi hotspots under Hy-Fi project (45 min/day, 25 Mbps). 47 of 57 metro stations have free WiFi. All hotels and malls have WiFi. Airport has free WiFi (30 min sessions).",
+    "offline_map_recommendation": "Generally fine for city areas. Download offline maps if visiting Golconda Fort top, Ananthagiri Hills, or Nagarjuna Sagar.",
+    "atm_availability": "Excellent — ATMs everywhere in all neighbourhoods. Old City has sufficient ATMs though some may run dry on festival days. Carry cash before heading to Golconda Fort area or day trip destinations."
+  },
+  "money": {
+    "cash_vs_upi": "UPI (Google Pay, PhonePe, Paytm) accepted at 90%+ establishments including most street food vendors. Cash still needed for: auto rickshaws (many refuse UPI), small tea stalls, monument entry tickets (some only take cash), parking fees, tips. Carry ₹2,000-3,000 cash per person per day as backup.",
+    "atm_availability": "Excellent — all major banks, all neighbourhoods. Multiple ATMs per sq km in Banjara Hills, HITEC City, Secunderabad, Charminar.",
+    "budget_per_day": {
+      "backpacker": "VERIFY: ₹800-1,500 (dorm ₹500-900, street food ₹200-400, metro/bus ₹50-100)",
+      "mid_range": "VERIFY: ₹3,000-5,000 (3-star hotel ₹1,500-3,000, restaurants ₹600-1,200, Uber/auto ₹300-600)",
+      "comfortable": "VERIFY: ₹6,000-10,000 (4-star hotel ₹4,000-7,000, mix dining ₹1,000-1,500, Uber ₹500-1,000)",
+      "luxury": "VERIFY: ₹12,000+ (5-star ₹8,000-20,000+, fine dining ₹2,000-4,000, private cab ₹2,000-3,500)"
+    },
+    "where_to_carry_cash": "Auto rickshaws (negotiated fares), monument entry tickets (Golconda ₹25, Charminar ₹25, Salar Jung ₹50 — some counters cash only), parking attendants, small tea stalls in Old City, tips, Laad Bazaar vendors (bargaining works better with cash)",
+    "overpriced_tourist_areas": [
+      "Charminar pearl/bangle shops — bargain hard, start at 50% of quoted price",
+      "HITEC City mall restaurants — inflated prices for ambience, mediocre food",
+      "Ramoji Film City food outlets — carry your own snacks and water",
+      "Airport food — dosa can cost ₹300-500 vs ₹30-80 in the city",
+      "Banjara Hills business hotels — premium pricing for business travellers"
+    ]
+  },
+  "attractions": [
+    {
+      "name": "Charminar",
+      "type": "monument",
+      "description": "The iconic 56m-tall gateway monument built in 1591 by Muhammad Quli Qutb Shah, with four grand arches facing cardinal directions. Surrounded by the chaotic, vibrant Laad Bazaar selling lac bangles and pearls.",
+      "why_worth_it": "The most recognisable symbol of Hyderabad. The climb to the first floor offers excellent city views. The surrounding area is the living heart of Old City culture.",
+      "best_time_to_visit": "9:00-10:00 AM on weekdays for fewer crowds. Evening (6:00-6:30 PM) for illuminated views.",
+      "avoid_when": "Weekends, festivals, and Friday evenings — extremely crowded. Ramzan nights are magical but packed.",
+      "entry_fee": "VERIFY: ₹25 Indians to climb; entry to area is free. Cashless discount may apply.",
+      "time_needed": "1-2 hours + shopping time in Laad Bazaar",
+      "crowd_reality": "EXTREME on weekends and festivals — shoulder-to-shoulder in Laad Bazaar. Weekday mornings are manageable.",
+      "local_tip": "Enter from the Mecca Masjid side for the best photography angle. Visit Nimrah Cafe beside Charminar for Irani chai with the monument as backdrop — most Instagrammed spot in Hyderabad.",
+      "accessibility": "Narrow steep stairs to first floor — not disabled-friendly. Area around is walkable but crowded.",
+      "distance_from_town_center": "3 km from Nampally/city centre",
+      "coordinates": {
+        "lat": 17.3616,
+        "lng": 78.4747
+      }
+    },
+    {
+      "name": "Golconda Fort",
+      "type": "fort",
+      "description": "A massive 13th-century fort complex expanded by the Qutb Shahi dynasty, famous for its advanced acoustic system — a handclap at the entrance gate can be heard at the top. 700+ steps climb to Bala Hisar pavilion.",
+      "why_worth_it": "UNESCO World Heritage Site (along with Qutb Shahi Tombs). The engineering ingenuity, the panoramic views from the top, and the evening sound-and-light show make this unmissable.",
+      "best_time_to_visit": "8:30 AM opening to avoid heat and crowds. Stay for the 6:30 PM (winter) / 7:00 PM (summer) English sound-and-light show.",
+      "avoid_when": "Sunday afternoons (crowded). Midday in summer (brutal heat on the climb). Sound-and-light show is CLOSED on Mondays.",
+      "entry_fee": "VERIFY: ₹25 Indians; sound-and-light show ₹80 (regular) / ₹140 (executive). Camera ₹25.",
+      "time_needed": "2-3 hours for fort exploration + 30 min for light show",
+      "crowd_reality": "Moderate on weekdays, high on weekends. Light show gets very crowded — arrive by 5:30 PM for good seats.",
+      "local_tip": "The climb is steep — carry water and wear proper shoes. Combine with Qutb Shahi Tombs (850m away) for a half-day heritage circuit.",
+      "accessibility": "Difficult — 700+ uneven stone steps to the top. Not suitable for elderly or those with mobility issues.",
+      "distance_from_town_center": "11 km from city center",
+      "coordinates": {
+        "lat": 17.3833,
+        "lng": 78.4011
+      }
+    },
+    {
+      "name": "Qutb Shahi Tombs",
+      "type": "monument",
+      "description": "Seven stunning tombs of the Qutb Shahi rulers (1518-1687) set in peaceful Ibrahim Bagh gardens. Recently restored by the Aga Khan Trust. The largest tomb (Mohammed Quli Qutub Shah's) rises 42m with 28 arches.",
+      "why_worth_it": "The most underrated monument in Hyderabad. Stunning blend of Persian, Indian, Deccan and Pathan architecture. Peaceful garden setting with very few crowds.",
+      "best_time_to_visit": "9:30-11:00 AM for soft morning light and photography. Can combine with Golconda Fort visit.",
+      "avoid_when": "VERIFY: May be closed on Friday — confirm before visiting. Dusk (mosquitoes in gardens).",
+      "entry_fee": "VERIFY: ₹10 Indians, ₹5 children. Camera ₹20-50.",
+      "time_needed": "1-2 hours",
+      "crowd_reality": "LOW — even on weekends. One of the most peaceful heritage spots in the city.",
+      "local_tip": "Visit after Golconda Fort (850m walk) for a combined half-day. The restoration work on the stucco ornamentation is remarkable — look closely at the intricate details.",
+      "accessibility": "Easy walk — flat garden paths. Individual tombs have some steps.",
+      "distance_from_town_center": "11 km from city center (next to Golconda Fort)",
+      "coordinates": {
+        "lat": 17.3947,
+        "lng": 78.3966
+      }
+    },
+    {
+      "name": "Salar Jung Museum",
+      "type": "museum",
+      "description": "One of the world's largest one-man collections, assembled by Nawab Mir Yousuf Ali Khan (Salar Jung III). 38 galleries across two floors featuring art from across the world. Must-see: Veiled Rebecca marble sculpture, Mephistopheles & Margaretta double sculpture, and the musical clock.",
+      "why_worth_it": "World-class museum that rivals any in India. The Veiled Rebecca alone is worth the visit — a mesmerizing marble sculpture that appears to show fabric through stone.",
+      "best_time_to_visit": "10:00 AM on weekdays (opens at 10). Allow 3-4 hours minimum.",
+      "avoid_when": "CLOSED ON FRIDAYS. Weekends are busier. Photography without ticket attracts ₹500 penalty.",
+      "entry_fee": "VERIFY: ₹50 Indians; ₹1,000 foreigners. Camera ₹50. Children below 5 free, students with ID free (up to 18 years).",
+      "time_needed": "3-4 hours minimum (38 galleries!)",
+      "crowd_reality": "Manageable on weekdays. The musical clock draws crowds every hour. Audio guide is free with mobile photography ticket.",
+      "local_tip": "The clock room gets crowded every hour when the mechanical figure strikes the gong — arrive 5 minutes early. Cloak room available for baggage.",
+      "accessibility": "Wheelchair accessible with ramps and elevators.",
+      "distance_from_town_center": "3 km from Charminar, 2 km from Nampally",
+      "coordinates": {
+        "lat": 17.3713,
+        "lng": 78.4804
+      }
+    },
+    {
+      "name": "Chowmahalla Palace",
+      "type": "palace",
+      "description": "The official residence of the Nizams, built in the 18th century and expanded 1857-1869. The Khilwat Mubarak (Durbar Hall) features massive crystal chandeliers. Also houses a remarkable vintage car collection including a 1912 Rolls Royce Silver Ghost.",
+      "why_worth_it": "The only palace in Hyderabad where you can experience Nizam-era grandeur up close. The Durbar Hall's chandeliers and the vintage car collection are spectacular.",
+      "best_time_to_visit": "10:00 AM on weekdays. 2-3 hours sufficient.",
+      "avoid_when": "CLOSED ON FRIDAYS and national holidays. Professional photoshoot/filming STRICTLY PROHIBITED.",
+      "entry_fee": "VERIFY: ₹150 Indians (recently revised up); ₹500 foreigners. Children below 10 ₹50. Mobile photography ₹50.",
+      "time_needed": "2-3 hours",
+      "crowd_reality": "Low-moderate even on weekends. Rarely overcrowded.",
+      "local_tip": "Located just 10 minutes walk from Charminar — combine with Old City heritage trail. The vintage car collection (including the 1937 Buick) is a hidden highlight many visitors rush past.",
+      "accessibility": "Mostly flat with some steps at entrances. Wheelchair-friendly.",
+      "distance_from_town_center": "3 km from Charminar area",
+      "coordinates": {
+        "lat": 17.3578,
+        "lng": 78.4716
+      }
+    },
+    {
+      "name": "Mecca Masjid",
+      "type": "temple",
+      "description": "One of India's largest and oldest mosques, accommodating 10,000+ worshippers. Construction started 1614, completed 1687. Bricks were made from soil brought from Mecca. Features 15 intricately carved arches and pillars carved from single granite slabs.",
+      "why_worth_it": "A masterpiece of Qutb Shahi architecture and one of the most significant religious sites in South India. The scale and craftsmanship are humbling.",
+      "best_time_to_visit": "8:00-9:00 AM on weekdays for a quiet experience.",
+      "avoid_when": "Friday prayer times (very crowded with worshippers, visitor access restricted).",
+      "entry_fee": "Free",
+      "time_needed": "30 minutes - 1 hour",
+      "crowd_reality": "HIGH on Fridays (worshippers). Manageable on other days.",
+      "local_tip": "Dress modestly — cover shoulders and knees. Women should carry a dupatta/scarf (available at entrance if needed). Backpacks must be left in paid lockers. View from Charminar's top floor gives excellent perspective of the mosque's scale.",
+      "accessibility": "Easy walk — flat marble floors. Remove shoes at entrance.",
+      "distance_from_town_center": "100m from Charminar",
+      "coordinates": {
+        "lat": 17.3604,
+        "lng": 78.4736
+      }
+    },
+    {
+      "name": "Birla Mandir",
+      "type": "temple",
+      "description": "A stunning white marble temple dedicated to Lord Venkateshwara, built on 280-foot Naubat Pahad hill using 2,000 tonnes of Rajasthan marble. Built in 1976. Panoramic views of the entire city including Hussain Sagar.",
+      "why_worth_it": "The white marble architecture against the city skyline is iconic. The panoramic views of Hyderabad and Secunderabad are the best in the city.",
+      "best_time_to_visit": "Evening 5:00-6:00 PM for sunset views over the city. Morning 7:00 AM for peaceful darshan.",
+      "avoid_when": "Sunday mornings and festival days — very crowded. Midday in summer — marble radiates heat.",
+      "entry_fee": "Free",
+      "time_needed": "1 hour",
+      "crowd_reality": "Moderate-high on weekends. Manageable on weekday evenings.",
+      "local_tip": "NO cameras, phones, or leather items (belts, wallets) allowed inside — deposit at entrance. Wear modest clothing — shorts and sleeveless not permitted. About 40 steps to climb.",
+      "accessibility": "Steep steps (280 ft hill) — not wheelchair friendly. Slip-on shoes recommended for quick removal.",
+      "distance_from_town_center": "2 km from Hussain Sagar/Necklace Road",
+      "coordinates": {
+        "lat": 17.4062,
+        "lng": 78.4691
+      }
+    },
+    {
+      "name": "Hussain Sagar Lake & Necklace Road",
+      "type": "experience",
+      "description": "One of Asia's largest artificial lakes (built 1562), featuring a 16m tall monolithic Buddha statue on Gibraltar Rock in the centre. The 33 bronze statues along Tank Bund road depict historical Telugu/Telangana figures. Necklace Road is the iconic boulevard for evening walks.",
+      "why_worth_it": "The evening atmosphere at Necklace Road is Hyderabad's favourite pastime — the Buddha statue lit up, the breeze off the lake, street food, and the 33 statues make for a memorable experience.",
+      "best_time_to_visit": "5:30-7:00 PM for sunset and illuminated Buddha statue. Early morning (6:00-7:00 AM) for jogs/walks.",
+      "avoid_when": "Sunday evenings — extremely crowded with families. Summer midday — no shade along Tank Bund.",
+      "entry_fee": "Lake area free; Lumbini Park ₹20; boating ₹50-500 depending on type",
+      "time_needed": "2-3 hours (including walk and boating)",
+      "crowd_reality": "HIGH in evenings, especially weekends. Morning walks are peaceful.",
+      "local_tip": "Take a speed boat (₹500 for 4 people) to get close to the Buddha statue. The laser show at Lumbini Park (7:15 PM weekdays, 7:15 PM + 8:30 PM weekends) tells Hyderabad's history through 3D projection.",
+      "accessibility": "Fully accessible — paved walkway along Necklace Road.",
+      "distance_from_town_center": "2 km from city center (Banjara Hills/Nampally)",
+      "coordinates": {
+        "lat": 17.4239,
+        "lng": 78.4738
+      }
+    },
+    {
+      "name": "Ramoji Film City",
+      "type": "experience",
+      "description": "The world's largest film studio complex (Guinness World Record), spread across 2,000+ acres 35km from Hyderabad. Features live shows, film sets (including Bahubali set), adventure rides, eco-tours, and entertainment shows. Full day experience.",
+      "why_worth_it": "A unique experience — nowhere else in India can you explore a working film studio of this scale. The Bahubali set, live stunt shows, and behind-the-scenes experiences are genuinely impressive.",
+      "best_time_to_visit": "Arrive by 9:00 AM sharp to cover maximum attractions. Weekdays significantly less crowded.",
+      "avoid_when": "Weekends, school holidays, and long weekends — extremely crowded with queues for everything.",
+      "entry_fee": "VERIFY: ₹1,550-3,199 depending on package (Studio Tour weekdays/weekends, Star Experience with AC coach + buffet).",
+      "time_needed": "Full day (9 AM - 5:30 PM minimum)",
+      "crowd_reality": "VERY HIGH on weekends — queues for Bahubali set bus, shows, and rides. Weekdays are manageable but still busy.",
+      "local_tip": "Book online in advance at booking.ramojifilmcity.com. Carry snacks and water — food inside is overpriced. Professional cameras beyond 18-55mm lens NOT permitted.",
+      "accessibility": "Vehicle-accessible with internal bus service. Lots of walking required between attractions.",
+      "distance_from_town_center": "35 km (1-1.5 hours drive from city)",
+      "coordinates": {
+        "lat": 17.2543,
+        "lng": 78.6808
+      }
+    },
+    {
+      "name": "Laad Bazaar",
+      "type": "market",
+      "description": "One of Hyderabad's oldest markets surrounding Charminar, dating to the Qutb Shahi/Nizam era. Famous for lac bangles (choodi), semi-precious stones, pearls, silverware, silk fabrics, brocades, and traditional perfumes (attars).",
+      "why_worth_it": "The quintessential Old City shopping experience — narrow lanes, glittering bangle shops, the smell of attars, and the energy of a 400-year-old market still thriving.",
+      "best_time_to_visit": "Evening (5:00-8:00 PM) when fully lit and most active. Combine with Charminar visit.",
+      "avoid_when": "Sunday afternoons (overcrowded). During Ramzan evenings (packed but atmospheric).",
+      "entry_fee": "Free (shopping costs vary)",
+      "time_needed": "1-2 hours",
+      "crowd_reality": "EXTREME — narrow lanes with shoulder-to-shoulder crowds in evenings. Part of the experience.",
+      "local_tip": "Bargaining is ESSENTIAL — quote 50% of asking price for bangles and pearls. Pearls sold here are mostly cultured/fake — for real pearls visit government-certified shops like Jagdamba Pearls. The lac bangles (₹50-200 per dozen) are the best souvenir buy.",
+      "accessibility": "Narrow pedestrian-only lanes — not wheelchair friendly. Watch your belongings in crowds.",
+      "distance_from_town_center": "3 km from city center (surrounds Charminar)",
+      "coordinates": {
+        "lat": 17.3616,
+        "lng": 78.4747
+      }
+    },
+    {
+      "name": "Durgam Cheruvu (Secret Lake)",
+      "type": "experience",
+      "description": "A 63-acre freshwater lake hidden between 2,500-million-year-old granite formations near HITEC City. Historically served as Golconda Fort's water source. Features the iconic cable bridge, boating, kayaking, and water sports.",
+      "why_worth_it": "The cable bridge is a stunning modern landmark beautifully lit at night. Kayaking and the sunset views over granite rocks offer a unique urban-nature contrast in the heart of the IT corridor.",
+      "best_time_to_visit": "Evening 5:00-7:00 PM for sunset views and illuminated cable bridge. Morning walks 5:00-10:00 AM.",
+      "avoid_when": "Midday in summer (no shade). Some visitors report the area can be poorly maintained.",
+      "entry_fee": "Free. Boating ₹60-500 depending on type.",
+      "time_needed": "1-2 hours",
+      "crowd_reality": "Moderate — popular with young locals and couples. Less crowded than Hussain Sagar.",
+      "local_tip": "Best reached via HITEC City Metro (Blue Line) + short walk. The Yacht Club of Hyderabad offers kayaking and stand-up paddleboarding sessions.",
+      "accessibility": "Easy walk — paved paths around the lake.",
+      "distance_from_town_center": "15 km from Old City (in HITEC City area)",
+      "coordinates": {
+        "lat": 17.4261,
+        "lng": 78.3882
+      }
+    },
+    {
+      "name": "Shilparamam",
+      "type": "experience",
+      "description": "A 50-acre arts and crafts village in HITEC City that recreates rural India in an urban setting. Artisans from across India display traditional crafts — hand-woven sarees, shawls, jewelry, wooden and metal artifacts. Features an open-air amphitheatre and rural museum.",
+      "why_worth_it": "The best place in Hyderabad to buy authentic Indian handicrafts directly from artisans. Cultural performances on weekends add to the atmosphere.",
+      "best_time_to_visit": "Weekends for cultural performances. 10:30 AM - 1:00 PM for relaxed shopping.",
+      "avoid_when": "Weekday afternoons (many artisans on break). Summer midday (open-air, limited shade).",
+      "entry_fee": "VERIFY: ₹40-60 adults, ₹20 children",
+      "time_needed": "2-3 hours",
+      "crowd_reality": "Low-moderate. Never overcrowded.",
+      "local_tip": "Bargaining expected — aim for 20-40% discount. The annual crafts festival (first 2 weeks of March) is the best time to visit. Combine with HITEC City Metro + Durgam Cheruvu for a full modern Hyderabad day.",
+      "accessibility": "Mostly flat outdoor paths. Some areas may be uneven.",
+      "distance_from_town_center": "15 km from Old City (HITEC City area)",
+      "coordinates": {
+        "lat": 17.4494,
+        "lng": 78.383
+      }
+    },
+    {
+      "name": "Paigah Tombs",
+      "type": "monument",
+      "description": "Stunning but little-known tombs of the Paigah noble family (18th-20th century), who were related to the Nizams by marriage. Features exquisite Indo-Islamic architecture with intricate jali (lattice) work, mosaic tile work, and pierced marble facades.",
+      "why_worth_it": "The most beautiful monument in Hyderabad that most tourists never see. The jali work rivals anything at the Taj Mahal. Peaceful, atmospheric, and free/cheap entry.",
+      "best_time_to_visit": "Morning (9:00-11:00 AM) for soft light filtering through the jali work.",
+      "avoid_when": "CLOSED ON FRIDAYS. Afternoon heat in summer (no shade).",
+      "entry_fee": "VERIFY: Free or nominal fee (₹5-10)",
+      "time_needed": "1 hour",
+      "crowd_reality": "VERY LOW — often you'll have the entire complex to yourself. A true hidden gem.",
+      "local_tip": "Even many locals don't know about this. Reach by auto from Charminar (4.5 km). The afternoon light through the jali creates stunning shadow patterns for photography.",
+      "accessibility": "Flat ground, easy walk. Some narrow passages between tombs.",
+      "distance_from_town_center": "6 km from Charminar (Santosh Nagar area)",
+      "coordinates": {
+        "lat": 17.3453,
+        "lng": 78.5011
+      }
+    },
+    {
+      "name": "Moula Ali Hill",
+      "type": "viewpoint",
+      "description": "A hilltop dargah with 400-500 well-laid steps (road goes halfway up) offering 360-degree panoramic views of Hyderabad and Secunderabad. Built during the Qutb Shahi period, renovated by the second Nizam. Believed to have a stone with Hazrat Ali's hand imprint.",
+      "why_worth_it": "The best sunrise and sunset viewpoint in Hyderabad. Very few tourists — mostly local devotees. The city lights at dusk are spectacular.",
+      "best_time_to_visit": "Sunrise (5:30-6:30 AM) or sunset (5:30-6:30 PM).",
+      "avoid_when": "Midday in summer (exposed, no shade).",
+      "entry_fee": "Free",
+      "time_needed": "1-1.5 hours (including climb)",
+      "crowd_reality": "VERY LOW — mostly devotees. Rarely any tourists.",
+      "local_tip": "Cover your head inside the dargah (carry a scarf). The road goes halfway up — autos can drop you at the base of the steps. Carry water for the climb.",
+      "accessibility": "Moderate trek — 400-500 steps from the road. Steep but well-laid.",
+      "distance_from_town_center": "10 km from city center (Secunderabad side)",
+      "coordinates": {
+        "lat": 17.4283,
+        "lng": 78.5431
+      }
+    }
+  ],
+  "food": {
+    "must_try_dishes": [
+      {
+        "dish": "Hyderabadi Biryani (Mutton)",
+        "what_it_is": "Kacchi-style biryani where raw marinated mutton is slow-cooked with basmati rice in the dum pukht (sealed pot) method. The signature dish of Hyderabad.",
+        "where_to_find_best": "Hotel Shadab (Madina, near Charminar) for the most authentic — Friday special Bagara Khana + Dalcha is legendary. Bawarchi (RTC X Roads) for best value. Meridian (Panjagutta) for locals' #1 choice."
+      },
+      {
+        "dish": "Haleem",
+        "what_it_is": "A thick, porridge-like dish of wheat, meat, lentils and spices slow-cooked for hours. Available only during Ramzan (Ramadan). Topped with fried onions, lemon and ghee.",
+        "where_to_find_best": "Pista House (15+ outlets across city, exports globally) — ₹200-400 during Ramzan. Shah Ghouse (Toli Chowki) for spicier version. Hotel Nayaab claims to be first to sell haleem commercially."
+      },
+      {
+        "dish": "Irani Chai + Osmania Biscuits",
+        "what_it_is": "Thick, creamy, cardamom-spiced milky tea paired with mildly sweet, slightly salty crumbly biscuits named after the last Nizam. The sweet-salty contrast is the definitive Hyderabad snack.",
+        "where_to_find_best": "Nimrah Cafe (beside Charminar) — the most iconic spot, opens 5 AM, chai+biscuits ~₹30-50 with Charminar view. Cafe Niloufer (Lakdi Ka Pul/Banjara Hills) — gold standard for Osmania biscuits since 1978."
+      },
+      {
+        "dish": "Qubani Ka Meetha",
+        "what_it_is": "Apricot dessert — dried apricots stewed with sugar, garnished with apricot kernels (the 'almonds' inside the seed). The traditional dessert of Hyderabadi weddings.",
+        "where_to_find_best": "Hotel Shadab (after biryani). Cafe Bahar. Available at most Old City restaurants. ~₹80-150."
+      },
+      {
+        "dish": "Double Ka Meetha",
+        "what_it_is": "Hyderabadi bread pudding — bread fried in ghee, soaked in sugar syrup, topped with reduced milk, nuts and saffron.",
+        "where_to_find_best": "Sweet Basket, Balaji Ratanlal Mithai Bhandar, Hotel Shadab, Cafe Bahar. ~₹80-150."
+      },
+      {
+        "dish": "Pathar ka Gosht",
+        "what_it_is": "Mutton seared on a hot flat stone slab — originated as a hunting expedition dish from the Nizam era. Unique to Hyderabad.",
+        "where_to_find_best": "Bade Miyan Kababs (Upper Tank Bund) — widely regarded as the best. Chicha's (Masab Tank). ~₹200-400."
+      },
+      {
+        "dish": "Jauzi Halwa",
+        "what_it_is": "Dense nutmeg-scented halwa made with ghee and dry fruits — exists almost exclusively in Hyderabad. A 125+ year old tradition.",
+        "where_to_find_best": "Hameedi Confectioners (Moazzam Jahi Market, Nampally) — 125+ year old shop. Also try Badam Ki Jaali and Puran Puri here. ~₹200-400 per box."
+      },
+      {
+        "dish": "Govind Dosa (Butter Dosa)",
+        "what_it_is": "NOT a regular masala dosa — thin crispy batter fried in butter, topped with semolina (rava), secret podi (spicy powder), tomato, mint. The filling is ghee-dipped upma, not potato. A unique Hyderabad invention.",
+        "where_to_find_best": "Govind Dosa near Charminar — opens at dawn, closes by ~10:30 AM. Also Himayath Nagar outlet. ~₹30-80. Go early."
+      }
+    ],
+    "signature_local_food": "Hyderabadi Biryani (kacchi-style with mutton) is the undisputed king — this is what the city is famous for worldwide. The Irani chai + Osmania biscuit culture is the daily ritual. During Ramzan, haleem transforms the entire Old City into a food festival. The cuisine blends Telugu, Mughlai and Persian-Nizami influences into something uniquely Hyderabadi.",
+    "vegetarian_friendliness": "moderate",
+    "jain_food_availability": "limited",
+    "halal_availability": "good",
+    "vegan_options": "very limited",
+    "street_food_safety": "generally safe at established places — Ram ki Bandi, Gokul Chaat, Paradise, Cafe Niloufer, Hotel Shadab. Choose busy stalls with high turnover. Old City kebab stalls are safe if freshly grilled in front of you. Avoid pre-cooked food sitting uncovered. Tap water should be avoided.",
+    "restaurant_price_reality": "Budget street food/snack: ₹30-100. Budget meal at small hotel: ₹100-250. Mid-range meal for two at good restaurant: ₹500-1,200. Premium/fine dining for two: ₹1,500-5,000+. Iconic biryani single plate: ₹200-350. Old City is significantly cheaper than Banjara Hills/HITEC City.",
+    "local_market_for_food": "Moazzam Jahi Market (Mozamjahi Market) in Nampally — historic fruit and dry fruit market. Hameedi Confectioners (125+ years) is located here. Also Subhan Bakery nearby for Osmania biscuits alternative.",
+    "tourist_trap_restaurants": "HITEC City mall restaurants (Inorbit, GVK One, Forum) charge 2x for average food — same biryani costs double vs standalone restaurants. Fancy Banjara Hills hotel restaurants charge premium for ambience over food quality. Jewel of Nizam vegetarian set menu is overpriced at ~₹5,000+ per person. Multiple fake 'Bawarchi' restaurants — ONLY RTC X Roads is original.",
+    "where_locals_eat": "Meridian (Panjagutta) — ranked #1 by many Hyderabadis, completely off tourist radar. Bawarchi (RTC X Roads) — the queues confirm it's the real deal. Hotel Shadab (Old City) — local Muslim families' go-to. Cafe Bahar — old-timers' favourite for decades. Grand Hotel (Abids) — operating since 1935. Shah Ghouse (Toli Chowki) — open 5 AM to 4 AM. Govind Dosa at dawn near Charminar — pure local experience."
+  },
+  "accommodation": {
+    "areas_to_stay": [
+      {
+        "area": "HITEC City / Gachibowli",
+        "why": "Modern, safe, organized with wide roads and excellent restaurants. Best infrastructure. Near airport (~30-40 min).",
+        "best_for": "Business travellers, first-time visitors wanting convenience, families",
+        "price_range": "VERIFY: Budget ₹1,500-2,500/night; Mid ₹3,000-7,000; Premium ₹8,000-15,000+"
+      },
+      {
+        "area": "Banjara Hills / Jubilee Hills",
+        "why": "Upscale, posh locality with the best dining scene, pubs, and nightlife. Leafy, safe, near KBR National Park and GVK One mall.",
+        "best_for": "Couples, food lovers, those seeking upscale experience",
+        "price_range": "VERIFY: Budget ₹1,500-2,500/night; Mid ₹3,000-6,000; Premium ₹8,000-20,000+"
+      },
+      {
+        "area": "Secunderabad / Necklace Road",
+        "why": "Near railway station, well-connected by metro, home to original Paradise biryani. Cheaper than south Hyderabad.",
+        "best_for": "Transit travellers, budget travellers, families",
+        "price_range": "VERIFY: Budget ₹1,000-2,000/night; Mid ₹2,500-5,000; Premium ₹6,000-10,000"
+      },
+      {
+        "area": "Abids / Nampally",
+        "why": "Very central, walking distance to Nampally railway station and metro. Near Grand Hotel (1935), Niloufer Cafe, Hameedi Confectioners.",
+        "best_for": "Budget travellers, backpackers, those wanting central location",
+        "price_range": "VERIFY: Budget ₹800-2,000/night; Mid ₹2,000-4,000"
+      },
+      {
+        "area": "Charminar / Old City",
+        "why": "Heritage immersion, walking distance to ALL food spots (Shadab, Nimrah, Nayaab). Most authentic Hyderabad experience.",
+        "best_for": "Culture seekers, serious food lovers, heritage enthusiasts",
+        "price_range": "VERIFY: Budget ₹800-1,800/night; very limited mid-range/premium options"
+      }
+    ],
+    "areas_to_avoid": [
+      {
+        "area": "Very cheap lodges near railway stations (Secunderabad/Nampally below ₹600)",
+        "why": "Variable hygiene and safety. Check reviews carefully. Minimum ₹800-1,000 recommended for basic safety."
+      },
+      {
+        "area": "Parts of Old City for first-time/nervous travellers",
+        "why": "Extremely crowded, chaotic, narrow lanes, can be overwhelming. Stay in HITEC City/Banjara Hills and visit Old City during day instead."
+      },
+      {
+        "area": "Far suburbs lacking character",
+        "why": "VERIFY: Some new suburbs have limited food options, poor connectivity to tourist spots, and lack the Hyderabadi atmosphere."
+      }
+    ],
+    "booking_advance_required": "Book 2-4 weeks in advance for weekends. During Ramzan, Ganesh Chaturthi and December peak season: book 4-8 weeks ahead. Sunday nights are often cheapest. April (summer off-season) has lowest rates but avoid due to heat.",
+    "budget_options": "VERIFY: ₹800-2,000 per night. Expect: basic AC room, clean bed, private bathroom, TV. Areas: Abids, Nampally, Lakdi Ka Pul, parts of Secunderabad, Old City. Check MakeMyTrip/Goibibo for Indian budget chains.",
+    "mid_range_options": "VERIFY: ₹3,000-6,000 per night. Expect: 3-4 star hotel, good location, restaurant, room service, reliable WiFi. Areas: HITEC City, Banjara Hills, Jubilee Hills, Secunderabad. Lemon Tree, Sarovar, FabHotels are reliable chains.",
+    "premium_options": "VERIFY: ₹8,000-20,000+ per night. Expect: 5-star luxury, pool, spa, fine dining, concierge. Taj Krishna, Park Hyatt, ITC Kakatiya, The Park, Taj Falaknuma Palace (heritage luxury, ₹20,000+)."
+  },
+  "local_knowledge": {
+    "things_nobody_tells_you": [
+      "Hyderabad is effectively TWO completely different cities — the 400-year-old traditional Muslim Old City around Charminar and the modern glass-and-steel IT hub of HITEC City are 30+ km apart with different languages, food, pace, and culture. Plan each day around ONE area only — don't try to combine them.",
+      "The real language of Hyderabad is not Telugu — it's Deccani/Dakhni (also called Hyderabadi Hindi/Urdu), a distinct dialect with its own vocabulary. 'Nakko' means no, 'Kaiku' means why, 'Hau' means yes, 'Miya' is how friends address each other, and 'Baigan' (literally brinjal) means nonsense.",
+      "Salar Jung Museum AND Chowmahalla Palace are both CLOSED on Fridays. Many first-time visitors plan their Old City day on Friday and miss both. Plan Old City visits for Saturday-Thursday only.",
+      "The pearls at Laad Bazaar are almost entirely fake/cultured — NOT the legendary Hyderabadi pearls. Real pearls require government-certified dealers (Jagdamba Pearls, Kedarnathji Motiwale). If you're paying ₹100-500 for 'pearl' jewelry, it's costume jewellery. Bargain accordingly.",
+      "The metro is excellent for the IT corridor but does NOT reach any major tourist spot — not Charminar, not Golconda Fort, not Hussain Sagar, not Birla Mandir, not Salar Jung. You'll need autos/cabs for all tourist areas. Phase 2 extension to Old City and airport is under construction (expected ~2030).",
+      "During Ramzan (Ramadan), the Old City transforms into a magical all-night food festival. Streets are alive with haleem stalls, kebab grills, and crowds until 3 AM. It's the best time to visit for food lovers but book hotels months ahead.",
+      "Govind Dosa near Charminar is only available from dawn to ~10:30 AM. If you miss this window, you've missed a unique Hyderabad food experience that doesn't exist elsewhere in India.",
+      "Auto rickshaws in Hyderabad have meters but drivers NEVER use them. EVER. Negotiation is mandatory for every single ride. Use Uber/Ola Auto for metered pricing if you want fairness.",
+      "The city shuts down surprisingly early. Unlike Mumbai or Bangalore, most areas (except specific late-night food spots) are quiet by 10-11 PM. HITEC City and Jubilee Hills have pubs open till midnight/1 AM on weekends but the rest of the city sleeps early.",
+      "Friday special at Hotel Shadab is Bagara Khana + Dalcha — a dish combination that most tourists never hear about but locals queue for. It's only available on Fridays and is a defining Old City food ritual."
+    ],
+    "tourist_traps": [
+      {
+        "trap": "Fake pearls at Laad Bazaar",
+        "reality": "Vendors claim 'real Hyderabadi pearls' but most are cultured Chinese pearls or plastic. Real pearls are expensive and rare.",
+        "how_to_avoid": "Buy from government-certified dealers (Jagdamba Pearls). At Laad Bazaar, bargain to 50% of quoted price and treat everything as costume jewellery."
+      },
+      {
+        "trap": "Self-appointed 'guides' at Charminar",
+        "reality": "Local men follow tourists offering 'guided tours' then demand ₹200-500+ payment. Charminar has NO official guides.",
+        "how_to_avoid": "Politely decline from the start ('No thank you, we're fine'). Explore independently — there's nothing a guide can tell you that isn't on the info boards."
+      },
+      {
+        "trap": "Overpriced food at HITEC City malls",
+        "reality": "Restaurants in Inorbit, GVK One, Forum malls charge 2x for ambience that doesn't match food quality.",
+        "how_to_avoid": "Eat at standalone local restaurants — Bawarchi, Shah Ghouse, Cafe Bahar serve better biryani at half the mall price."
+      },
+      {
+        "trap": "Auto driver 'monument is closed' redirect",
+        "reality": "Drivers tell you a monument is closed and offer to take you to shops where they earn commission.",
+        "how_to_avoid": "Verify timings online. Only Salar Jung and Chowmahalla are closed on Friday. Everything else is open regular hours (10 AM - 5/6 PM)."
+      },
+      {
+        "trap": "Fake parking attendants near Charminar",
+        "reality": "Unofficial 'attendants' demand ₹50-200 for parking on public roads near Charminar.",
+        "how_to_avoid": "Park only at designated parking areas. Ask for a parking ticket/receipt. Ignore unofficial demands and walk away."
+      }
+    ],
+    "hidden_gems": [
+      {
+        "name": "Paigah Tombs",
+        "why_hidden": "Even many locals don't know about this stunning complex. The jali (lattice) work rivals the Taj Mahal. Free/nominal entry, peaceful, and you'll likely have it to yourself.",
+        "how_to_get_there": "Auto from Charminar (4.5 km, ~₹100). Near Santosh Nagar. Closed on Fridays."
+      },
+      {
+        "name": "Moula Ali Hill",
+        "why_hidden": "The best 360-degree panoramic view of Hyderabad — sunrise and sunset — with virtually no tourists. A 400-500 step climb to a historic dargah.",
+        "how_to_get_there": "Auto from Secunderabad (nearby). Road goes halfway up. Free entry. Carry water."
+      },
+      {
+        "name": "Kasu Brahmananda Reddy (KBR) National Park",
+        "why_hidden": "353 acres of urban forest right in Jubilee Hills — peacocks freely roaming, 600+ tree species, 5km trails. The 'green lung' escape from city chaos that most tourists miss.",
+        "how_to_get_there": "Road No. 2, Banjara Hills (near LV Prasad Eye Hospital). Entry ₹40-45. Closed Mondays."
+      },
+      {
+        "name": "Chilkur Balaji Temple (Visa Temple)",
+        "why_hidden": "500+ year old temple famous for visa approvals. Unique: no hundi/donations, no VIP access, equal for all. Devotees do 11 or 108 circumambulations. Featured in BBC and CNN.",
+        "how_to_get_there": "30 km from city. Bus or cab. Combine with Mrugavani National Park and Osman Sagar."
+      },
+      {
+        "name": "Heritage Walks in Old City",
+        "why_hidden": "Organisations conduct guided walks covering hidden stepwells, forgotten monuments, and traditional food stops that you'd never find alone. Reveals layers of history invisible to casual visitors.",
+        "how_to_get_there": "Search 'Hyderabad heritage walk' before your trip to find current operators. Typically start from Charminar area."
+      }
+    ],
+    "local_scams": [
+      {
+        "scam": "Auto rickshaw overcharging",
+        "how_it_works": "Drivers refuse meter, quote 2-3x actual fare to non-locals. May take longer routes. May increase fare after reaching destination.",
+        "how_to_avoid": "Use Uber/Ola Auto for metered fares. If hailing street auto, know approximate fare before boarding: ₹30-50 (1-2km), ₹50-100 (3-5km). Use Google Maps to show the route. Be firm."
+      },
+      {
+        "scam": "Photography trap at tourist spots",
+        "how_it_works": "Photographers offer 'free' photos at Hussain Sagar/Charminar, then demand ₹100-200+ per photo.",
+        "how_to_avoid": "Politely decline all unsolicited photography offers. Take your own photos."
+      },
+      {
+        "scam": "Restaurant commission auto drivers",
+        "how_it_works": "Auto drivers insist on taking you to specific restaurants (usually mediocre ones) for commission from the owner.",
+        "how_to_avoid": "Research restaurants in advance and insist on your chosen place. Don't let drivers decide where you eat."
+      }
+    ],
+    "photography_spots": [
+      {
+        "spot": "Charminar from Mecca Masjid entrance",
+        "best_time": "6:45-7:30 AM sunrise",
+        "tip": "Best symmetrical angle of Charminar. Combine with Nimrah Cafe for iconic 'chai in front of Charminar' shot."
+      },
+      {
+        "spot": "Necklace Road at sunset",
+        "best_time": "5:30-6:30 PM",
+        "tip": "Buddha statue reflections, Tank Bund's 33 statues, city lights coming on. 'Love Hyderabad' sign nearby."
+      },
+      {
+        "spot": "Golconda Fort summit",
+        "best_time": "5:00-6:00 PM golden hour",
+        "tip": "Panoramic city views. The stone structures glow warm in golden light."
+      },
+      {
+        "spot": "Durgam Cheruvu Cable Bridge",
+        "best_time": "6:30-7:30 PM blue hour",
+        "tip": "Bridge lit up with modern architecture reflected in the lake."
+      },
+      {
+        "spot": "Qutb Shahi Tombs",
+        "best_time": "8:30-10:00 AM",
+        "tip": "Soft morning light creates dramatic shadows on the domes. Very few people."
+      },
+      {
+        "spot": "Moula Ali Hill top",
+        "best_time": "5:30-6:30 AM sunrise",
+        "tip": "360-degree city panorama. City lights visible at dawn."
+      }
+    ],
+    "cultural_etiquette": [
+      "Remove shoes at ALL temples and mosques (Birla Mandir, Mecca Masjid, Chilkur Balaji). Carry socks — floors can be very hot in summer.",
+      "Greet with 'Adaab' (hand gesture — right palm on forehead with slight bow) in Old City areas — shows respect and cultural awareness. 'Namaste' works everywhere.",
+      "Right hand for giving/receiving money, business cards, food. Left hand is considered unclean in traditional settings.",
+      "Ask permission before photographing people in Old City — most will happily pose, some may refuse.",
+      "During Ramzan, avoid eating/drinking openly in Old City during fasting hours (sunrise to sunset). Many restaurants will be closed or curtained.",
+      "Tipping: 5-10% at restaurants appreciated but not mandatory. Round up auto fares. ₹10-20 for porters.",
+      "Bargaining is expected at street markets (Laad Bazaar, Sultan Bazaar) but NOT in malls or established restaurants.",
+      "Hyderabadis appreciate patience and good humour. Losing temper in public is frowned upon. 'Light lena' (taking it easy) is a local philosophy."
+    ],
+    "dress_code": "Casual wear fine in modern areas (HITEC City, Banjara Hills). At religious sites: cover shoulders and knees. Women carry a dupatta/scarf — REQUIRED at Mecca Masjid (head covering) and appreciated at temples. Men: no shorts at religious sites. Birla Mandir: STRICTEST — no shorts, no sleeveless, no leather items (belts, wallets). Old City: slightly more conservative — avoid very short/revealing clothing. Summer: light cotton essential (40-45°C). Winter evenings: light jacket (can drop to 15°C).",
+    "language": {
+      "primary_language": "Telugu (official), Urdu (second official), Hyderabadi Hindi/Urdu (Deccani/Dakhni — widely spoken in Old City, distinct from standard Hindi)",
+      "useful_phrases": [
+        {
+          "phrase": "Kya hai miya?",
+          "meaning": "What's up, friend? (casual greeting)",
+          "pronunciation": "Kya hain mee-ya"
+        },
+        {
+          "phrase": "Baigan nahi karne ka",
+          "meaning": "Don't mess around / Don't fool me",
+          "pronunciation": "Bye-gun na-hee kar-ne ka"
+        },
+        {
+          "phrase": "Hau",
+          "meaning": "Yes (distinct Hyderabadi pronunciation)",
+          "pronunciation": "Hao"
+        },
+        {
+          "phrase": "Kaiku?",
+          "meaning": "Why?",
+          "pronunciation": "Kai-koo"
+        },
+        {
+          "phrase": "Nakko",
+          "meaning": "No / Don't want (from Marathi/Telugu influence)",
+          "pronunciation": "Nuk-ko"
+        },
+        {
+          "phrase": "Adaab",
+          "meaning": "Respectful greeting (hand on forehead with slight bow)",
+          "pronunciation": "Uh-daab"
+        },
+        {
+          "phrase": "Chalo nako",
+          "meaning": "Let's go / Enough now",
+          "pronunciation": "Chaa-lo na-ko"
+        },
+        {
+          "phrase": "Light lena",
+          "meaning": "Take it easy / Don't stress",
+          "pronunciation": "Light lay-na"
+        }
+      ]
+    }
+  },
+  "safety": {
+    "overall_safety_rating": "safe — Hyderabad is consistently ranked among India's top 5 safest major cities. Good law and order, particularly in new city areas.",
+    "safe_for_solo_women": "Yes with precautions — ranked #55 safest in India for solo female travellers (safety rating 3.4/5). Metro has women-only compartments. SHE Teams (women safety teams) operate — dial 100 or 181. Safest areas: Banjara Hills, Jubilee Hills, HITEC City, Gachibowli. Exercise more caution in Old City after 10 PM. Use Uber/Ola at night rather than street autos. Dress modestly in Old City. Multiple women residents report feeling safe even after 6+ years.",
+    "areas_to_avoid_at_night": [
+      "Isolated parts of Golconda Fort area after dark",
+      "Very late night in Old City narrow lanes (main roads are fine, but inner lanes get deserted)",
+      "Unlit areas near Hussain Sagar at very late hours",
+      "Railway station surroundings (Secunderabad/Nampally) late at night — standard precaution"
+    ],
+    "natural_hazards": [
+      "Summer heat waves (March-June): temperatures reach 40-45°C. Carry ORS packets, avoid outdoor activity 12-3 PM, drink 3-4 litres water daily.",
+      "Monsoon flooding (July-September): some low-lying areas may waterlog during heavy rains. Roads can get slippery.",
+      "Air quality (winter): AQI can reach 150-200 on bad days (moderate unhealthy). Sensitive individuals should monitor."
+    ],
+    "health_precautions": [
+      "Drink only bottled/mineral water (Bisleri, Kinley). Tap water NOT safe.",
+      "Street food at established places only — if locals are queuing, it's probably safe",
+      "Carry ORS/electrolyte packets in summer — dehydration hits fast at 40°C+",
+      "Mosquito repellent in monsoon — dengue cases reported seasonally",
+      "No malaria risk in city proper but mosquito protection advisable",
+      "Good hospitals widely available: Apollo (multiple), Care Hospital (Banjara Hills), Yashoda (Secunderabad/Malakpet), KIMS (Secunderabad)"
+    ],
+    "emergency_contacts": {
+      "police": "100 (also 112 for all emergencies)",
+      "ambulance": "108",
+      "fire": "101",
+      "nearest_hospital": {
+        "name": "VERIFY: Apollo Hospital (Jubilee Hills) or CARE Hospital (Banjara Hills) — multiple branches across city",
+        "distance": "VERIFY: 2-5 km from most central areas depending on location",
+        "phone": "VERIFY: Check specific branch number"
+      },
+      "tourist_helpline": "VERIFY: 1363 (Telangana Tourism) or 1800-425-46464"
+    }
+  },
+  "packing": {
+    "essentials_specific_to_destination": [
+      "Comfortable walking shoes with good grip — Golconda Fort alone has 700+ uneven stone steps, Charminar has narrow steep stairs",
+      "Power bank — lots of photo opportunities at monuments, GPS drains battery fast",
+      "Cash in small denominations (₹10, ₹20, ₹50, ₹100 notes) — autos, tea stalls, parking, tips all need cash",
+      "Dupatta/scarf (for women) — REQUIRED for Mecca Masjid and appreciated at temples",
+      "Valid photo ID — required at some monuments and for metro card",
+      "Hand sanitizer — street food and crowded bazaar visits",
+      "Reusable water bottle — refill at hotels, essential given heat"
+    ],
+    "clothing": {
+      "summer": [
+        "Light cotton/linen clothing (loose fit essential)",
+        "Light coloured clothes (dark colours absorb heat)",
+        "Wide-brim hat or cap",
+        "Sunglasses",
+        "Cotton socks (temple floors get very hot)",
+        "One light shawl for heavily air-conditioned restaurants/malls",
+        "Slip-on shoes (for quick removal at temples/mosques)"
+      ],
+      "monsoon": [
+        "Rain jacket or poncho (umbrellas get blown away in wind)",
+        "Quick-dry clothing",
+        "Waterproof phone pouch",
+        "Shoes with good grip (avoid slippery soles — roads get mossy)",
+        "Extra pairs of socks",
+        "Waterproof bag cover for electronics",
+        "Light layers — humid but not cold"
+      ],
+      "winter": [
+        "Light sweater or jacket (temperatures drop to 10-15°C in early mornings/evenings)",
+        "Full sleeve shirts for evenings",
+        "Light shawl or dupatta",
+        "Regular cotton clothes for daytime (still 25-30°C)"
+      ]
+    },
+    "things_hard_to_find_locally": [
+      "Specific Western cosmetic/toiletries brands — bring your own",
+      "Trekking/hiking gear if planning Ananthagiri Hills — limited options in city",
+      "Heavy winter clothing (not needed in Hyderabad but nearby hill stations in winter)"
+    ],
+    "things_easy_to_buy_locally": [
+      "Umbrellas and rain gear during monsoon — widely available at every street corner",
+      "Basic medicines and toiletries — pharmacy on every block",
+      "Phone chargers, cables, basic electronics",
+      "Hyderabad pearls (verify authenticity) and Bidriware metal crafts at Laad Bazaar",
+      "Kalamkari textiles and traditional bangles"
+    ],
+    "medications_to_carry": [
+      "ORS/electrolyte packets (essential for summer heat)",
+      "Basic fever medication (paracetamol)",
+      "Stomach upset medication — street food is generally safe but travel insurance is wise",
+      "Headache medication",
+      "Anti-chafing powder/cream (summer humidity)",
+      "Mosquito repellent (monsoon season)"
+    ]
+  },
+  "itinerary_framework": {
+    "one_day": "7:00 AM — Breakfast with idli/dosa at a local eatery. 8:00-10:00 AM — Charminar + Laad Bazaar (beat crowds, shop bangles). 10:30 AM-12:30 PM — Salar Jung Museum (Veiled Rebecca, Musical Clock). 12:30-1:30 PM — Hyderabadi biryani at Hotel Shadab or Paradise. 3:00-6:00 PM — Golconda Fort (climb to top for views). 6:30 PM — Sound-and-light show (English). 8:30 PM — Necklace Road walk + dinner at Hussain Sagar. NOTE: Do NOT attempt this itinerary on a Friday — Salar Jung is closed.",
+    "two_days": "DAY 1 — OLD CITY HERITAGE: 8:30 AM — Govind Dosa near Charminar (dawn only). 9:00-10:00 AM — Charminar climb + Laad Bazaar. 10:00-10:30 AM — Mecca Masjid. 10:30-11:30 AM — Nimrah Cafe (Irani chai + Osmania biscuits with Charminar view). 12:00-2:00 PM — Chowmahalla Palace. 2:00-3:30 PM — Mutton biryani lunch at Hotel Shadab (Friday special Bagara Khana if applicable). 4:00-5:30 PM — Salar Jung Museum (Veiled Rebecca, Musical Clock). Evening — Explore Old City lanes, kebabs near Madina. DAY 2 — FORTS, TOMBS & MODERN: 8:30-11:30 AM — Golconda Fort (climb to top). 11:30 AM-1:00 PM — Qutb Shahi Tombs (peaceful photography). 1:00-2:00 PM — Lunch at Taramati Baradari/Haritha Resort. 4:00-5:30 PM — Birla Mandir (sunset views). 5:30-7:00 PM — Hussain Sagar/Necklace Road sunset walk. 7:15 PM — Lumbini Park laser show (optional).",
+    "three_days": "DAY 1 — OLD CITY HERITAGE (as Day 1 above). DAY 2 — FORTS, TOMBS & MODERN (as Day 2 above). DAY 3 — EXPERIENCE HYDERABAD: 9:30 AM-12:30 PM — Ramoji Film City OR Shilparamam (crafts village in HITEC City). 12:30-1:30 PM — Lunch. 2:00-3:30 PM — Durgam Cheruvu Secret Lake (cable bridge, boating). 3:30-5:00 PM — KBR National Park walk (peacocks, urban forest). 5:00-6:00 PM — Jagannath Temple (Puri replica, Banjara Hills). 6:30 PM onwards — Dinner at a trendy Jubilee Hills restaurant or GVK One mall. ALTERNATIVE Day 3 for families: Full day at Nehru Zoological Park (Lion/Tiger Safari, toy train) + evening at Wonderla or Prasad's IMAX.",
+    "four_days_plus": "Days 1-3 as above. DAY 4 — Choose: (A) DAY TRIP to Warangal (150km, 3h) — Thousand Pillar Temple, Warangal Fort, Ramappa Temple (UNESCO); OR (B) DAY TRIP to Ananthagiri Hills (80km, 2h) — trekking, coffee plantations, Musi River origin; OR (C) DEEP EXPLORATION — Morning at Paigah Tombs + extended Salar Jung visit. Afternoon at Nehru Zoo. Evening at NTR Gardens + Lumbini Park laser show. For 5+ days, combine multiple day trips or slow down the city exploration.",
+    "day_trip_from": [
+      "Bangalore — 570km overnight bus/train, great highway for road trip",
+      "Chennai — Charminar Express overnight train (iconic route)",
+      "Mumbai — 1h 15m flight or overnight train"
+    ]
+  },
+  "nearby_destinations": [
+    {
+      "name": "Ramoji Film City",
+      "distance": "35 km (1-1.5 hours)",
+      "why_combine": "World's largest film studio (Guinness Record). Full-day experience with Bahubali set, live shows, rides, and eco-tours. Best for families and movie enthusiasts.",
+      "how_to_get_there": "Cab/full-day taxi (~₹2,000-3,000 including return). Telangana Tourism also runs day tours. Book entry online at booking.ramojifilmcity.com."
+    },
+    {
+      "name": "Warangal",
+      "distance": "150 km (3 hours by road/train)",
+      "why_combine": "Ancient Kakatiya dynasty capital. Thousand Pillar Temple, Warangal Fort ruins with iconic toranas, and Ramappa Temple (UNESCO World Heritage Site, 65 km from Warangal). Worth 1-2 days.",
+      "how_to_get_there": "Frequent trains from Hyderabad (2-2.5 hours). Road via NH163 (good condition). Private cab for day trip (~₹5,000-7,000)."
+    },
+    {
+      "name": "Ananthagiri Hills",
+      "distance": "80 km (2 hours)",
+      "why_combine": "Telangana's 'poor man's Ooty' near Vikarabad. Coffee plantations, birthplace of Musi River, trekking trails, Nagasamudram Lake. Best in monsoon and winter (July-March). Good for nature lovers.",
+      "how_to_get_there": "Road via Vikarabad (good condition). Train to Vikarabad + local auto. Private cab for day trip (~₹3,000-4,000)."
+    },
+    {
+      "name": "Nagarjuna Sagar Dam",
+      "distance": "150 km (3-4 hours)",
+      "why_combine": "One of world's largest masonry dams. Spectacular when dam gates open in monsoon (July-Oct). Buddhist museum on island (boat ride required). Ethipothala Waterfalls nearby. Full day trip.",
+      "how_to_get_there": "Private cab recommended (₹5,000-7,000). Telangana Tourism runs weekend tours (₹800 adult, departs 7:30 AM, returns ~9 PM). Start early (5-6 AM) to avoid heat."
+    },
+    {
+      "name": "Medak",
+      "distance": "100 km (2.5 hours)",
+      "why_combine": "Medak Cathedral — one of India's largest churches with stunning Gothic architecture. Medak Fort. Pocharam Wildlife Sanctuary nearby. Good half-day to full-day trip.",
+      "how_to_get_there": "Road trip via cab or bus. TSRTC buses available from MGBS."
+    },
+    {
+      "name": "Yadagirigutta (Yadadri)",
+      "distance": "70 km (1.5 hours)",
+      "why_combine": "Popular Narasimha Swamy temple, recently renovated and expanded. One of Telangana's most visited temples. Can combine with Bhuvanagiri Fort.",
+      "how_to_get_there": "Regular buses from Hyderabad. Private cab (~₹2,500-3,500). Road is good."
+    },
+    {
+      "name": "Bidar (Karnataka)",
+      "distance": "140 km (3 hours)",
+      "why_combine": "Cross-state trip to massive Bidar Fort, Gurudwara Nanak Jhira Sahib (important Sikh pilgrimage), and Bahmani tombs. Different state = different cuisine and culture.",
+      "how_to_get_there": "Road via Zaheerabad. Private cab for day trip (~₹5,000-6,000). Bus services also available."
+    }
+  ],
+  "data_quality": {
+    "research_sources_used": [
+      "Reddit: r/hyderabad first-timer tips thread (July 2025), food recommendation threads, hidden gems discussion",
+      "YouTube: Grishma Udayawar 'Hyderabad Travel Guide 2025', Shashank Voyage '2 Days Budget Itinerary', Luv4FoodNTravel 'Tolichowki Ramzan Street Food Tour 2025', Kunal Vijayakar 'Charminar Food Walk'",
+      "Travel Blogs: FabHotels 2-day itinerary, HaveMony budget itinerary with costs (2026), TrekGo hidden gems guide, Finely Chopped biryani trail",
+      "Official Sources: Hyderabad Tourism (hyderabadtourism.travel), Incredible India, Telangana Tourism Policy 2024, Hyderabad Metro Phase 2 update (hmrl.co.in)",
+      "OTA Platforms: MakeMyTrip attraction listings and hotel guides, TripAdvisor Hyderabad reviews",
+      "News Sources: Times of India (Tourism 2.0 Telangana), The Hindu (CM tourism plans), Deccan Chronicle (tourism policy), Telangana Today",
+      "Food Guides: Social Maharaj biryani comparison, Wish Yatra haleem guide 2026, Orange Wayfarer Ramadan food walk, Karl Rock haleem guide",
+      "Transport: Indian Eagle Hyderabad transport guide, Rough Guides, Uber Hyderabad guide, Homefleet metro guide",
+      "Safety: Travel Ladies solo female safety rating, Quora safety discussions for women",
+      "Weather: Climatestotravel.com, TimeAndDate.com, WeatherSpark.com historical data"
+    ],
+    "confidence_level": "high",
+    "last_known_accurate_as_of": "June-July 2025",
+    "fields_needing_verification": [
+      "how_to_reach.nearest_airport.cab_cost_from_airport",
+      "how_to_reach.nearest_railway_station.auto_cab_cost",
+      "local_transport.cab_rates.local_sightseeing_full_day",
+      "local_transport.cab_rates.per_km_sedan",
+      "local_transport.cab_rates.per_km_suv",
+      "local_transport.cab_rates.airport_transfer",
+      "money.budget_per_day.backpacker",
+      "money.budget_per_day.mid_range",
+      "money.budget_per_day.comfortable",
+      "money.budget_per_day.luxury",
+      "attractions[0].entry_fee (Charminar — conflicting sources: ₹5, ₹20, ₹25)",
+      "attractions[2].entry_fee (Qutb Shahi Tombs — some sources say closed Friday)",
+      "attractions[3].entry_fee (Salar Jung — revised from ₹20 to ₹50)",
+      "attractions[4].entry_fee (Chowmahalla — revised from ₹50-100 to ₹150)",
+      "attractions[8].entry_fee (Ramoji Film City — multiple package tiers)",
+      "attractions[11].entry_fee (Shilparamam — sources vary ₹40-60)",
+      "attractions[12].entry_fee (Paigah Tombs — free or nominal)",
+      "accommodation.areas_to_stay[*].price_range (all areas)",
+      "accommodation.budget_options",
+      "accommodation.mid_range_options",
+      "accommodation.premium_options",
+      "safety.emergency_contacts.nearest_hospital.name",
+      "safety.emergency_contacts.nearest_hospital.distance",
+      "safety.emergency_contacts.nearest_hospital.phone",
+      "safety.emergency_contacts.tourist_helpline"
+    ],
+    "notes_for_reviewer": "1. Entry fees are a known pain point — ASI/Telangana Tourism revised multiple fees in 2024-2025. Always list the highest verified current fee and note that Indians vs foreigners pay different rates. 2. The Pushpak airport bus fare was reportedly revised in June 2025 to ₹350-450 but conflicting sources list ₹150-250 — verify with TGSRTC. 3. Hyderabad Metro Phase 2 is under construction (Airport line, Old City line) — this information will become outdated as lines open. 4. Biryani prices vary wildly by restaurant tier — ₹100 at a roadside stall to ₹600+ at 5-star. The ranges given reflect mid-tier iconic restaurants. 5. 'Weekend' in Hyderabad starts Thursday night for some crowds. 6. Ramzan/Eid dates vary by lunar calendar — verify current year dates. 7. Multiple 'Paradise' and 'Bawarchi' outlets exist — only the original locations (Paradise Circle Secunderabad, RTC X Roads for Bawarchi) are the legendary ones. 8. The Deccani/Dakhni phrases are authentic to Hyderabad but pronunciation guides are approximate — these are meant as fun cultural ice-breakers, not language lessons."
+  }
+}

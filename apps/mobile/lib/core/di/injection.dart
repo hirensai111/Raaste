@@ -8,6 +8,7 @@ import 'package:raaste/features/auth/data/repositories/auth_repository_impl.dart
 import 'package:raaste/features/auth/domain/repositories/auth_repository.dart';
 import 'package:raaste/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:raaste/features/destination/data/repositories/destination_guide_store.dart';
+import 'package:raaste/features/destination/data/services/destination_research_service.dart';
 import 'package:raaste/features/destination/data/services/destination_search_service.dart';
 import 'package:raaste/features/destination/data/services/open_ai_destination_service.dart';
 import 'package:raaste/features/destination/data/services/overpass_service.dart';
@@ -38,6 +39,9 @@ Future<void> configureDependencies() async {
   getIt.registerFactory<AuthBloc>(() => AuthBloc(getIt<AuthRepository>()));
 
   // Destination planning
+  getIt.registerLazySingleton<DestinationResearchService>(
+    () => DestinationResearchService(),
+  );
   getIt.registerLazySingleton<DestinationSearchService>(
     () => DestinationSearchService(),
   );
