@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:raaste/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:raaste/features/companion/presentation/screens/companion_screen.dart';
+import 'package:raaste/features/destination/presentation/screens/destination_chat_screen.dart';
 import 'package:raaste/features/destination/presentation/screens/destination_detail_screen.dart';
 import 'package:raaste/features/explore/presentation/screens/explore_screen.dart';
 import 'package:raaste/features/home/presentation/screens/home_screen.dart';
@@ -27,6 +28,7 @@ class AppRoutes {
   static const String explore = '/explore';
   static const String saved = '/saved';
   static const String destination = '/destination';
+  static const String destinationChat = '/destination-chat';
   static const String tripPlanning = '/trip-planning';
   static const String itinerary = '/itinerary';
   static const String companion = '/companion';
@@ -89,6 +91,19 @@ class AppRouter {
             ),
           ),
           GoRoute(
+            path: AppRoutes.destinationChat,
+            builder: (_, state) => DestinationChatScreen(
+              destinationName: state.uri.queryParameters['destination'] ?? '',
+              sourceId: state.uri.queryParameters['sourceId'] ??
+                  state.uri.queryParameters['placeId'] ??
+                  '',
+              displayAddress: state.uri.queryParameters['displayAddress'] ?? '',
+              lat: double.tryParse(state.uri.queryParameters['lat'] ?? ''),
+              lon: double.tryParse(state.uri.queryParameters['lon'] ?? ''),
+              guideId: state.uri.queryParameters['guideId'],
+            ),
+          ),
+          GoRoute(
             path: AppRoutes.tripPlanning,
             builder: (_, state) => TripPlanningScreen(
               destinationId: state.uri.queryParameters['destinationId'] ?? '',
@@ -113,3 +128,4 @@ class AppRouter {
         ],
       );
 }
+

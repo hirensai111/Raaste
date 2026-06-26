@@ -1,5 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:raaste/config/routes.dart';
+import 'package:raaste/core/di/injection.dart';
+import 'package:raaste/features/destination/data/services/destination_search_service.dart';
+import 'package:raaste/features/destination/domain/models/place_suggestion.dart';
 import 'package:raaste/shared/widgets/raaste_nav_shell.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -172,18 +179,125 @@ class _Header extends StatelessWidget {
 
 // ─── Planner Hero ─────────────────────────────────────────────────────────────
 
-class _PlannerHero extends StatelessWidget {
+class _PlannerHero extends StatefulWidget {
   const _PlannerHero();
+
+  @override
+  State<_PlannerHero> createState() => _PlannerHeroState();
+}
+
+class _PlannerHeroState extends State<_PlannerHero> {
+  final _controller = TextEditingController();
+  final _focusNode = FocusNode();
+  final _searchService = getIt<DestinationSearchService>();
+  Timer? _debounce;
+  List<PlaceSuggestion> _suggestions = const [];
+  PlaceSuggestion? _selectedSuggestion;
+  bool _isSearching = false;
+  String? _searchError;
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _onQueryChanged(String value) {
+    _selectedSuggestion = null;
+    _debounce?.cancel();
+    final query = value.trim();
+
+    if (query.length < 2) {
+      setState(() {
+        _suggestions = const [];
+        _searchError = null;
+        _isSearching = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isSearching = true;
+      _searchError = null;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 900), () async {
+      try {
+        final results = await _searchService.autocomplete(query);
+        if (!mounted || _controller.text.trim() != query) return;
+        setState(() {
+          _suggestions = results;
+          _isSearching = false;
+        });
+      } on DestinationSearchException catch (e) {
+        if (!mounted) return;
+        setState(() {
+          _suggestions = const [];
+          _searchError = e.message;
+          _isSearching = false;
+        });
+      }
+    });
+  }
+
+  void _selectSuggestion(PlaceSuggestion suggestion) {
+    setState(() {
+      _selectedSuggestion = suggestion;
+      _controller.text = suggestion.name;
+      _suggestions = const [];
+      _searchError = null;
+    });
+    _focusNode.unfocus();
+  }
+
+  void _startPlanning() {
+    final suggestion = _selectedSuggestion;
+    final destination = suggestion?.name ?? _controller.text.trim();
+    if (destination.isEmpty) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text('Search a destination first')),
+        );
+      return;
+    }
+
+    if (suggestion == null || suggestion.lat == null || suggestion.lon == null) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text('Choose a destination from the search results')),
+        );
+      return;
+    }
+
+    final uri = Uri(
+      path: AppRoutes.destinationChat,
+      queryParameters: {
+        'destination': destination,
+        'sourceId': suggestion.sourceId,
+        'displayAddress': suggestion.displayAddress,
+        'lat': suggestion.lat.toString(),
+        'lon': suggestion.lon.toString(),
+      },
+    );
+    context.go(uri.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final w = constraints.maxWidth;
-        final heroHeight = (w * 0.72).clamp(260.0, 300.0);
+        final showSuggestions =
+            _isSearching || _searchError != null || _suggestions.isNotEmpty;
+        final heroHeight = showSuggestions
+            ? (w * 1.02).clamp(350.0, 420.0).toDouble()
+            : (w * 0.62).clamp(224.0, 260.0).toDouble();
         final compact = w < 390;
         final innerPadding = compact ? 16.0 : 20.0;
-        final contentMaxWidth = compact ? w : w * 0.68;
 
         return SizedBox(
           height: heroHeight,
@@ -213,23 +327,21 @@ class _PlannerHero extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.all(innerPadding),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: contentMaxWidth),
+                Positioned.fill(
+                  child: Padding(
+                    padding: EdgeInsets.all(innerPadding),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Row(
                           children: [
                             const Icon(
                               Icons.travel_explore_rounded,
                               color: RaasteShellColors.background,
-                              size: 26,
+                              size: 24,
                             ),
                             const SizedBox(width: 10),
-                            Flexible(
+                            Expanded(
                               child: Text(
                                 'Where are you going?',
                                 maxLines: 1,
@@ -245,17 +357,27 @@ class _PlannerHero extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
-                        _SearchBox(onTap: () => showImplementingSoon(context)),
-                        const SizedBox(height: 12),
-                        _PlannerFilters(
-                          onTap: () => showImplementingSoon(context),
+                        const SizedBox(height: 14),
+                        _SearchBox(
+                          controller: _controller,
+                          focusNode: _focusNode,
+                          onChanged: _onQueryChanged,
+                          onSubmitted: _startPlanning,
                         ),
-                        const SizedBox(height: 16),
+                        if (showSuggestions) ...[
+                          const SizedBox(height: 10),
+                          _SuggestionPanel(
+                            suggestions: _suggestions,
+                            isLoading: _isSearching,
+                            error: _searchError,
+                            onSelect: _selectSuggestion,
+                          ),
+                        ],
+                        const Spacer(),
                         _PrimaryButton(
                           label: 'Plan My Trip',
                           icon: Icons.navigation_rounded,
-                          onTap: () => showImplementingSoon(context),
+                          onTap: _startPlanning,
                         ),
                       ],
                     ),
@@ -271,86 +393,191 @@ class _PlannerHero extends StatelessWidget {
 }
 
 class _SearchBox extends StatelessWidget {
-  final VoidCallback onTap;
-  const _SearchBox({required this.onTap});
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onSubmitted;
+
+  const _SearchBox({
+    required this.controller,
+    required this.focusNode,
+    required this.onChanged,
+    required this.onSubmitted,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xEAFFFFFF),
         borderRadius: BorderRadius.circular(14),
-        onTap: onTap,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          decoration: BoxDecoration(
-            color: const Color(0xEAFFFFFF),
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x26000000),
-                blurRadius: 12,
-                offset: Offset(0, 6),
-              ),
-            ],
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x26000000),
+            blurRadius: 12,
+            offset: Offset(0, 6),
           ),
-          child: const Row(
-            children: [
-              Icon(Icons.search_rounded, color: RaasteShellColors.ink, size: 22),
-              SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  'Search destinations in India',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Colors.grey, fontSize: 14, height: 1),
-                ),
-              ),
-            ],
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        onChanged: onChanged,
+        onSubmitted: (_) => onSubmitted(),
+        textInputAction: TextInputAction.search,
+        style: const TextStyle(
+          color: RaasteShellColors.ink,
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
+        ),
+        decoration: const InputDecoration(
+          hintText: 'Search destinations in India',
+          hintStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.w400),
+          prefixIcon: Icon(
+            Icons.search_rounded,
+            color: RaasteShellColors.ink,
+            size: 22,
           ),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         ),
       ),
     );
   }
 }
 
-class _PlannerFilters extends StatelessWidget {
-  final VoidCallback onTap;
-  const _PlannerFilters({required this.onTap});
+class _SuggestionPanel extends StatelessWidget {
+  final List<PlaceSuggestion> suggestions;
+  final bool isLoading;
+  final String? error;
+  final ValueChanged<PlaceSuggestion> onSelect;
+
+  const _SuggestionPanel({
+    required this.suggestions,
+    required this.isLoading,
+    required this.error,
+    required this.onSelect,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: const Color(0x29FFFFFF),
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.calendar_month_outlined, color: Colors.white, size: 18),
-              SizedBox(width: 6),
-              Text('2 days', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500)),
-              SizedBox(width: 10),
-              Text('|', style: TextStyle(color: Colors.white70, fontSize: 14)),
-              SizedBox(width: 10),
-              Icon(Icons.group_outlined, color: Colors.white, size: 18),
-              SizedBox(width: 6),
-              Text('couples', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500)),
-              SizedBox(width: 10),
-              Text('|', style: TextStyle(color: Colors.white70, fontSize: 14)),
-              SizedBox(width: 10),
-              Icon(Icons.tune_rounded, color: Colors.white, size: 18),
-              SizedBox(width: 4),
-              Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white, size: 18),
-            ],
-          ),
+    return Container(
+      width: double.infinity,
+      constraints: const BoxConstraints(maxHeight: 136),
+      decoration: BoxDecoration(
+        color: const Color(0xF7FFFFFF),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0x55FFFFFF)),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (isLoading)
+              const LinearProgressIndicator(
+                minHeight: 2,
+                color: RaasteShellColors.clay,
+                backgroundColor: Colors.transparent,
+              ),
+            Flexible(child: _buildBody()),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(12, 4, 12, 8),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  'Search by OpenStreetMap',
+                  style: TextStyle(
+                    color: RaasteShellColors.muted,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _buildBody() {
+    if (error != null) {
+      return Padding(
+        padding: const EdgeInsets.all(12),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            error!,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: RaasteShellColors.ink,
+              fontSize: 12,
+              height: 1.25,
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (suggestions.isEmpty) {
+      return const SizedBox(height: 34);
+    }
+
+    return ListView.separated(
+      shrinkWrap: true,
+      padding: EdgeInsets.zero,
+      itemCount: suggestions.length,
+      separatorBuilder: (_, __) => const Divider(
+        height: 1,
+        color: RaasteShellColors.outline,
+      ),
+      itemBuilder: (context, index) {
+        final suggestion = suggestions[index];
+        return InkWell(
+          onTap: () => onSelect(suggestion),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.place_outlined,
+                  color: RaasteShellColors.sage,
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        suggestion.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: RaasteShellColors.ink,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        suggestion.description,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: RaasteShellColors.muted,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -1063,3 +1290,4 @@ class _SmallAction extends StatelessWidget {
     );
   }
 }
+
