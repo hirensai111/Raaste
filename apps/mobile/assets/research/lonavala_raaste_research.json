@@ -1,0 +1,1098 @@
+{
+  "destination": {
+    "name": "Lonavala",
+    "state": "Maharashtra",
+    "tagline": "Misty ghats, monsoon magic, and chikki by the kilo.",
+    "description": "A bustling hill station at 622m in the Western Ghats, Lonavala is Mumbai and Pune's favourite weekend escape. Famous for its monsoon waterfalls, mist-covered viewpoints, historic forts, and the iconic chikki that bears its name. It's best for quick getaways, monsoon drives, and beginner treks — not for those seeking solitude or high-altitude adventure. The defining experience is watching clouds drift below you at Tiger Point while munching on freshly bought peanut chikki.",
+    "best_for": [
+      "couples",
+      "friend groups",
+      "families",
+      "solo travellers",
+      "nature lovers"
+    ],
+    "not_ideal_for": "Those seeking solitude or untouched nature — Lonavala is heavily commercialised and crowded on all weekends. Also not ideal for serious trekkers looking for challenging terrain (most treks are beginner-friendly) or anyone expecting a Himalayan-style hill station experience. At 2,050 ft, it's more of a plateau town than a mountain retreat."
+  },
+  "when_to_visit": {
+    "best_months": [
+      "october",
+      "november",
+      "december",
+      "january",
+      "february"
+    ],
+    "avoid_months": [
+      "april",
+      "may"
+    ],
+    "peak_season": "June to September (monsoon) — lush greenery, full waterfalls, but EXTREME crowds on weekends, 2-3x hotel prices, and serious safety risks at water bodies. Traffic jams of 3-4 hours on the expressway are common.",
+    "off_season": "March to May (summer) — hot afternoons (35°C+), dry landscapes, most waterfalls reduced to a trickle. But 40-60% cheaper hotels, empty attractions, and pleasant mornings/evenings. Best for budget travellers.",
+    "shoulder_season": "Late September to early October — the 'sweet spot' with 80% of monsoon greenery, 20% of the crowd, and reasonable prices. Also late February to March for pleasant weather before the heat sets in.",
+    "monthly_breakdown": {
+      "january": {
+        "weather": "16-30°C, coolest month, clear skies, pleasant days and cold nights",
+        "crowd_level": "high",
+        "notes": "Excellent for trekking. Carry light woolens for evenings. Weekends remain crowded."
+      },
+      "february": {
+        "weather": "17-32°C, still cool and pleasant, no rain",
+        "crowd_level": "high",
+        "notes": "Great for outdoor activities. Ideal for fort treks and camping."
+      },
+      "march": {
+        "weather": "22-32°C, transition to spring, warm but comfortable",
+        "crowd_level": "low",
+        "notes": "Fewer tourists. Good for budget travel. Start activities early to avoid midday heat."
+      },
+      "april": {
+        "weather": "24-36°C, hottest month, daytime can exceed 35°C",
+        "crowd_level": "low",
+        "notes": "Avoid midday outdoor activity. Best deals on hotels. Carry sun protection."
+      },
+      "may": {
+        "weather": "24-35°C, hot and humid, pleasant evenings",
+        "crowd_level": "low",
+        "notes": "Cheapest month. Night treks are ideal. Pre-monsoon humidity builds up."
+      },
+      "june": {
+        "weather": "20-30°C, monsoon begins mid-month, heavy rainfall starts",
+        "crowd_level": "high",
+        "notes": "Roads become slippery. Waterfalls start flowing. Weekend crowds surge."
+      },
+      "july": {
+        "weather": "20-27°C, wettest month (31 rainy days), maximum monsoon magic and danger",
+        "crowd_level": "extreme",
+        "notes": "Prohibitory orders likely at Bhushi Dam (Jul 2-31 based on 2024). 29+ drowning deaths since 2017. Avoid waterfall areas."
+      },
+      "august": {
+        "weather": "19-29°C, continued heavy rain, lush green hills",
+        "crowd_level": "extreme",
+        "notes": "Waterfall danger persists. Landslide risk on ghat roads. Book hotels weeks ahead."
+      },
+      "september": {
+        "weather": "18-28°C, monsoon tapering off, good mix of rain and sunshine",
+        "crowd_level": "high",
+        "notes": "Flora in full bloom. Late September is the post-monsoon sweet spot."
+      },
+      "october": {
+        "weather": "15-25°C, post-monsoon pleasant weather, clear skies return",
+        "crowd_level": "medium",
+        "notes": "Best overall month — greenery remains, crowds thin, weather is perfect."
+      },
+      "november": {
+        "weather": "10-20°C, cool and comfortable",
+        "crowd_level": "medium",
+        "notes": "Great for all activities. Lonavala Carnival usually held in December (verify dates)."
+      },
+      "december": {
+        "weather": "8-18°C, coolest month, popular for family outings",
+        "crowd_level": "high",
+        "notes": "Clear skies, festive season crowds. Book hotels in advance."
+      }
+    },
+    "festival_calendar": [
+      {
+        "name": "Lonavala Carnival",
+        "month": "December",
+        "impact_on_travel": "2-day event at Aamby Valley City with cultural activities, adventure sports, food stalls. Expect higher crowds and hotel prices."
+      },
+      {
+        "name": "Firefly Season at Rajmachi",
+        "month": "May-June",
+        "impact_on_travel": "Thousands of fireflies light up forests around Udhewadi village. Book homestays well in advance. Firefly sightings NOT guaranteed."
+      },
+      {
+        "name": "Monsoon Weekend Rush",
+        "month": "June-September",
+        "impact_on_travel": "Extreme crowds from Mumbai/Pune every weekend. Expressway traffic jams of 3-4 hours. Hotel rates surge 2-3x."
+      }
+    ]
+  },
+  "how_to_reach": {
+    "from_major_cities": {
+      "mumbai": {
+        "distance_km": "83-96 (road), 66 (rail via Panvel)",
+        "by_road": "Mumbai-Pune Expressway (Rs 320 toll one-way) or Old NH48 (Rs 55 toll, 2-wheelers allowed). 1.5-2 hours weekdays, 2-3 hours weekends. Ghat section via Khandala is scenic but winding.",
+        "by_train": "26+ trains daily from CSMT/Dadar/LTT. Deccan Queen (12123, 17:10 dep, 2h08m), Pragati Express (12125, 16:25 dep, 2h21m), Indrayani Express (22105, 05:40 dep, 2h18m). Fare Rs 80-315. Most reliable option.",
+        "by_bus": "MSRTC ST buses + private operators (Neeta, Gujarat Travels). Every 30-60 min from Dadar/Borivali/Thane. Rs 100-400. Duration 2-3 hours.",
+        "by_air": "Not applicable — no airport in Lonavala.",
+        "recommended_mode": "Train (Deccan Queen/Indrayani) for reliability; own car for flexibility. Start by 6 AM to beat traffic.",
+        "travel_time": "2-2.5 hours by train; 1.5-2 hours by road (weekdays)"
+      },
+      "delhi": {
+        "distance_km": "~1,200 (road), ~1,447 (aerial)",
+        "by_road": "~23+ hours driving. Not recommended for self-drive in one go.",
+        "by_train": "3+ direct trains (Darshan Express, others). 19-25 hours. Sleeper from ~Rs 640.",
+        "by_bus": "Direct sleeper buses. 30-34 hours. Rs 3,499-4,000+",
+        "by_air": "Fly Delhi-Pune (2h15m, Rs 2,500-8,000) then cab/train to Lonavala (1-2h).",
+        "recommended_mode": "Flight to Pune + cab/train to Lonavala",
+        "travel_time": "~6 hours total via flight + road"
+      },
+      "bangalore": {
+        "distance_km": "~911 (road), ~837 (aerial)",
+        "by_road": "~15+ hours by bus/car via NH48.",
+        "by_train": "No direct trains. Take train to Pune/Mumbai, then connect.",
+        "by_bus": "Direct overnight buses. ~15 hours. Rs 1,500-2,500 (SRS, VRL, zingbus).",
+        "by_air": "Fly Bangalore-Pune (1h20m, Rs 3,000-7,000) then cab/train (1-1.5h).",
+        "recommended_mode": "Flight to Pune + cab for time-sensitive; overnight bus for budget",
+        "travel_time": "~6 hours via flight + road; ~15 hours by bus"
+      },
+      "hyderabad": {
+        "distance_km": "~625-659 (road), ~558 (aerial)",
+        "by_road": "Via NH65 to Solapur then NH48. 11-13 hours driving.",
+        "by_train": "Direct trains: Konark Express (11020, 13h13m, Sleeper Rs 355), Rajkot Express (17018, 12h05m).",
+        "by_bus": "Multiple operators. 11-14 hours. Rs 1,575-2,940 (AC sleeper).",
+        "by_air": "Fly Hyderabad-Pune (1h10m-1h20m, Rs 2,500-8,500) then cab (1.5h, Rs 1,600-3,000).",
+        "recommended_mode": "Train (Konark Express) for budget/comfort; Flight to Pune + cab for fastest",
+        "travel_time": "11-13 hours by train; ~5-6 hours via flight + road"
+      },
+      "pune": {
+        "distance_km": "64-74 (road), 64 (rail)",
+        "by_road": "Expressway via Aundh-Ravet (65km) or NH48 via Paud Road (71km). 1-1.5 hours. Toll Rs 320.",
+        "by_train": "17+ trains daily. Locals every 2 hours. Journey 45-90 min. Fare Rs 15-100. First train ~01:10 AM, last ~19:35.",
+        "by_bus": "MSRTC + private (Neeta, zingbus). Every hour. Rs 200-420 (private AC), Rs 100-150 (ST). 1h20m-2h.",
+        "by_air": "Not applicable.",
+        "recommended_mode": "Train (frequent, cheapest) or own vehicle (pleasant short drive)",
+        "travel_time": "1-1.5 hours"
+      },
+      "chennai": {
+        "distance_km": "~1,139-1,200 (road/rail), ~1,114 (aerial)",
+        "by_road": "Not practical (~20+ hours).",
+        "by_train": "2 daily trains: MS CSMT SF Exp (22158, 20h05m), MAS LTT SF Exp (12164, 18h15m). Sleeper Rs 550; 3AC Rs 1,465.",
+        "by_bus": "Direct buses ~28 hours. Rs 2,999-6,000 (Ravina Travels from Koyambedu).",
+        "by_air": "Fly Chennai-Pune/Mumbai (1h45m, Rs 5,000+) then road/rail (1.5-2h).",
+        "recommended_mode": "Flight to Pune + cab (total ~6 hours)",
+        "travel_time": "~6 hours via flight + road; ~18-20 hours by train"
+      }
+    },
+    "nearest_airport": {
+      "name": "Pune International Airport (PNQ)",
+      "distance_from_destination": "~65-70 km, 1.5-2 hours drive",
+      "cab_cost_from_airport": "VERIFY: Rs 1,600-3,000 for pre-paid taxi/app cab"
+    },
+    "nearest_railway_station": {
+      "name": "Lonavala Railway Station (LNL)",
+      "distance_from_main_area": "~500m-1km (walkable to main market/hotels)",
+      "auto_cab_cost": "Rs 50-100 to hotel area (negotiate, no meter)"
+    },
+    "entry_permits_required": false,
+    "permit_details": "No entry permits required. E-pass was COVID-only (2020). Some forts may require nominal registration at base village."
+  },
+  "local_transport": {
+    "uber_available": false,
+    "ola_available": false,
+    "rapido_available": false,
+    "auto_rickshaw_available": true,
+    "local_taxi_available": true,
+    "bus_service": "MSRTC ST buses connect to nearby villages (Khopoli, Kamshet, Karla, Malavli). No dedicated local sightseeing bus. Private sightseeing buses run at Rs 300-400/person for 8-hour circuit. Lonavala to Khandala: ST bus available (4km, ~10-15 min).",
+    "bike_rental_available": true,
+    "car_rental_available": false,
+    "primary_recommendation": "Pre-booked full-day local cab (best value) for sightseeing. Auto rickshaws for point-to-point (negotiate every fare upfront). From Mumbai/Pune: train in, hire local cab for 4-6 hours, train back.",
+    "cab_rates": {
+      "local_sightseeing_full_day": "VERIFY: Hatchback Rs 1,600-2,600 (weekday), Rs 1,800-2,800 (weekend); Sedan Rs 2,000-2,800 / Rs 2,200-3,200; SUV Rs 2,700-3,200 / Rs 3,000-3,600 (8-10 hours)",
+      "per_km_sedan": "VERIFY: Rs 12-18/km for local cabs",
+      "per_km_suv": "VERIFY: Rs 18-25/km for local cabs",
+      "airport_transfer": "VERIFY: Rs 1,600-3,000 from Pune airport; Rs 2,500-4,000 from Mumbai airport"
+    },
+    "negotiation_tips": "Always negotiate BEFORE getting in — autos don't use meters. Check distance on Google Maps first. Weekday rates 15-20% cheaper. Off-season (Mar-May): negotiate aggressively. Pre-book via hotel for better rates. For full-day cabs: compare 2-3 operators; online booking often cheaper than spot. Carry small change for parking 'fees'.",
+    "scam_warnings": [
+      "Auto overcharging at railway station: drivers quote 2-3x normal rates to tourists. Walk 100m away and negotiate better.",
+      "Cab package exclusions: many Rs 2,000 packages are non-AC. Clarify AC, entry fees, extra hours before booking.",
+      "Roadside parking 'fees': unofficial attendants charge Rs 20-50 at viewpoints. No receipts.",
+      "Tiger Point/Lion Point shared jeep: last stretch may need shared jeep (Rs 50-100/head) during peak season due to parking restrictions.",
+      "Routes to avoid at night: unlit ghat roads, isolated waterfall areas, trekking trails after dark"
+    ],
+    "transport_reality_check": "Uber and Ola are BANNED within Lonavala Municipal Council limits since 2017 — local taxi unions actively block app-based pickups. You can get DROPPED in Lonavala by Ola/Uber from Mumbai/Pune (outstation booking), but RETURNING via app cab is NOT possible. This catches many travellers unaware. Most tourists hire a local cab for the day (Rs 2,000-3,000) or use autos for each spot (costs add up to ~Rs 800-1,200 for 3-4 spots). Pawna Lake has NO public transport — private jeep costs Rs 1,200-1,500 one-way. Expressway toll is Rs 320 one-way for cars. Monsoon weekend prices double, and last 10 km can take 1 hour due to traffic."
+  },
+  "connectivity": {
+    "overall_rating": "good",
+    "jio_coverage": "Good 4G/5G in town area and major viewpoints. Patchy at fort summits and Pawna Lake camping areas.",
+    "airtel_coverage": "Good 4G in town area and major viewpoints. Patchy at fort summits and trekking trails.",
+    "vi_coverage": "Moderate 2G in town, patchy elsewhere. Generally the weakest of the three.",
+    "bsnl_coverage": "Moderate in town area, may have some coverage at remote trekking base villages where private networks don't work.",
+    "specific_dead_zones": [
+      "Fort trek summits (Lohagad, Visapur, Rajmachi, Tikona): expect no to minimal signal",
+      "Pawna Lake camping areas: network issues reported, especially at remote campsites",
+      "Rajmachi trek route and Udhewadi village: very poor or no coverage",
+      "Kataldhar waterfall trek route: no signal in dense forest sections",
+      "Duke's Nose summit: patchy coverage"
+    ],
+    "wifi_availability": "Available at virtually all hotels/resorts and most cafes in town. Basic campsites at Pawna Lake generally don't have WiFi. Don't rely on public WiFi for sensitive transactions.",
+    "offline_map_recommendation": "Strongly recommend downloading offline maps before leaving town area. Essential for fort treks, Pawna Lake area, and Rajmachi route where signal is patchy or nonexistent.",
+    "atm_availability": "SBI, ICICI, HDFC, Axis, Canara Bank ATMs available, mostly near railway station and main road. Carry sufficient cash as ATMs can run out on long weekends."
+  },
+  "money": {
+    "cash_vs_upi": "UPI (GPay, PhonePe) works at most established restaurants, hotels, and larger shops. Cash needed for: small street food vendors, parking 'fees' (Rs 20-50), cave entries (Rs 15-25), auto fares, trek base village expenses, chikki from small shops. Carry a mix of both.",
+    "atm_availability": "Multiple ATMs near railway station and main road (SBI, ICICI, HDFC, Axis). Can run out of cash on long weekends — withdraw in advance.",
+    "budget_per_day": {
+      "backpacker": "VERIFY: Rs 1,500-2,500 per day (hostel/guesthouse, dhaba meals, shared autos, free attractions)",
+      "mid_range": "VERIFY: Rs 3,500-6,000 per day (3-star hotel, restaurant meals, private taxi, selective activities)",
+      "comfortable": "VERIFY: Rs 6,000-10,000 per day (4-star resort, fine dining, private cab, adventure activities)",
+      "luxury": "VERIFY: Rs 8,000-15,000+ per day (premium resort/villa, resort dining, Della Adventure/Imagicaa)"
+    },
+    "where_to_carry_cash": "Street food vendors, auto rickshaws, cave/fort entry fees, parking fees at viewpoints, small chikki shops, trek base village food stalls, tips",
+    "overpriced_tourist_areas": [
+      "Tiger's Point food stalls (Maggi at Rs 150 vs Rs 50 elsewhere)",
+      "Main market generic chikki shops (factory-made at inflated prices)",
+      "Bhushi Dam area parking (unofficial collectors charge exorbitant rates on peak days)",
+      "Della Resorts restaurants (cover charges apply, significantly above town average)"
+    ]
+  },
+  "food": {
+    "must_try_dishes": [
+      {
+        "dish": "Chikki (Groundnut)",
+        "what_it_is": "Traditional brittle made from jaggery and groundnuts, invented in Lonavala in the 1880s as an energy bar for railway workers. The signature sweet of the hill station.",
+        "where_to_find_best": "Maganlal Chikki (ORIGINAL) — opposite railway station, blue-and-white signage, 5th generation family-run since 1880. Look for the blue sign — red-and-yellow 'Maganlal' shops are copycats."
+      },
+      {
+        "dish": "Chocolate Fudge (Walnut)",
+        "what_it_is": "Dense, creamy sweet made with condensed milk, cocoa, and crushed walnuts. Warm and chewy. Lonavala's second-most-famous sweet after chikki.",
+        "where_to_find_best": "Cooper's Fudge — 85-year-old hole-in-the-wall near original Maganlal in old market. People drive from Mumbai just for this. Long queues on weekends."
+      },
+      {
+        "dish": "Vada Pav",
+        "what_it_is": "Mumbai's iconic street food — potato fritter in a bun with chutneys and green chilli. Fresh-fried crispy vada with flavourful thecha.",
+        "where_to_find_best": "Golden Vada Pav, Old Mumbai-Pune Highway — always crowded, staff fries fresh in front of you. The most famous street-food joint in Lonavala."
+      },
+      {
+        "dish": "Misal Pav",
+        "what_it_is": "Spicy curry with sprouted moth beans, topped with farsan, onions, served with pav. The quintessential Maharashtrian breakfast.",
+        "where_to_find_best": "Hotel Ramakrishna — 40+ year old pure veg institution, legendary misal pav. Also try Ruchiprayog Hotel for economical, healthy versions (Rs 300-400 for two)."
+      },
+      {
+        "dish": "Maggi at Maggi Points",
+        "what_it_is": "Instant noodles made at roadside stalls — a hill station ritual. Masala, cheese, and egg variants available.",
+        "where_to_find_best": "Santosh's Maggi Point — popular 24/7 roadside joint, customisable. Avoid Tiger's Point stalls charging Rs 150/plate (vs Rs 50-80 at regular places)."
+      },
+      {
+        "dish": "Bhutta (Corn on the Cob)",
+        "what_it_is": "Fresh corn roasted on charcoal, rubbed with lime dipped in salt-red chilli masala. The monsoon essential.",
+        "where_to_find_best": "Roadside stalls at Bhushi Dam and all viewpoints during monsoon (Rs 30-60). Pick stalls where corn is roasted fresh after you order."
+      },
+      {
+        "dish": "Zunka Bhakri",
+        "what_it_is": "Gram flour (besan) cooked with onions and spices, served with jowar/bajra bhakri. Simple, deeply satisfying authentic Maharashtrian fare.",
+        "where_to_find_best": "Maval Maratha — authentic 'gavaran' (village-style) food. Watch local ladies make bhakris at the entrance. Rating 4.2/5."
+      },
+      {
+        "dish": "Maharashtrian Thali",
+        "what_it_is": "Complete meal with bhakri, seasonal vegetable curry, lentil preparations, spicy chutney, rice. Non-veg versions include chicken/mutton with dry spice blends.",
+        "where_to_find_best": "Joshi Homely Food — all-women run, behind Maharaj Hotel on Old Highway. Featured by Kunal Vijayakar. Real home cooking with fried pomfret, chicken curry, sol kadhi."
+      }
+    ],
+    "signature_local_food": "Chikki (peanut-jaggery brittle) — Lonavala IS the chikki capital of India. The hill station's identity is inseparable from this sweet. Chocolate fudge from Cooper's is a close second. The combination of chikki + fudge is the standard return-journey purchase for every visitor.",
+    "vegetarian_friendliness": "Excellent — many of the most famous and long-standing restaurants are pure vegetarian (Hotel Ramakrishna, Hotel Interval Pure-Veg, Panchavati Gaurav, Govinda Resort). Highway dhabas and local thali places all have full veg sections.",
+    "jain_food_availability": "Good — dedicated Jain options available (Nidhivan Pure Veg & Jain Restaurant, Govinda Resort, Crème Della at Della Resorts, Jain Rasoi delivery). Most pure veg restaurants can accommodate Jain requests (no onion, no garlic, no root vegetables) — always confirm before ordering.",
+    "halal_availability": "Limited — no dedicated Halal-certified restaurants found. Many non-veg restaurants serve chicken and mutton but don't explicitly certify Halal. Muslim travellers should stick to street food (vada pav, chikki, bhutta) and pure veg restaurant options for certainty.",
+    "vegan_options": "Limited — not a strong vegan scene. Street food like bhutta (without butter), plain Maggi, and vada pav (check chutney) may be accidentally vegan. Anglo Indian Cafe lists vegan options explicitly (rare for Lonavala). Most places use ghee/oil in cooking — vegan travellers need to ask.",
+    "street_food_safety": "Moderate — exercise standard Indian street food caution. Golden Vada Pav (very high turnover, fresh frying) is generally safe. Choose bhutta stalls roasting fresh on coal after you order. Avoid pre-roasted corn sitting uncovered. At busy stalls = better turnover = fresher food. During monsoon: eat only piping hot food, avoid chutneys sitting out.",
+    "restaurant_price_reality": "Budget: Rs 150-250 per person (street food, basic thali, vada pav, Maggi). Mid-range: Rs 400-700 for two (Hotel Ramakrishna, Maval Maratha, Sunny Da Dhaba). Premium: Rs 1,200-2,500 for two (Anglo Indian Cafe, The Machan, Della Resorts). Chikki: Rs 95-140/250g (groundnut), Rs 300-500/250g (dry fruit).",
+    "local_market_for_food": "Lonavala Main Market near Railway Station — the hub for chikki shopping (original Maganlal, National Chikki), street food (vada pav, chaat, bhajiyas), and fudge (Cooper's). Also buy sev/chiwda (savoury snacks) and masala peanuts.",
+    "tourist_trap_restaurants": "Tiger's Point/Lion's Point food stalls charge Rs 150 for Maggi (vs Rs 50-80 elsewhere). Main market generic restaurants overcharge with average quality. Anglo Indian Cafe is Instagram-famous but mixed reviews — 'slightly overpriced, average food.' Della Resorts restaurants have cover charges (Rs 750 pp at Parsi Dhaba) and prices significantly above town average.",
+    "where_locals_eat": "Hotel Ramakrishna (40+ years old, locals AND tourists), Ruchiprayog Hotel (run by research centre, economical, healthy), Maval Maratha (authentic Maharashtrian village food), Joshi Homely Food (all-women run, home cooking), Golden Vada Pav (highway legend). Rule of thumb: if the place is filled with Marathi-speaking families and has no fancy decor, the food is probably authentic and fairly priced."
+  },
+  "accommodation": {
+    "areas_to_stay": [
+      {
+        "area": "Main Lonavala Town / Market Area (Near Railway Station)",
+        "why": "Maximum convenience. Walking distance to market, chikki shops, restaurants, station. Easy access to transport. Good for first-time visitors.",
+        "best_for": "Budget travellers, families who want walkable access, those without private transport",
+        "price_range": "VERIFY: Budget hotels Rs 500-2,500/night; Mid-range Rs 2,000-5,000/night"
+      },
+      {
+        "area": "Tungarli Lake Area",
+        "why": "Quieter than main town. Scenic lake and hill views. Private villas and homestays dominate. Peaceful mornings.",
+        "best_for": "Couples, families seeking calm, groups wanting private villas with pools",
+        "price_range": "VERIFY: Homestays Rs 2,000-6,000/night; Luxury villas Rs 8,000-35,000/night"
+      },
+      {
+        "area": "Pawna Lake Area (Camping)",
+        "why": "Lakeside camping experience with fort views. Serene nature. Budget-friendly adventure option with tents, bonfire, BBQ.",
+        "best_for": "Young travellers, friend groups, adventure seekers, budget travellers wanting experience over comfort",
+        "price_range": "VERIFY: Regular tents Rs 999-1,499/night; Premium/glamping Rs 2,400-4,000/night"
+      },
+      {
+        "area": "Khandala Side",
+        "why": "Quieter than Lonavala town. Better for viewpoint-focused trips. Slightly more upscale resort options. Less traffic chaos.",
+        "best_for": "Couples, those seeking refined stay, travellers wanting easy access to Khandala viewpoints",
+        "price_range": "VERIFY: Mid-range Rs 3,000-8,000/night; Luxury Rs 8,000-25,000/night"
+      },
+      {
+        "area": "Aamby Valley Road Area",
+        "why": "Ultra-luxury, exclusive, world-class resorts in forest setting. Premium spa/wellness experience.",
+        "best_for": "Luxury travellers, honeymooners, those seeking spa/wellness retreats",
+        "price_range": "VERIFY: Rs 15,000-50,000+/night"
+      }
+    ],
+    "areas_to_avoid": [
+      {
+        "area": "Properties right on Mumbai-Pune Highway / Old Highway",
+        "why": "Traffic noise is a real problem unless hotel has excellent soundproofing. Ask for rooms away from highway side."
+      },
+      {
+        "area": "Bhushi Dam immediate vicinity",
+        "why": "Impossibly crowded on weekends, parking nightmare. Good to visit, terrible to stay near."
+      },
+      {
+        "area": "Tiger's Point / Lion's Point areas for overnight",
+        "why": "Too remote, no proper accommodation options, food stalls are tourist traps."
+      },
+      {
+        "area": "Unverified budget lodges in deep market lanes",
+        "why": "Some may be unclean or have maintenance issues. Check recent reviews carefully."
+      }
+    ],
+    "booking_advance_required": "2-4 weeks for monsoon weekends (Jun-Sep); 4-6 weeks for long weekends/holidays (Independence Day, Diwali, Christmas, New Year); 2-3 weeks for winter weekends (Oct-Feb); 1 week or even last-minute for summer off-season (Mar-May). Weekdays always cheaper — Rs 800-1,800/night less than weekends.",
+    "budget_options": "VERIFY: Rs 500-2,500/night. Basic but clean rooms, attached bathroom, AC may or may not be included, TV, hot water. Small rooms. Usually no restaurant on-site. Found on Station Road and Old Highway corridor. Options: Zostel Plus Lonavala, The Hosteller, Hotel Lalit Inn, Montana Hotels, various OYO properties.",
+    "mid_range_options": "VERIFY: Rs 2,500-8,000/night. Comfortable AC rooms, restaurant on-site, parking, room service, decent decor, some have pools. Family-friendly. Options: Rhythm Lonavala, Sterling Lonavala, Upper Deck Resort, Meritas Adore Resort, Doves Kohinoor Exotica.",
+    "premium_options": "VERIFY: Rs 8,000-50,000+/night. Private villas with pools, spa facilities, multi-cuisine restaurants, bonfire areas, lake/valley views, premium service. Options: Della Resorts, Fariyas Resort, The Machan, Hilton Shillim Estate Retreat & Spa, StayVista properties, Ama Stays & Trails."
+  },
+  "itinerary_framework": {
+    "one_day": "6:00 AM — Arrive by Deccan Queen/Indrayani train from Mumbai (or drive from Pune). 7:00 AM — Tiger's Point for sunrise and valley views (least crowded, best light). 9:00 AM — Lion's Point for panoramic views and bhutta. 10:30 AM — Bhushi Dam (before weekend crowds build up; weekdays only). 12:30 PM — Lunch at Hotel Ramakrishna (misal pav) or Maval Maratha. 2:00 PM — Karla Caves (Ekvira Devi Temple). 4:00 PM — Main market for chikki shopping at original Maganlal + Cooper's Fudge. 5:30 PM — Khandala Reversing Station or Shooting Point for sunset. 7:00 PM — Dinner at a local restaurant. 8:30 PM — Train/bus back. NOTE: If monsoon, skip Bhushi Dam if prohibitory orders are in effect. If summer, add Ryewood Park instead.",
+    "two_days": "Day 1: Morning — Tiger's Point + Lion's Point sunrise visit. Afternoon — Bhushi Dam (weekdays) or Wax Museum (rainy day alternative). Evening — Main market chikki/fudge shopping + sunset at Khandala Reversing Station. Day 2: Morning — Lohagad Fort trek (start 8 AM, 3-4 hours total) OR Visapur Fort for more adventure. Afternoon — Lunch at base village (pithla bhakri at Lohagadwadi). Evening — Pawna Lake for sunset and lakeside walk, or return via Tungarli Lake for quiet reflection photography.",
+    "three_days": "Day 1: Viewpoints circuit — Tiger's Point, Lion's Point, Bhushi Dam, Karla Caves. Market shopping. Day 2: Fort trek day — Lohagad + Visapur (combined, start 7 AM from Bhaje village). Evening — Tungarli Lake sunset. Day 3: Adventure/day trip — Della Adventure Park (3 km from town, Rs 1,750-5,999 entry) OR Imagicaa Theme Park (20-25 km, Rs 999-3,000) OR Rajmachi trek with firefly camping (May-June) OR Pawna Lake overnight camping.",
+    "four_days_plus": "Not necessary for core Lonavala. With 4+ days, combine with nearby destinations: add Khandala (Duke's Nose trek, Amrutanjan Point), Pawna Lake camping (1 night), Rajmachi overnight trek, or Tikona Fort. Alternatively, use extra days for relaxed resort stay at Aamby Valley or Hilton Shillim. For active travellers, 3 days covers everything; beyond that, you're repeating viewpoints.",
+    "day_trip_from": [
+      "Mumbai (2-2.5h by train, very doable)",
+      "Pune (1-1.5h by train, very doable)",
+      "Navi Mumbai (~2h by road)"
+    ]
+  },
+  "nearby_destinations": [
+    {
+      "name": "Khandala",
+      "distance": "4-5 km",
+      "why_combine": "Twin hill station — quieter, Duke's Nose trek, Amrutanjan Point, Kune Falls. Visit together as part of the same trip.",
+      "how_to_get_there": "Train (3-8 min, Rs 45-260), auto (Rs 100-150), ST bus, or own vehicle (10-15 min)"
+    },
+    {
+      "name": "Pawna Lake",
+      "distance": "17-27 km",
+      "why_combine": "Maharashtra's most popular lakeside camping. Surreal sunsets with fort silhouettes. Combine with Tikona/Tung Fort treks.",
+      "how_to_get_there": "Private cab/jeep (Rs 800-1,500 one-way). No public transport. 45-60 min drive via Kamshet/old highway."
+    },
+    {
+      "name": "Lohagad Fort",
+      "distance": "15 km",
+      "why_combine": "Beginner-friendly fort trek (3,389 ft). Famous Vinchu Kata ridge and reverse waterfall in monsoon. 3-4 hours round trip.",
+      "how_to_get_there": "Drive to Malavli (15 km) then walk 6 km OR drive to Lohagadwadi base village. Local cab Rs 400-600."
+    },
+    {
+      "name": "Visapur Fort",
+      "distance": "15-18 km",
+      "why_combine": "Less-crowded twin of Lohagad. Spectacular 'waterfall stairs' in monsoon. More adventurous. Can combine with Lohagad.",
+      "how_to_get_there": "Same base as Lohagad — Malavli/Lohagadwadi area. Trek from Bhaje village route (2 hours)."
+    },
+    {
+      "name": "Rajmachi Fort",
+      "distance": "15-17 km (terrible road, takes 1-2 hours)",
+      "why_combine": "Twin forts, famous firefly season (May-June), overnight camping at Udhewadi village. Complete experiential destination.",
+      "how_to_get_there": "SUV/jeep on terrible off-road (1 hour bone-rattling) OR 15 km walk from Lonavala OR trek from Karjat side (10 km)."
+    },
+    {
+      "name": "Della Adventure Park",
+      "distance": "3 km",
+      "why_combine": "Adventure activities — flying fox, bungee trampoline, horse riding, swoop swing. Good for groups and families with kids.",
+      "how_to_get_there": "Auto or cab from Lonavala town. Entry Rs 1,750-5,999 depending on package."
+    },
+    {
+      "name": "Imagicaa Theme Park",
+      "distance": "20-25 km",
+      "why_combine": "Large theme park with rides, water park, and snow park. Good for families with children.",
+      "how_to_get_there": "Cab from Lonavala. Entry Rs 999-3,000 depending on package."
+    },
+    {
+      "name": "Aamby Valley",
+      "distance": "24 km",
+      "why_combine": "Ultra-luxury township, scenic drive. The drive offers better views than the destination. Only worth it if staying there.",
+      "how_to_get_there": "Own vehicle or cab via Aamby Valley Road. Entry restricted to guests/residents."
+    }
+  ],
+  "safety": {
+    "overall_safety_rating": "Safe with significant monsoon caveats. Crime rate is low. The real dangers are natural hazards during monsoon — drowning at waterfalls and landslides on ghat roads, NOT crime.",
+    "safe_for_solo_women": "Yes with standard precautions — low crime rate, police patrol tourist areas, locals are friendly. Stay in established accommodations, avoid isolated waterfall areas alone, avoid unlit areas at night. Being close to Mumbai/Pune makes it ideal for quick solo trips.",
+    "areas_to_avoid_at_night": [
+      "Bhushi Dam reservoir area (drowning risk, isolated)",
+      "Waterfall areas in forested regions (remote, no lighting, slippery)",
+      "Unlit trekking trails (Lohagad, Visapur paths)",
+      "Isolated viewpoints after 6 PM (Tiger Point, Lion Point technically closed 6 PM-6 AM under prohibitory orders)",
+      "Deserted stretches near Lonavala Lake"
+    ],
+    "natural_hazards": [
+      "Monsoon drowning at Bhushi Dam and waterfalls — 29 deaths since 2017. Flash floods occur without warning. Prohibitory orders enforced July 2-31 (based on 2024).",
+      "Monsoon landslides on Khandala Ghat — 191 serious crashes in 2024. Roads can be temporarily closed after heavy rain.",
+      "Brake fade on Mumbai-Pune Expressway ghat section — 88% of brake fade accidents occur on Mumbai-bound descent near Amrutanjan Bridge.",
+      "Trekking accidents — slippery stone steps at forts (moss/algae in monsoon), falling into gorge incidents documented at Lohagad.",
+      "Leech bites on monsoon forest treks — carry salt to remove.",
+      "Aggressive monkeys at Lohagad Fort — do not open bags or eat in front of them."
+    ],
+    "health_precautions": [
+      "Drink only bottled/mineral water — avoid tap water",
+      "Stick to freshly prepared food from hygienic places — standard street food precautions",
+      "No altitude sickness risk at 622m elevation",
+      "Carry basic first-aid kit — blisters and small injuries common on treks",
+      "Pharmacies available but not all 24/7 — carry personal prescription medications",
+      "Mosquito repellent essential for monsoon season"
+    ],
+    "emergency_contacts": {
+      "police": "100 / 112 (national emergency) or VERIFY: 02114-273100 (Lonavala Police Station)",
+      "ambulance": "108 (GVK EMRI critical care) / 102 (basic patient transport)",
+      "fire": "101",
+      "nearest_hospital": {
+        "name": "VERIFY: Yash Hospital (Old B.P. Road, Valvan Jakat Naka) or Sanjeevani Multispeciality Hospital (Pandit Nehru Road, near City Police Station — has ICU)",
+        "distance": "VERIFY: 1-3 km from main town area",
+        "phone": "VERIFY: Yash Hospital 02114-273306 / 275687; Sanjeevani +91-9762456463"
+      },
+      "tourist_helpline": "VERIFY: 1363 or 1800-11-1363 (national tourist helpline) / Maharashtra Tourism WhatsApp: 99933 08883"
+    }
+  },
+  "packing": {
+    "essentials_specific_to_destination": [
+      "Closed walking shoes with grip — ALL trails involve stone/gravel, slippery year-round, extreme in monsoon",
+      "Power bank — monsoon power cuts (30-60 min) are common",
+      "Reusable water bottle — fill only with bottled water",
+      "Waterproof phone bag/pouch — protect electronics at waterfalls",
+      "Personal first-aid kit — pharmacies not 24/7, blisters common on treks",
+      "Sunscreen + hat + sunglasses — strong sun year-round even at 622m",
+      "Mosquito repellent — essential for monsoon",
+      "Plastic bags — for wet clothes/shoes during monsoon"
+    ],
+    "clothing": {
+      "summer": [
+        "Light cotton/linen separates (breathable)",
+        "Comfortable shorts for daytime (not for treks)",
+        "Sun hat/cap",
+        "Sunglasses",
+        "Light evening wrap (evenings can still be cool)",
+        "Comfortable walking shoes with grip",
+        "Sandals for casual outings"
+      ],
+      "monsoon": [
+        "Quick-drying T-shirts/tunics (3-4)",
+        "Full-length pants/joggers (2-3) — protects from leeches",
+        "Packable rain shell/poncho",
+        "Light wool wrap/shawl for misty evenings",
+        "Waterproof ankle-length boots or sturdy shoes with grip",
+        "Flip-flops with grip for poolside",
+        "Oversized hoodie/pullover for chilly evenings",
+        "Avoid: silk, leather sandals, jeans (never dry), white/light fabrics"
+      ],
+      "winter": [
+        "Layered cotton separates (3-4 sets)",
+        "Full-length cotton or lightweight wool pants",
+        "Warmer jacket/sweater for early mornings",
+        "Cashmere/light wool wrap for evening chill",
+        "Closed walking shoes",
+        "Light scarf for morning treks",
+        "Avoid heavy winter gear — doesn't get that cold"
+      ]
+    },
+    "things_hard_to_find_locally": [
+      "Specific prescription medications — carry sufficient supply",
+      "Quality trekking gear — specialized shoes and technical rain shells limited",
+      "Leech socks for monsoon treks — specialized item",
+      "Portable water filter for trekkers",
+      "Specific skincare products — basic items available but not all brands"
+    ],
+    "things_easy_to_buy_locally": [
+      "Chikki — available everywhere (original Maganlal, National Chikki, dozens of shops)",
+      "Fudge — Cooper's Fudge and multiple outlets",
+      "Rain ponchos/umbrellas — roadside vendors during monsoon",
+      "Basic first-aid supplies — local pharmacies",
+      "Snacks/biscuits/water — general stores widely available",
+      "Masala chai — at every street corner"
+    ],
+    "medications_to_carry": [
+      "Band-aids, antiseptic cream, cotton gauze",
+      "Paracetamol, ibuprofen",
+      "ORS sachets, anti-diarrheal, antacid",
+      "Antihistamine (Cetirizine) for insect bites",
+      "Salt (small packet) for leech removal in monsoon",
+      "Mosquito repellent cream/spray",
+      "Personal prescription medications",
+      "Cold/cough tablets and throat lozenges",
+      "Sunscreen and lip balm"
+    ]
+  },
+  "attractions": [
+    {
+      "name": "Tiger's Leap / Tiger Point",
+      "type": "viewpoint",
+      "description": "A cliff-top viewpoint at Kurvande with a sheer 650-meter drop into the valley. Named for its resemblance to a tiger leaping into the valley. During monsoon, clouds drift below eye level creating a 'floating above the valley' experience.",
+      "why_worth_it": "One of the most dramatic viewpoints in the Western Ghats. The sight of clouds below you during monsoon is unforgettable. Strong winds keep it cool even in summer.",
+      "best_time_to_visit": "6-8 AM (least crowded, best light) or 4 PM-sunset. June-September for clouds/monsoon magic, October-February for clearest valley views.",
+      "avoid_when": "Weekends after 10 AM (extremely crowded), public holidays. Midday visits have harsh sunlight and haze.",
+      "entry_fee": "Free",
+      "time_needed": "1-2 hours",
+      "crowd_reality": "Weekdays before 8 AM: peaceful, 10-15 people. Weekends 10 AM-4 PM: extremely crowded, chaotic parking, long queues for photos. Monsoon weekends feel like a Mumbai local train station.",
+      "local_tip": "Walk past the main viewpoint area for less crowded spots with equally good views. The drive itself is scenic — stop at small waterfalls along the road during monsoon.",
+      "accessibility": "Easy — vehicle drops you right at the viewpoint, only 50m walk from parking",
+      "distance_from_town_center": "10-12 km (20-30 min drive via Amby Valley Road)",
+      "coordinates": {
+        "lat": 18.7236,
+        "lng": 73.3647
+      }
+    },
+    {
+      "name": "Lion's Point",
+      "type": "viewpoint",
+      "description": "A panoramic viewpoint midway between Bhushi Dam and Aamby Valley on the same road as Tiger Point. More panoramic than Tiger Point — you can see dozens of small waterfalls, Tungarli Lake, and lush green hills during monsoon.",
+      "why_worth_it": "Better panoramic views than Tiger Point with multiple waterfalls visible during monsoon. Strong winds create a thrilling atmosphere. The roasted corn and onion bhaji here are arguably the best in Lonavala.",
+      "best_time_to_visit": "Sunrise (6:30-7:30 AM) or sunset (5:30-6:30 PM). June-September for waterfalls, October-February for clearest views.",
+      "avoid_when": "Weekends after 11 AM (very crowded), evenings after dark (no lighting).",
+      "entry_fee": "Free",
+      "time_needed": "1 hour",
+      "crowd_reality": "Weekdays: moderate. Weekends: very crowded with groups taking edge-of-cliff photos. Slightly more crowded than Tiger Point on average.",
+      "local_tip": "Tiger Point and Lion's Point are only 1-2 km apart on the SAME road — hire one auto/cab for both, not separate ones. The bhutta and onion bhaji at the stalls here are the best in Lonavala.",
+      "accessibility": "Easy — vehicle accessible, short walk from parking",
+      "distance_from_town_center": "12 km (25-30 min drive)",
+      "coordinates": {
+        "lat": 18.7189,
+        "lng": 73.3703
+      }
+    },
+    {
+      "name": "Bhushi Dam",
+      "type": "waterfall",
+      "description": "A historic dam built in the late 1860s on the Indrayani River. During monsoon, when the dam overflows, water cascades over broad stone steps creating natural pools — turning into an open-air water park. NO safety railings on the stepped overflow area.",
+      "why_worth_it": "THE most iconic monsoon experience in Lonavala. The sight of water gushing over wide stepped terrain is unique. Historically significant as one of India's oldest railway infrastructure projects.",
+      "best_time_to_visit": "9 AM-12 PM weekdays before crowds build. July-September when dam overflows. Visit ONLY on weekdays.",
+      "avoid_when": "Weekends during peak monsoon (unbearably crowded), AFTER 6 PM (banned by law after drowning incidents), dry season October-May (minimal or no water flow).",
+      "entry_fee": "Free (parking may be chargeable)",
+      "time_needed": "2-3 hours",
+      "crowd_reality": "Weekday mornings: manageable, mostly families. Weekend monsoon: EXTREMELY crowded — shoulder-to-shoulder on steps, parking chaos 1-2 km away. College groups are loud and rowdy.",
+      "local_tip": "Visit the smaller waterfall area to the SIDE of the main dam steps instead of fighting the crowd at center. Look for old cast-iron pipes that once carried water to the railway — a piece of history most miss.",
+      "accessibility": "Easy — vehicle accessible, 5-10 min walk from parking to dam steps",
+      "distance_from_town_center": "6-8 km (15-20 min drive)",
+      "coordinates": {
+        "lat": 18.7197,
+        "lng": 73.3769
+      }
+    },
+    {
+      "name": "Karla Caves",
+      "type": "cave",
+      "description": "Ancient Buddhist rock-cut caves from the 2nd century BCE. The highlight is the 'Grand Chaityagriha' — the largest and best-preserved rock-cut prayer hall in India with 37 huge octagonal pillars. Features intricate sculptures, elephant carvings, and a large rock-cut stupa.",
+      "why_worth_it": "A jaw-dropping architectural marvel — the scale of the main prayer hall with its wooden-ribbed ceiling is breathtaking. One of the most important Buddhist sites in India. The Ekvira Temple at the base adds spiritual significance.",
+      "best_time_to_visit": "9-11 AM (least crowded, cooler) or 4-5 PM (golden light). October-March for pleasant weather.",
+      "avoid_when": "Monsoon months (stairs get slippery, landslide risk), midday April-June (exposed climb, 35°C+), festival days at Ekvira Temple (massive crowds).",
+      "entry_fee": "VERIFY: Rs 25 (Indian nationals), Rs 200-300 (foreign nationals). Children below 15 free.",
+      "time_needed": "1.5-2 hours",
+      "crowd_reality": "Weekday mornings: quiet, great for photography. Weekends: moderate crowd of families and school groups. Ekvira festivals: extremely crowded with pilgrims.",
+      "local_tip": "The light inside the main chaitya hall is magical at 9-10 AM when sunbeams stream through the large window. Don't miss the smaller viharas (monk quarters) to the sides — most tourists only see the central hall.",
+      "accessibility": "Moderate — requires climbing ~150+ uneven stone steps uphill. Not wheelchair accessible. Elderly need assistance.",
+      "distance_from_town_center": "10-11 km (20-25 min drive toward Malavli)",
+      "coordinates": {
+        "lat": 18.7833,
+        "lng": 73.4667
+      }
+    },
+    {
+      "name": "Bhaja Caves",
+      "type": "cave",
+      "description": "A group of 22 rock-cut monuments from the 3rd-2nd century BCE, making them OLDER than Karla Caves. Features prayer halls (chaityas), viharas (monasteries), 14 stupas with carved names of Buddhist teachers, and unique wooden roof architecture.",
+      "why_worth_it": "Less crowded and more intimate than Karla. The 14 stupas with names of Buddhist teachers are unique. Setting amidst greenery with a seasonal waterfall at the entrance is picturesque.",
+      "best_time_to_visit": "8-10 AM (coolest, best light). October-March for pleasant weather; monsoon for waterfall at base (but stairs slippery).",
+      "avoid_when": "Heavy monsoon days (slippery stairs, 200+ uneven steps), hot summer afternoons.",
+      "entry_fee": "VERIFY: Rs 15-25 (Indian nationals), Rs 200 (foreign nationals)",
+      "time_needed": "1-1.5 hours",
+      "crowd_reality": "Significantly less crowded than Karla. Weekdays: very peaceful, you might have sections to yourself. Weekends: small groups, trekkers.",
+      "local_tip": "The small waterfall at the BASE of the caves (monsoon only) is a great spot to cool off BEFORE climbing. The base village Bhaje has excellent misal pav and vada pav stalls — worth a breakfast stop.",
+      "accessibility": "Moderate — ~200 uneven stone steps, 15-20 min climb. Not wheelchair accessible.",
+      "distance_from_town_center": "12 km (25 min drive via Old Mumbai-Pune Highway toward Malavli)",
+      "coordinates": {
+        "lat": 18.7303,
+        "lng": 73.4833
+      }
+    },
+    {
+      "name": "Lohagad Fort",
+      "type": "fort",
+      "description": "A well-preserved hill fort at 3,389 feet, once a strategic stronghold of Chhatrapati Shivaji Maharaj. Known for its four massive gates and the famous 'Vinchu Kata' (Scorpion's Tail) — a narrow fortified ridge shaped like a scorpion's sting. The fort top is relatively flat.",
+      "why_worth_it": "One of the EASIEST and most beginner-friendly fort treks in Maharashtra. Stone steps are well-preserved. Spectacular views of Pawna Lake, Visapur Fort, and Sahyadri valleys. Rich in Maratha history.",
+      "best_time_to_visit": "Start trek by 8 AM. June-September for lush green and reverse waterfall, October-February for clearest views.",
+      "avoid_when": "Summer midday treks (very hot, little shade), monsoon weekends (extremely crowded, parking chaos 2+ km away).",
+      "entry_fee": "VERIFY: Rs 25 (Indian nationals), Rs 300 (foreign nationals) — collected by ASI at entrance",
+      "time_needed": "3-4 hours total (45 min climb + 1.5 hours exploring + 45 min descent)",
+      "crowd_reality": "Weekdays: pleasant, scattered groups. Monsoon weekends: massive crowds at stone steps, parking 2+ km away. Post-monsoon weekends: large trekking groups from Pune/Mumbai.",
+      "local_tip": "The REVERSE WATERFALL at Lohagad during heavy monsoon — strong winds push water UP the cliff face near Vinchu Kata. The village of Lohagadwadi at the base serves excellent pithla bhakri at very reasonable prices.",
+      "accessibility": "Easy to Moderate trek — ~350 stone steps from base village (45 min-1 hour). Families with children can do this with patience.",
+      "distance_from_town_center": "15-20 km via Malavli (45 min drive + trek); base village Lohagadwadi ~10 km",
+      "coordinates": {
+        "lat": 18.71,
+        "lng": 73.4736
+      }
+    },
+    {
+      "name": "Visapur Fort",
+      "type": "fort",
+      "description": "The larger, higher, and less-crowded twin of Lohagad Fort (3,556 feet). Built in 1713-1720 CE. Has a vast plateau top with ruins of water cisterns, fortifications, a Hanuman carving, and stone grinders. During monsoon, the trail transforms into stunning 'waterfall staircase.'",
+      "why_worth_it": "A MORE adventurous and less-crowded alternative to Lohagad (60-70% fewer people). The monsoon 'waterfall stairs' phenomenon is spectacular. The vast green plateau top feels like another world.",
+      "best_time_to_visit": "Start by 7:30-8 AM. July-September for waterfall stairs and lush greenery, October-February for clear views.",
+      "avoid_when": "Summer (hot and dry, no water sources on trail).",
+      "entry_fee": "Free",
+      "time_needed": "4-5 hours (2 hours ascent + 1-1.5 hours exploring + 1-1.5 hours descent)",
+      "crowd_reality": "60-70% less crowded than Lohagad. Weekdays: you might see only 4-5 other trekkers. The slightly tougher trek keeps casual tourists away.",
+      "local_tip": "The Patan village route is shorter and steeper but more scenic (experienced trekkers). The western edge of the fort offers the best sunset views over Pawna Lake — most trekkers don't walk far enough to find this spot.",
+      "accessibility": "Easy to Moderate — 2 hours from Bhaje village (8 km round trip) OR 1.5 hours from Patan village (6 km round trip). Fit beginners can attempt the Bhaje route.",
+      "distance_from_town_center": "12-15 km to Bhaje village (30-40 min drive), then trek",
+      "coordinates": {
+        "lat": 18.7181,
+        "lng": 73.485
+      }
+    },
+    {
+      "name": "Rajmachi Fort",
+      "type": "fort",
+      "description": "Twin fortified peaks — Shrivardhan (higher) and Manaranjan — built in the 17th century by Shivaji Maharaj. The base village Udhewadi has traditional homes, homestays, and a peaceful rural atmosphere. Famous for the FIREFLY spectacle in pre-monsoon (May-June).",
+      "why_worth_it": "A complete experiential destination — trek, village life, fireflies (May-June), waterfalls, and history. The firefly phenomenon is magical. The Kataldhar waterfall is visible from the fort during monsoon.",
+      "best_time_to_visit": "Firefly season: May-June (THE reason many visit). Monsoon: July-September. Winter: October-February for clearest summit views.",
+      "avoid_when": "Peak summer (April-May without fireflies — hot, dry). Monsoon weekends if you dislike crowds.",
+      "entry_fee": "VERIFY: Nominal fee Rs 10-25 per person at Udhewadi base village",
+      "time_needed": "Day trip: 6-8 hours. Recommended: Overnight stay at Udhewadi for fireflies, sunrise, both forts.",
+      "crowd_reality": "Firefly season weekends: very crowded, book homestays in advance. Monsoon weekdays: pleasant, moderate crowd. Overnight stays: quieter, more immersive.",
+      "local_tip": "Order pithla bhakri at Udhewadi homestay BEFORE you start climbing — tell them to start cooking when you begin descending. Homemade village food takes time and is worth the wait. Carry drinking water as rock-cut cisterns are not reliable.",
+      "accessibility": "Easy to Moderate trek from Udhewadi. The challenge is REACHING Udhewadi — 15 km of terrible off-road from Lonavala (1-2 hours bone-rattling drive). SUV/high ground clearance essential.",
+      "distance_from_town_center": "15 km to Udhewadi (takes 1-2 hours due to terrible road)",
+      "coordinates": {
+        "lat": 18.825,
+        "lng": 73.4
+      }
+    },
+    {
+      "name": "Duke's Nose / Nagphani",
+      "type": "trek",
+      "description": "A prominent cliff at 3,200 feet named after its resemblance to the Duke of Wellington's nose. Also called 'Nagphani' (cobra's hood) in Marathi. Flat rock summit with 360-degree views. Popular for trekking, rock climbing, rappelling, and the annual Slackline Festival.",
+      "why_worth_it": "Low-effort, high-reward trek — reach the top in just 1-1.5 hours and get views comparable to much harder treks. The Cobra Hood rock formation is unique. Adventure activities like rappelling available.",
+      "best_time_to_visit": "Early morning 7 AM for trek start. July-February (monsoon for greenery, winter for clearest views).",
+      "avoid_when": "Summer (March-June) — hot, dry, no shade on trail.",
+      "entry_fee": "Free",
+      "time_needed": "3-4 hours (trek + summit time)",
+      "crowd_reality": "Significantly less crowded than Tiger/Lion Point. Weekdays: very peaceful. Weekends: small trekking groups. Slackline Festival draws crowds seasonally.",
+      "local_tip": "The shorter, easier route from Kurvande village (2 km, 1.5 hours) is perfect for beginners. The longer route from Khandala railway station (6 km, 3-4 hours) is more scenic. A small Lord Shiva temple at the summit is often overlooked.",
+      "accessibility": "Easy to Moderate — Kurvande route: 2 km, 1-1.5 hours. Khandala Station route: 6 km, 3-4 hours. Suitable for beginners via Kurvande.",
+      "distance_from_town_center": "6 km to Kurvande village (15-20 min drive)",
+      "coordinates": {
+        "lat": 18.7347,
+        "lng": 73.3508
+      }
+    },
+    {
+      "name": "Pawna Lake",
+      "type": "lake",
+      "description": "A man-made reservoir from 1973 surrounded by Sahyadri hills and overlooked by forts (Lohagad, Tikona, Tung). Maharashtra's most popular lakeside camping destination with hundreds of campsites along its shores.",
+      "why_worth_it": "Surreal sunset views over water with forts silhouetted against the sky. The camping experience (tents, bonfire, BBQ, stargazing) is unmatched near Mumbai/Pune. Boating and kayaking add to the experience.",
+      "best_time_to_visit": "Arrive by 4 PM for sunset, stay overnight. November-February for best camping/bonfires. July-August for greenest hills and full lake.",
+      "avoid_when": "Summer (March-May) — water levels low, hot days. Heavy monsoon (September) — some campsites may close.",
+      "entry_fee": "VERIFY: Day visit free; Camping Rs 1,200-1,500/person (tent+food+activities); Boating Rs 100/person; Speed boat Rs 200/person; Jet Ski Rs 400/person",
+      "time_needed": "Half day to overnight (camping highly recommended)",
+      "crowd_reality": "Weekday camping: peaceful, few tents. Weekend camping: hundreds of tents, DJ music can be loud — 'party atmosphere.' Peak season (Dec-Jan weekends): book in advance.",
+      "local_tip": "Visit Wagheshwar Temple near the lake — it's mostly UNDERWATER throughout the year and only accessible in summer when water levels drop. The village of Kusagaon on the way has authentic local food.",
+      "accessibility": "Easy — vehicle accessible, drive right to lakeside camping spots. No public transport — private cab/jeep needed.",
+      "distance_from_town_center": "25 km (45-60 min drive via Kamshet/old highway)",
+      "coordinates": {
+        "lat": 18.655,
+        "lng": 73.49
+      }
+    },
+    {
+      "name": "Kune Falls",
+      "type": "waterfall",
+      "description": "A three-tiered waterfall cascading from approximately 200 meters, making it the 14th highest waterfall in India. Located on the old Mumbai-Pune Highway near Kune Church. The upper tier drops about 100 meters.",
+      "why_worth_it": "The most impressive waterfall in the region when in full flow during monsoon. The three-tier structure is unique and photogenic. Visible from the highway itself.",
+      "best_time_to_visit": "Morning for best water flow and lighting. June-September (monsoon — full flow).",
+      "avoid_when": "October-May (little to no water flow). Heavy monsoon days when police block access for safety.",
+      "entry_fee": "Free (some sources mention parking fee)",
+      "time_needed": "1-2 hours",
+      "crowd_reality": "Monsoon weekends: very crowded, roadside parking chaos. Monsoon weekdays: moderate. Non-monsoon: almost deserted.",
+      "local_tip": "The waterfall is visible from the old Mumbai-Pune Highway itself — the view FROM the highway during monsoon is actually the best and safest vantage point. No need to trek down.",
+      "accessibility": "Easy to Moderate — short trek of ~2 km from Kune Church. Path involves stream crossings and uneven terrain.",
+      "distance_from_town_center": "3.5 km from Lonavala station / 2 km from Khandala station",
+      "coordinates": {
+        "lat": 18.7483,
+        "lng": 73.38
+      }
+    },
+    {
+      "name": "Tungarli Lake / Dam",
+      "type": "lake",
+      "description": "A small lake and dam built during the British era (1930s) in the Rajmachi region. Helps irrigate the area. Offers serene views of surrounding hills, popular for quiet picnics, camping, and birdwatching.",
+      "why_worth_it": "THE most peaceful lake near Lonavala — significantly less crowded than Pawna or Lonavala Lake. The dam wall walk offers stunning mirror-reflection views on calm evenings. Free camping with no permissions required.",
+      "best_time_to_visit": "Early morning (sunrise) or evening (reflection photography). September-March for pleasant weather.",
+      "avoid_when": "Heavy monsoon (July-August) — approach road becomes difficult.",
+      "entry_fee": "Free",
+      "time_needed": "2-3 hours (or overnight camping)",
+      "crowd_reality": "One of the least crowded spots near Lonavala. Weekends: a few picnickers, trekkers starting Rajmachi trek. Weekdays: often completely empty.",
+      "local_tip": "Walk ACROSS the dam wall to the other side — most visitors stop at the first viewpoint. The far side has better views and fewer people. Vada pav and cutting chai at Tungarli village are simple but excellent.",
+      "accessibility": "Easy — short trek uphill from base. Auto from Lonavala station reaches base (10-15 min drive). 10-15 min walk to dam.",
+      "distance_from_town_center": "5 km (15-20 min drive)",
+      "coordinates": {
+        "lat": 18.735,
+        "lng": 73.39
+      }
+    },
+    {
+      "name": "Kataldhar Waterfall",
+      "type": "waterfall",
+      "description": "A massive 350-foot seasonal waterfall near Rajmachi Fort, hidden deep within dense forest. 'Katal' means rock wall, 'Dhar' means waterfall. Features a large eye-shaped cave at the base that can accommodate 100+ people, with views of Rajmachi Fort from inside.",
+      "why_worth_it": "One of the most spectacular hidden waterfalls in Maharashtra. The trek through pristine forest is an adventure. The eye-shaped cave at the base is unique. Rappelling from the 350-foot height is available.",
+      "best_time_to_visit": "July-September (peak monsoon — waterfall at full force). Start trek early morning (7 AM).",
+      "avoid_when": "October-June (dry, no waterfall). Heavy monsoon days (dangerous).",
+      "entry_fee": "Free",
+      "time_needed": "Full day (6-8 hours including trek)",
+      "crowd_reality": "Very few people attempt this trek — you might encounter only 2-3 other groups even on weekends. The challenging trek naturally filters out casual tourists.",
+      "local_tip": "Look for the THREE MANGO TREES on the Rajmachi trekking route — this is the unmarked turn-off to descend into Ulhas valley toward Kataldhar. Most trekkers walk right past it. Requires a local guide — easy to get lost.",
+      "accessibility": "Difficult — challenging trek through dense forest, slippery trails, stream crossings. Basic trekking experience essential. Not suitable for children or elderly.",
+      "distance_from_town_center": "Reachable via Rajmachi trek route (~15+ km)",
+      "coordinates": {
+        "lat": 18.83,
+        "lng": 73.395
+      }
+    },
+    {
+      "name": "Sunil's Celebrity Wax Museum",
+      "type": "museum",
+      "description": "India's most famous wax museum featuring nearly 100 lifelike wax statues of Indian and international celebrities. Located in Lonavala Square Mall near the railway station. The Shivaji Maharaj sculpture is the highlight.",
+      "why_worth_it": "An entertaining indoor activity during monsoon rains or hot afternoons. The wax sculptures are remarkably detailed. Great for photography and selfies. A 15-year+ Lonavala landmark.",
+      "best_time_to_visit": "Anytime during open hours. Less crowded in the morning. Useful during heavy rain.",
+      "avoid_when": "Manage expectations — this is NOT Madame Tussauds London. Many figures don't resemble the celebrities closely.",
+      "entry_fee": "VERIFY: Rs 200 (adults), children below 5 free. Combo packages (Wax Museum + Miniature World + 9D Cinema) ~Rs 650.",
+      "time_needed": "1-1.5 hours",
+      "crowd_reality": "Weekday mornings: moderate, comfortable. Weekends: crowded with families. School holidays: very crowded.",
+      "local_tip": "The Square Mall also has a Horror House, 9D Cinema, VR experiences, and fish spa — combo tickets offer better value. The museum guide shares interesting anecdotes most visitors rush through.",
+      "accessibility": "Very Easy — 500m from Lonavala railway station, walkable",
+      "distance_from_town_center": "0.5 km (walking distance)",
+      "coordinates": {
+        "lat": 18.7475,
+        "lng": 73.408
+      }
+    },
+    {
+      "name": "Khandala Reversing Station",
+      "type": "viewpoint",
+      "description": "A historic railway site from British colonial rule where 'banker' locomotives were attached to assist trains climbing steep Bor Ghat slopes. Now a scenic viewpoint offering stunning valley views. Famous as the filming location for the Bollywood song 'Aati Kya Khandala.'",
+      "why_worth_it": "Unique railway heritage combined with natural beauty. Spectacular views of Duke's Nose, Khopoli town, and the valley. Sunset views are famous. The Bollywood nostalgia factor is fun.",
+      "best_time_to_visit": "4-6 PM (sunset golden hour). June-September for waterfalls/greenery, October-February for clearest views.",
+      "avoid_when": "Summer afternoons (hot, less scenic).",
+      "entry_fee": "VERIFY: Rs 25 (Indian nationals), Rs 100 (foreign nationals)",
+      "time_needed": "1-1.5 hours",
+      "crowd_reality": "Weekdays: quiet, mostly photography enthusiasts. Weekends: moderate crowd. Generally less crowded than Tiger/Lion Point.",
+      "local_tip": "The night view is spectacular — you can see the ENTIRE Khopoli town lit up below. Combine with nearby Amrutanjan Point (short walk away) for the best sunset views in the region.",
+      "accessibility": "Easy — 4 km auto ride from Khandala station",
+      "distance_from_town_center": "8-10 km via Khandala (20-25 min drive)",
+      "coordinates": {
+        "lat": 18.76,
+        "lng": 73.37
+      }
+    },
+    {
+      "name": "Korigad Fort",
+      "type": "fort",
+      "description": "A hill fort at ~3,050 feet near Aamby Valley. Perfect beginner trek with well-defined trail. Summit has two small lakes, panoramic views of Aamby Valley, and extensive well-preserved fort walls you can walk along.",
+      "why_worth_it": "One of the easiest beginner fort treks near Lonavala. You can walk along the remarkably intact 2 km circumference fortification wall. Two summit lakes are unique. Views of Aamby Valley are spectacular.",
+      "best_time_to_visit": "June-February. Visit weekdays to avoid monsoon weekend crowds.",
+      "avoid_when": "Monsoon weekends (gets crowded).",
+      "entry_fee": "Free (parking fee Rs 50 collected unofficially)",
+      "time_needed": "3-4 hours (trek + exploration)",
+      "crowd_reality": "Gets crowded on monsoon weekends. Weekdays: peaceful.",
+      "local_tip": "The parking fee at the base feels like a local 'loot' — there's no formal infrastructure, just a local collecting money. Visit weekdays for solitude.",
+      "accessibility": "Easy trek — 500-600 steps, 45 min climb. Suitable for beginners and families.",
+      "distance_from_town_center": "20 km toward Aamby Valley",
+      "coordinates": {
+        "lat": null,
+        "lng": null
+      }
+    },
+    {
+      "name": "Tikona Fort",
+      "type": "fort",
+      "description": "A pyramid-shaped fort at ~3,500 feet near Pawna Lake. Named 'Tikona' (triangle) for its distinctive pyramidal shape. Views of Pawna Lake, Lohagad, Visapur, and Tung Fort. Has Satavahana-era caves and Trimbakeshwar temple at summit.",
+      "why_worth_it": "The unique pyramid shape is distinctive. Excellent views of Pawna Lake and surrounding forts. Can be combined with Pawna Lake camping for a weekend trip. Family-friendly 45-minute climb.",
+      "best_time_to_visit": "June-February. Combine with Pawna Lake visit.",
+      "avoid_when": "VERIFY: In August 2024, a landslide partially collapsed the cliff — check current access before visiting.",
+      "entry_fee": "Free",
+      "time_needed": "4-5 hours",
+      "crowd_reality": "Less famous than Lohagad/Visapur so fewer crowds. Weekdays: very peaceful.",
+      "local_tip": "Best combined with an overnight Pawna Lake camping trip. Start early for best light. The steep winding paths provide a good workout.",
+      "accessibility": "Moderate trek — steep paths but manageable. Base village is Peth (Tikona Peth).",
+      "distance_from_town_center": "25 km (near Pawna Lake area)",
+      "coordinates": {
+        "lat": null,
+        "lng": null
+      }
+    }
+  ],
+  "local_knowledge": {
+    "things_nobody_tells_you": [
+      "The 'Original Maganlal Chikki' has blue-and-white signage opposite the station — hundreds of red-and-yellow 'Maganlal' shops are copycats selling factory-made product after a family split sold naming rights widely.",
+      "Tiger Point and Lion's Point are literally 1-2 km apart on the SAME road — most tourists hire separate autos for each. Plan them together and save money.",
+      "Late September to early October is the 'sweet spot' — you get 80% of the monsoon greenery with only 20% of the crowd. Monsoon weekends are chaos with 3-4 hour expressway traffic jams.",
+      "Bhushi Dam has NO safety railings on the stepped overflow area where everyone sits. 29 drowning deaths since 2017. Flash floods can occur even when it's not raining at the dam (rain upstream).",
+      "Most wax museum figures look nothing like the celebrities — TripAdvisor reviews consistently say 'extremely bad replicas, done in 10 minutes.' Entry is Rs 200 but skip unless you have 30 minutes to kill.",
+      "Auto-rickshaws don't use meters in Lonavala — everything is negotiated. Fares 'start' at Rs 100. Walk 100m away from the station for better rates.",
+      "The 'Chikki Festival' is mostly a marketing gimmick — not a traditional cultural festival. It's designed to sell more chikki.",
+      "Parking at Korigad Fort base costs Rs 50 (as of 2025) — feels like a 'loot' since there's no formal parking infrastructure, just a local collecting money.",
+      "Weekday hotel rates are Rs 800-1,800/night cheaper than weekends. Booking 40-50 days ahead locks better room categories at lower rates.",
+      "The drive TO Aamby Valley offers better views than the destination itself — it's largely deserted and feels artificial. Don't pay entry unless specifically staying there."
+    ],
+    "tourist_traps": [
+      {
+        "trap": "Fake 'Original Maganlal' Chikki Shops",
+        "reality": "Every second shop claims to be 'Original Maganlal' with red-and-yellow signage. Tourists buy overpriced, mass-produced chikki thinking it's authentic. After a family split, one brother sold naming rights widely.",
+        "how_to_avoid": "Go to the actual original shop near Lonavala Railway Station with BLUE-AND-WHITE signage (Jaychand Chowk). Also try National Chikki (established 1920s) or Cooper's Fudge. Ask locals: 'Asli Maganlal kahan hai?'"
+      },
+      {
+        "trap": "Bhushi Dam Weekend Chaos",
+        "reality": "Instagram shows pristine stepped waterfalls with a few people. Reality is 10,000+ people packed on algae-covered steps during monsoon weekends. Dangerously overcrowded with no safety railings. Multiple accidents annually.",
+        "how_to_avoid": "Visit ONLY on weekdays before 9 AM. Avoid entirely during peak monsoon (July-August) weekends. Consider Tungarli Lake or the Forgotten Stream behind Kurvande village as peaceful alternatives."
+      },
+      {
+        "trap": "Celebrity Wax Museum",
+        "reality": "Marketed as 'India's answer to Madame Tussauds' but consistently rated extremely poor quality. 'Extremely bad replicas, very small place, done in 10 minutes.' Dated selection of figures.",
+        "how_to_avoid": "Skip entirely unless you have young children and 30 minutes to kill. Entry Rs 200. Your time is better spent at any viewpoint or cave."
+      },
+      {
+        "trap": "Tiger/Lion Point Midday Visit",
+        "reality": "Arriving at 11 AM-2 PM brings peak crowds, haze, harsh sunlight, and parking chaos. The 'floating above clouds' experience only happens early morning or late afternoon during monsoon.",
+        "how_to_avoid": "Visit before 8 AM or after 4 PM. The clouds-below-eye-level magic only happens at sunrise/sunset during monsoon."
+      },
+      {
+        "trap": "Mapro Garden on the Highway",
+        "reality": "Commercialized, crowded, overpriced food court. Strawberry cream and pizzas are mediocre. Clothing shop is pricey.",
+        "how_to_avoid": "Buy Mapro products from their original store for genuine quality. Don't waste a meal here — eat at local places instead."
+      },
+      {
+        "trap": "Aamby Valley City",
+        "reality": "Expected European-style planned city with pristine lakes. Reality: overpriced, largely deserted, feeling artificial. The drive there offers better views than the destination.",
+        "how_to_avoid": "Just do the scenic drive and stop at viewpoints along the way. Don't pay entry unless specifically staying at a resort there."
+      }
+    ],
+    "hidden_gems": [
+      {
+        "name": "Visapur Fort Trek (The 'Better Lohagad')",
+        "why_hidden": "Overshadowed by famous twin Lohagad Fort. Most tourists don't know it exists despite being on the same hill range.",
+        "how_to_get_there": "Base village Bhaje/Patan (2 km walk from Malavli station on Pune-Lonavala local line). Multiple routes: Gaimukh Khind (45 min, steep), Bhaje caves route (2 hours), Patan village route (2.5 hours through jungle)."
+      },
+      {
+        "name": "Kataldhar Waterfall (The Secret Giant)",
+        "why_hidden": "Not on Google Maps properly. Requires challenging trek through dense forest from Rajmachi trail. Only dedicated trekkers make it.",
+        "how_to_get_there": "Find 3 mango trees on Rajmachi trekking route, then descend into Ulhas Valley through dense forest. Requires local guide — easy to get lost. 350-foot plunge waterfall with eye-shaped cave at base."
+      },
+      {
+        "name": "Tungi Village Waterfall ('Tekdi Cha Jharna')",
+        "why_hidden": "Not on Google Maps. Locals call it 'tekdi cha jharna' (the hill's fall). Everyone drives past Tungi on the way to Pawna Lake.",
+        "how_to_get_there": "Park near Tungi primary school, walk a muddy path that seems to go nowhere. Follow the sound of water. Wild, no railings, no crowds — just raw nature."
+      },
+      {
+        "name": "The Forgotten Stream Behind Kurvande Village",
+        "why_hidden": "Kurvande village itself is ignored by tourists. This trail is known only to locals and avid trekkers.",
+        "how_to_get_there": "Reach Kurvande village (near Tiger Point), ask locals for the trail behind the village. Series of tiny falls and natural water slides made by smooth rocks. Perfect gentle water experience for families."
+      },
+      {
+        "name": "Tungarli Lake and Dam",
+        "why_hidden": "Overshadowed by Lonavala Lake and Bhushi Dam. Most tourists don't venture here.",
+        "how_to_get_there": "Short drive from Lonavala town, accessible by auto (10-15 min to base, then 10-15 min walk). Walk across the dam wall for mirror-reflection photography at sunset."
+      },
+      {
+        "name": "Bedse (Bedsa) Caves",
+        "why_hidden": "Everyone goes to Karla/Bhaja. Bedse is the quiet cousin — 1st century BCE Buddhist caves, often completely deserted.",
+        "how_to_get_there": "Maval taluka, near Kamshet. Short trek from nearest village road. Visit at sunrise for mystical light streaming into the prayer hall."
+      },
+      {
+        "name": "Rajmachi Firefly Camping (Pre-Monsoon Magic)",
+        "why_hidden": "Seasonal phenomenon (May-June) that most tourists don't know about. Millions of fireflies light up forests around Udhewadi village at night.",
+        "how_to_get_there": "16 km off-road from Lonavala (need SUV/high ground clearance) OR trek from Lonavala/Karjat. Self-drive packages from Rs 1,399/person. Firefly sightings NOT guaranteed."
+      }
+    ],
+    "local_scams": [
+      {
+        "scam": "Auto-Rickshaw Overcharging",
+        "how_it_works": "No meters used. Drivers quote 2-3x normal rate to tourists, especially at railway station. Fares 'start' at Rs 100 and escalate.",
+        "how_to_avoid": "Don't take autos directly outside station — walk out of premises first. Negotiate fixed rate for entire day (Rs 800-1,200). Ask hotel for fare benchmarks before negotiating. Keep driver's contact and fix him for whole trip."
+      },
+      {
+        "scam": "Fake 'Original Maganlal' Chikki Shops",
+        "how_it_works": "Hundreds of shops use Maganlal name with red-and-yellow signage. Sell mediocre chikki at premium prices claiming heritage.",
+        "how_to_avoid": "Look for BLUE-AND-WHITE signage near railway station (Jaychand Chowk). Buy from National Chikki or Cooper's Fudge. Ask locals where THEY buy from."
+      },
+      {
+        "scam": "Parking 'Fees' at Unofficial Spots",
+        "how_it_works": "Local youth collect Rs 20-50 for 'parking' on public roads near viewpoints. No official infrastructure, no receipts.",
+        "how_to_avoid": "Park at designated spots where possible. For Korigad, park away from the 'official' parking spot. Don't argue — the amount is small but know it's unofficial."
+      },
+      {
+        "scam": "Fake Tour Guides at Railway Station",
+        "how_it_works": "Auto drivers offer to be your 'tour guide,' taking you to spots where they get commissions (specific restaurants, shops). May skip spots you want.",
+        "how_to_avoid": "Pre-plan your itinerary. Use hotel-recommended drivers. Don't fall for 'I'll show you all points' offers from station autos."
+      },
+      {
+        "scam": "Restaurant Overcharging",
+        "how_it_works": "Tourist-area restaurants inflate prices 30-50% for basic dishes. Some add 'service charges' without disclosure.",
+        "how_to_avoid": "Check prices before ordering. Eat where locals eat (Hotel Ramakrishna, Ruchiprayog, Maval Maratha). Small family-run places > commercial restaurants."
+      },
+      {
+        "scam": "'Lucky Coupon/Scratch Card' Scams",
+        "how_it_works": "You're told you've won a prize but need to pay 'processing fees' or buy overpriced products to claim it.",
+        "how_to_avoid": "Never participate in scratch card/lucky draw schemes at tourist spots. They're universally rigged."
+      }
+    ],
+    "photography_spots": [
+      {
+        "spot": "Tiger's Point / Tiger's Leap",
+        "best_time": "6-8 AM (least crowd, soft light) or sunset. Deep coral, mustard, fuchsia clothing pops against green monsoon backdrop.",
+        "tip": "Walk past the main viewpoint for equally good views with fewer people. Black disappears in mist."
+      },
+      {
+        "spot": "Visapur Fort Summit",
+        "best_time": "Monsoon for dramatic clouds/waterfalls, winter for clear panoramas.",
+        "tip": "Anti-clockwise route around fort has better views and fewer people. Northeastern buruj with lake reflection is the money shot."
+      },
+      {
+        "spot": "Tungarli Lake (The Mirror Shot)",
+        "best_time": "Calm evenings at sunset.",
+        "tip": "Walk along dam wall. Far end grassy areas have best reflections. Flowing silhouette in warm colors against gold-on-water reads beautifully."
+      },
+      {
+        "spot": "Duke's Nose (Nagphani)",
+        "best_time": "Sunrise or sunset for golden hour.",
+        "tip": "Perfect for wide-angle shots. The ridge trail offers multiple dramatic vantage points. Cobra-hood shape most visible from Amrutanjan Point."
+      },
+      {
+        "spot": "Pawna Lake",
+        "best_time": "Sunset for golden hues, night for stargazing/camping-under-stars shots.",
+        "tip": "Flowy dresses, candid moments. Forts in background add depth."
+      },
+      {
+        "spot": "Kune Falls",
+        "best_time": "Monsoon mornings for best flow and lighting.",
+        "tip": "Flowy outfits for dramatic effect. Wide angle lens essential. View from highway is safest and often best."
+      },
+      {
+        "spot": "The Reverse Waterfall (Amby Valley Road / Duke's Nose area)",
+        "best_time": "Heavy monsoon only (July-August).",
+        "tip": "Strong upward winds push waterfall water UP — unique 'water defying gravity' shots. Finding the exact spot requires local knowledge or guide."
+      }
+    ],
+    "cultural_etiquette": [
+      "Remove footwear at temples and some caves — carry easily removable shoes when visiting Karla/Bhaja/Bedse caves or Hindu temples",
+      "Greet with folded hands (Namaste) — especially when greeting elders at villages or temple staff. Marathi people genuinely appreciate the effort",
+      "Don't litter at waterfalls or trekking trails — the hills are sacred in local culture. Carry your trash back down. Locals deeply resent tourists who litter",
+      "Ask before photographing locals — especially in villages like Udhewadi (Rajmachi), Tungi, or Kurvande",
+      "Don't play loud music in forest/mountain areas — many areas (especially Rajmachi, firefly spots) have local rules against loud music. It disturbs wildlife and residents",
+      "Respect monsoon safety advisories — if locals tell you an area is closed or dangerous during heavy rain, believe them. Landslides and flash floods are real risks",
+      "Dress modestly at religious sites — covered shoulders and knees appreciated (not strictly enforced but respectful)",
+      "Accept tea offers from locals — if a villager offers tea in Kurvande or Udhewadi, accept it. It's genuine warmth, not a scam",
+      "Don't haggle excessively with small vendors — the Rs 10-20 difference matters more to them than to you",
+      "Be patient with service — hill station pace is slow. Restaurants prepare limited quantities and close when food runs out. This is normal, not poor service."
+    ],
+    "dress_code": "Monsoon: Quick-drying long-sleeved tunics/kurtas, full-length pants, packable rain shell, sturdy closed waterproof shoes. Saturated jewel tones (coral, mustard, fuchsia) pop against green. Avoid silk, leather sandals, jeans (never dry), white/light fabrics. Winter: Layered cottons, light wool wrap, light jacket for mornings. Earth tones (rust, olive, terracotta). Summer: Light cotton/linen, breathable clothing, sun hat. Universal: NO beachwear (this is hills, not coast), NO heels (all paths involve stone/gravel), closed shoes mandatory for ALL treks, modest clothing for temples/caves.",
+    "language": {
+      "primary_language": "Marathi (primary local language). Hindi widely understood. English works in hotels, restaurants, and with most auto drivers.",
+      "useful_phrases": [
+        {
+          "phrase": "Namaskar",
+          "meaning": "Hello (formal)",
+          "pronunciation": "nuh-mus-kur"
+        },
+        {
+          "phrase": "Kasa kai?",
+          "meaning": "Casual greeting / How are you?",
+          "pronunciation": "kuh-suh kye"
+        },
+        {
+          "phrase": "Dhanyawad",
+          "meaning": "Thank you",
+          "pronunciation": "dhun-yuh-vaad"
+        },
+        {
+          "phrase": "Kitay?",
+          "meaning": "How much? (most useful for shopping and auto fares)",
+          "pronunciation": "ki-tay"
+        },
+        {
+          "phrase": "Khup chaadaay",
+          "meaning": "Too expensive",
+          "pronunciation": "khoop chaw-dye"
+        },
+        {
+          "phrase": "...kuthe ahe?",
+          "meaning": "Where is...?",
+          "pronunciation": "...koo-thay ah-hay"
+        },
+        {
+          "phrase": "Paani",
+          "meaning": "Water",
+          "pronunciation": "paa-nee"
+        },
+        {
+          "phrase": "Ho / Nahi",
+          "meaning": "Yes / No",
+          "pronunciation": "hoe / nuh-hee"
+        }
+      ]
+    }
+  },
+  "data_quality": {
+    "research_sources_used": [
+      "IRCTC official train schedules (Deccan Queen, Indrayani, Pragati Express timings)",
+      "MSRTC Maharashtra bus service information",
+      "Maharashtra Tourism Official Website (maharashtratourism.gov.in)",
+      "RedBus, zingbus private operator data",
+      "Conde Nast Traveller India (Maganlal Chikki history, original shop location)",
+      "Times of India (Bhushi Dam drowning incidents, prohibitory orders)",
+      "Hindustan Times (29 drowning deaths at Bhushi Dam since 2017)",
+      "Indian Express (June 2024 and June 2025 drowning incidents)",
+      "IndiaHikes trekking guides (Lohagad, Visapur, Rajmachi trek details)",
+      "MakeMyTrip, TripAdvisor user reviews (hotel pricing, restaurant quality)",
+      "TheFreeBird trek blog (Korigad, Visapur, hidden gems)",
+      "StayMist, StayVista blogs (hidden waterfalls, local tips)",
+      "Treebo travel blog (scam warnings, transport tips)",
+      "Lakshmi Sharath travel blog (chikki shop authenticity)",
+      "Lakshmi Sharath blog (Lonavala travel guide)",
+      "pawnacamp.com (Pawna Lake camping pricing and details)",
+      "ACOHI (Lonavala Carnival information)",
+      "Global Highways report (191 crashes on Khandala Ghat 2024)",
+      "PMRDA official website (emergency contacts)",
+      "Yash Hospital, Sanjeevani Hospital contact information",
+      "Multiple Quora threads and Reddit discussions (r/mumbai, r/pune, r/india, r/indiantravel)",
+      "ixigo, Yatra, Rome2Rio transport data",
+      "SOTC blog, Thrillophilia, Adventure Pulse trekking guides",
+      "Google Maps reviews (sorted by recent)"
+    ],
+    "confidence_level": "high",
+    "last_known_accurate_as_of": "June-July 2025",
+    "fields_needing_verification": [
+      "how_to_reach.from_major_cities.cab costs — fluctuate with fuel prices and season",
+      "nearest_airport.cab_cost_from_airport — varies by operator and vehicle type",
+      "local_transport.cab_rates.all rates — surge during peak season and long weekends",
+      "money.budget_per_day.all ranges — vary significantly by travel style and season",
+      "accommodation.areas_to_stay.all price ranges — highly seasonal, verify on booking platforms",
+      "accommodation.budget_options price range — varies by day of week and season",
+      "accommodation.mid_range_options price range — varies by day of week and season",
+      "accommodation.premium_options price range — varies significantly",
+      "attractions.Karla Caves entry fee — varies across sources from Rs 5 to Rs 30",
+      "attractions.Bhaja Caves entry fee — varies across sources",
+      "attractions.Lohagad Fort entry fee — reported as Rs 25 but may have changed",
+      "attractions.Rajmachi Fort entry fee — nominal fee reported but exact amount varies",
+      "attractions.Pawna Lake camping and activity prices — vary by operator",
+      "attractions.Sunil's Celebrity Wax Museum entry fee — combo packages vary",
+      "attractions.Khandala Reversing Station entry fee — may have changed",
+      "safety.emergency_contacts.police — verify current local number",
+      "safety.emergency_contacts.nearest_hospital — verify current hospital details and phone numbers",
+      "safety.emergency_contacts.tourist_helpline — verify current helpline numbers",
+      "attractions.Tikona Fort — landslide damage in August 2024, verify current access"
+    ],
+    "notes_for_reviewer": [
+      "CRITICAL SAFETY INFO: Bhushi Dam drowning data (29 deaths since 2017) and prohibitory orders (July 2-31) must be prominently displayed to app users during monsoon. This is life-critical information.",
+      "Uber/Ola ban in Lonavala since 2017 is a major transport reality that most travellers are unaware of. Must be highlighted prominently in the app.",
+      "Entry fee discrepancies: Multiple sources report different amounts for Karla Caves (Rs 5-30), Bhaja Caves (Rs 15-25), and Lohagad Fort (Rs 25). These should be verified on-ground or displayed as approximate ranges.",
+      "Chikki shop authenticity: The blue-vs-red Maganlal signage distinction is widely reported but the exact family dispute details are based on traveller accounts, not official documentation.",
+      "Hotel price ranges are highly seasonal — monsoon weekend rates can be 2-3x off-season rates. The ranges provided cover this variation but users should be advised to check current rates.",
+      "The 191 crashes on Khandala Ghat figure is from Global Highways report citing official 2024 data. This road safety information should be shared with users planning to drive.",
+      "Tikona Fort had landslide damage in August 2024 — access status needs verification before recommending.",
+      "Rajmachi firefly season (May-June) is a major draw but sightings are NOT guaranteed — this should be clearly communicated.",
+      "All coordinates provided are approximate and should be verified against official sources before use in navigation features."
+    ]
+  }
+}

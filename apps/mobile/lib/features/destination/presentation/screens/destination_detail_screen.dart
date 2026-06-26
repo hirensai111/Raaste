@@ -276,15 +276,23 @@ class _OverviewSection extends StatelessWidget {
   }
 }
 
-class _ItineraryDayCard extends StatelessWidget {
+class _ItineraryDayCard extends StatefulWidget {
   final ItineraryDay day;
 
   const _ItineraryDayCard({required this.day});
 
   @override
+  State<_ItineraryDayCard> createState() => _ItineraryDayCardState();
+}
+
+class _ItineraryDayCardState extends State<_ItineraryDayCard> {
+  bool _expanded = false;
+
+  @override
   Widget build(BuildContext context) {
+    final day = widget.day;
+
     return Container(
-      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: const Color(0xFFFFFCF7),
         borderRadius: BorderRadius.circular(22),
@@ -300,60 +308,100 @@ class _ItineraryDayCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                height: 64,
-                width: 64,
-                decoration: const BoxDecoration(
-                  color: RaasteShellColors.ink,
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  day.dayNumber.toString(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          Material(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(22),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(22),
+              onTap: () => setState(() => _expanded = !_expanded),
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      day.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                    Container(
+                      height: 58,
+                      width: 58,
+                      decoration: const BoxDecoration(
                         color: RaasteShellColors.ink,
-                        fontSize: 23,
-                        fontWeight: FontWeight.w800,
-                        height: 1.12,
+                        shape: BoxShape.circle,
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        day.dayNumber.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 26,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      day.subtitle.isEmpty
-                          ? 'Day ${day.dayNumber}'
-                          : day.subtitle,
-                      style: const TextStyle(
-                        color: RaasteShellColors.muted,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            day.title,
+                            maxLines: _expanded ? 3 : 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: RaasteShellColors.ink,
+                              fontSize: 21,
+                              fontWeight: FontWeight.w800,
+                              height: 1.12,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            day.subtitle.isEmpty
+                                ? 'Day ${day.dayNumber}'
+                                : day.subtitle,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: RaasteShellColors.muted,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    AnimatedRotation(
+                      turns: _expanded ? 0.5 : 0,
+                      duration: const Duration(milliseconds: 180),
+                      child: const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: RaasteShellColors.ink,
+                        size: 28,
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-          const SizedBox(height: 18),
-          ...day.stops.map((stop) => _ItineraryStopRow(stop: stop)),
+          AnimatedCrossFade(
+            firstChild: const SizedBox.shrink(),
+            secondChild: Padding(
+              padding: const EdgeInsets.fromLTRB(18, 0, 18, 2),
+              child: Column(
+                children:
+                    day.stops
+                        .map((stop) => _ItineraryStopRow(stop: stop))
+                        .toList(),
+              ),
+            ),
+            crossFadeState:
+                _expanded
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+            duration: const Duration(milliseconds: 180),
+            firstCurve: Curves.easeOut,
+            secondCurve: Curves.easeOut,
+          ),
         ],
       ),
     );

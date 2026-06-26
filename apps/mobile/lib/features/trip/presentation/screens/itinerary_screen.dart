@@ -6,15 +6,25 @@ import 'package:raaste/config/routes.dart';
 class ItineraryScreen extends StatelessWidget {
   final String tripId;
 
-  const ItineraryScreen({
-    super.key,
-    required this.tripId,
-  });
+  const ItineraryScreen({super.key, required this.tripId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Your itinerary')),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+              return;
+            }
+            context.go(AppRoutes.trips);
+          },
+          icon: const Icon(Icons.arrow_back_rounded),
+        ),
+        title: const Text('Your itinerary'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -42,7 +52,8 @@ class ItineraryScreen extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () => context.go('${AppRoutes.companion}?tripId=$tripId'),
+              onPressed:
+                  () => context.go('${AppRoutes.companion}?tripId=$tripId'),
               child: const Text('Open trip companion'),
             ),
           ],

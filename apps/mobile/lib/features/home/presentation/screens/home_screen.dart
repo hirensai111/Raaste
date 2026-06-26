@@ -7,6 +7,9 @@ import 'package:raaste/config/routes.dart';
 import 'package:raaste/core/di/injection.dart';
 import 'package:raaste/features/destination/data/services/destination_search_service.dart';
 import 'package:raaste/features/destination/domain/models/place_suggestion.dart';
+import 'package:raaste/features/home/domain/models/popular_attraction.dart';
+import 'package:raaste/features/trip/data/repositories/saved_trip_repository.dart';
+import 'package:raaste/features/trip/domain/models/saved_trip.dart';
 import 'package:raaste/shared/widgets/raaste_nav_shell.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -60,7 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverPadding(
-                  padding: EdgeInsets.fromLTRB(padding, 20, padding, bottomInset),
+                  padding: EdgeInsets.fromLTRB(
+                    padding,
+                    20,
+                    padding,
+                    bottomInset,
+                  ),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate.fixed([
                       _Header(firstName: _firstName),
@@ -88,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ─── Header ──────────────────────────────────────────────────────────────────
+// Header
 
 class _Header extends StatelessWidget {
   final String firstName;
@@ -177,7 +185,7 @@ class _Header extends StatelessWidget {
   }
 }
 
-// ─── Planner Hero ─────────────────────────────────────────────────────────────
+// Planner Hero
 
 class _PlannerHero extends StatefulWidget {
   const _PlannerHero();
@@ -264,11 +272,15 @@ class _PlannerHeroState extends State<_PlannerHero> {
       return;
     }
 
-    if (suggestion == null || suggestion.lat == null || suggestion.lon == null) {
+    if (suggestion == null ||
+        suggestion.lat == null ||
+        suggestion.lon == null) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text('Choose a destination from the search results')),
+          const SnackBar(
+            content: Text('Choose a destination from the search results'),
+          ),
         );
       return;
     }
@@ -293,9 +305,10 @@ class _PlannerHeroState extends State<_PlannerHero> {
         final w = constraints.maxWidth;
         final showSuggestions =
             _isSearching || _searchError != null || _suggestions.isNotEmpty;
-        final heroHeight = showSuggestions
-            ? (w * 1.02).clamp(350.0, 420.0).toDouble()
-            : (w * 0.62).clamp(224.0, 260.0).toDouble();
+        final heroHeight =
+            showSuggestions
+                ? (w * 1.02).clamp(350.0, 420.0).toDouble()
+                : (w * 0.62).clamp(224.0, 260.0).toDouble();
         final compact = w < 390;
         final innerPadding = compact ? 16.0 : 20.0;
 
@@ -529,10 +542,8 @@ class _SuggestionPanel extends StatelessWidget {
       shrinkWrap: true,
       padding: EdgeInsets.zero,
       itemCount: suggestions.length,
-      separatorBuilder: (_, __) => const Divider(
-        height: 1,
-        color: RaasteShellColors.outline,
-      ),
+      separatorBuilder:
+          (_, __) => const Divider(height: 1, color: RaasteShellColors.outline),
       itemBuilder: (context, index) {
         final suggestion = suggestions[index];
         return InkWell(
@@ -629,7 +640,7 @@ class _PrimaryButton extends StatelessWidget {
   }
 }
 
-// ─── Preference Chips ─────────────────────────────────────────────────────────
+// Preference Chips
 
 class _PreferenceChips extends StatelessWidget {
   const _PreferenceChips();
@@ -653,7 +664,7 @@ class _PreferenceChips extends StatelessWidget {
   }
 }
 
-// ─── Phase Cards ──────────────────────────────────────────────────────────────
+// Phase Cards
 
 class _PhaseCards extends StatelessWidget {
   const _PhaseCards();
@@ -663,10 +674,10 @@ class _PhaseCards extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final w = constraints.maxWidth;
-        final cardWidth = ((w - 24) / 2.5).clamp(140.0, 210.0);
+        final cardWidth = ((w - 24) / 2.2).clamp(164.0, 230.0);
 
         return SizedBox(
-          height: 220,
+          height: 226,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
@@ -674,7 +685,8 @@ class _PhaseCards extends StatelessWidget {
               children: [
                 _PhaseCard(
                   title: 'Before Trip',
-                  description: 'Briefing, itinerary, transport, packing',
+                  description:
+                      'Trip briefing, AI itinerary, transport choices, packing checklist',
                   icon: Icons.work_outline_rounded,
                   color: RaasteShellColors.sage,
                   width: cardWidth,
@@ -682,7 +694,8 @@ class _PhaseCards extends StatelessWidget {
                 const SizedBox(width: 12),
                 _PhaseCard(
                   title: 'During Trip',
-                  description: 'Ask anything, nearby food, local tips, offline guide',
+                  description:
+                      'Ask anything, nearby food, local tips, safety help, offline guide',
                   icon: Icons.pin_drop_outlined,
                   color: RaasteShellColors.clay,
                   width: cardWidth,
@@ -690,7 +703,8 @@ class _PhaseCards extends StatelessWidget {
                 const SizedBox(width: 12),
                 _PhaseCard(
                   title: 'After Trip',
-                  description: 'Quick review and feedback',
+                  description:
+                      'Quick reviews, trip notes, feedback, saved memories',
                   icon: Icons.camera_alt_outlined,
                   color: const Color(0xFF6B6885),
                   width: cardWidth,
@@ -721,81 +735,142 @@ class _PhaseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: RaasteShellColors.surface,
-      borderRadius: BorderRadius.circular(20),
-      child: InkWell(
+    return Container(
+      width: width,
+      height: 226,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: RaasteShellColors.surface,
+        border: Border.all(color: RaasteShellColors.outline),
         borderRadius: BorderRadius.circular(20),
-        onTap: () => showImplementingSoon(context),
-        child: Container(
-          width: width,
-          height: 220,
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            border: Border.all(color: RaasteShellColors.outline),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: const [
-              BoxShadow(
-                color: RaasteShellColors.shadow,
-                blurRadius: 14,
-                offset: Offset(0, 6),
-              ),
-            ],
+        boxShadow: const [
+          BoxShadow(
+            color: RaasteShellColors.shadow,
+            blurRadius: 14,
+            offset: Offset(0, 6),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: color,
-                child: Icon(icon, color: Colors.white, size: 22),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: RaasteShellColors.ink,
-                  fontFamily: 'serif',
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  height: 1.1,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: Text(
-                  description,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: RaasteShellColors.muted,
-                    fontSize: 12,
-                    height: 1.4,
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: CircleAvatar(
-                  radius: 13,
-                  backgroundColor: color,
-                  child: const Icon(Icons.chevron_right_rounded, color: Colors.white, size: 18),
-                ),
-              ),
-            ],
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: color,
+            child: Icon(icon, color: Colors.white, size: 24),
           ),
-        ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: RaasteShellColors.ink,
+              fontFamily: 'serif',
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              height: 1.08,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: Text(
+              description,
+              maxLines: 5,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: RaasteShellColors.muted,
+                fontSize: 14,
+                height: 1.34,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-// ─── Current Trip Card ────────────────────────────────────────────────────────
-
-class _CurrentTripCard extends StatelessWidget {
+class _CurrentTripCard extends StatefulWidget {
   const _CurrentTripCard();
+
+  @override
+  State<_CurrentTripCard> createState() => _CurrentTripCardState();
+}
+
+class _CurrentTripCardState extends State<_CurrentTripCard> {
+  late final Future<_CurrentTripLookup> _lookupFuture = _loadCurrentTrip();
+
+  Future<_CurrentTripLookup> _loadCurrentTrip() async {
+    try {
+      final trips = await getIt<SavedTripRepository>().listTrips();
+      final now = DateTime.now();
+
+      for (final trip in trips) {
+        final range = _parseTripDateRange(_tripDateText(trip), now);
+        if (range != null && range.contains(now)) {
+          return _CurrentTripLookup(trip: trip, range: range);
+        }
+      }
+
+      return const _CurrentTripLookup();
+    } on SavedTripException catch (error) {
+      return _CurrentTripLookup(error: error.message);
+    } catch (_) {
+      return const _CurrentTripLookup(
+        error: 'Could not check your current trips right now.',
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<_CurrentTripLookup>(
+      future: _lookupFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting &&
+            !snapshot.hasData) {
+          return const _CurrentTripLoadingCard();
+        }
+
+        final lookup = snapshot.data ?? const _CurrentTripLookup();
+        if (lookup.trip != null && lookup.range != null) {
+          return _CurrentTripTile(trip: lookup.trip!, range: lookup.range!);
+        }
+
+        if (lookup.error != null) {
+          return _NoCurrentTripCard(
+            title: 'Current trip unavailable',
+            subtitle: lookup.error!,
+            icon: Icons.cloud_off_rounded,
+          );
+        }
+
+        return const _NoCurrentTripCard(
+          title: 'No ongoing trips',
+          subtitle:
+              'Saved trips will appear here automatically when their travel dates are active.',
+          icon: Icons.luggage_rounded,
+        );
+      },
+    );
+  }
+}
+
+class _CurrentTripLookup {
+  final SavedTrip? trip;
+  final _TripDateRange? range;
+  final String? error;
+
+  const _CurrentTripLookup({this.trip, this.range, this.error});
+}
+
+class _CurrentTripTile extends StatelessWidget {
+  final SavedTrip trip;
+  final _TripDateRange range;
+
+  const _CurrentTripTile({required this.trip, required this.range});
 
   @override
   Widget build(BuildContext context) {
@@ -804,7 +879,7 @@ class _CurrentTripCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(22),
       child: InkWell(
         borderRadius: BorderRadius.circular(22),
-        onTap: () => showImplementingSoon(context),
+        onTap: () => _openTrip(context),
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -821,16 +896,15 @@ class _CurrentTripCard extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) {
               final compact = constraints.maxWidth < 340;
-              final imageWidget = ClipRRect(
-                borderRadius: BorderRadius.circular(14),
-                child: Image.asset(
-                  'assets/images/home_current_trip.png',
-                  fit: BoxFit.cover,
-                  height: compact ? 130 : 120,
-                  width: compact ? double.infinity : 106,
-                ),
+              final imageWidget = _CurrentTripImage(
+                trip: trip,
+                compact: compact,
               );
-              final content = _CurrentTripContent(compact: compact);
+              final content = _CurrentTripContent(
+                trip: trip,
+                range: range,
+                compact: compact,
+              );
 
               if (compact) {
                 return Column(
@@ -838,15 +912,14 @@ class _CurrentTripCard extends StatelessWidget {
                   children: [imageWidget, const SizedBox(height: 12), content],
                 );
               }
-              return IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    imageWidget,
-                    const SizedBox(width: 12),
-                    Expanded(child: content),
-                  ],
-                ),
+
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  imageWidget,
+                  const SizedBox(width: 12),
+                  Expanded(child: content),
+                ],
               );
             },
           ),
@@ -854,14 +927,85 @@ class _CurrentTripCard extends StatelessWidget {
       ),
     );
   }
+
+  void _openTrip(BuildContext context) {
+    final uri = Uri(
+      path: AppRoutes.destination,
+      queryParameters: {'tripId': trip.id},
+    );
+    context.go(uri.toString());
+  }
 }
 
-class _CurrentTripContent extends StatelessWidget {
+class _CurrentTripImage extends StatelessWidget {
+  final SavedTrip trip;
   final bool compact;
-  const _CurrentTripContent({required this.compact});
+
+  const _CurrentTripImage({required this.trip, required this.compact});
 
   @override
   Widget build(BuildContext context) {
+    final imagePath =
+        trip.imageUrl.trim().isNotEmpty
+            ? trip.imageUrl.trim()
+            : 'assets/images/home_current_trip.png';
+
+    Widget image;
+    if (trip.hasRemoteImage) {
+      image = Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+        height: compact ? 130 : 120,
+        width: compact ? double.infinity : 106,
+        errorBuilder: (_, __, ___) => _fallbackImage(),
+      );
+    } else {
+      image = Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        height: compact ? 130 : 120,
+        width: compact ? double.infinity : 106,
+        errorBuilder: (_, __, ___) => _fallbackImage(),
+      );
+    }
+
+    return ClipRRect(borderRadius: BorderRadius.circular(14), child: image);
+  }
+
+  Widget _fallbackImage() {
+    return Image.asset(
+      'assets/images/home_current_trip.png',
+      fit: BoxFit.cover,
+      height: compact ? 130 : 120,
+      width: compact ? double.infinity : 106,
+    );
+  }
+}
+
+class _CurrentTripContent extends StatelessWidget {
+  final SavedTrip trip;
+  final _TripDateRange range;
+  final bool compact;
+
+  const _CurrentTripContent({
+    required this.trip,
+    required this.range,
+    required this.compact,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final destination =
+        trip.destinationName.trim().isNotEmpty
+            ? trip.destinationName.trim()
+            : trip.guide.destinationName.trim();
+    final title =
+        destination.toLowerCase().contains('trip')
+            ? destination
+            : '$destination Trip';
+    final dayNumber = range.dayNumber(DateTime.now());
+    final totalDays = range.totalDays;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -883,15 +1027,19 @@ class _CurrentTripContent extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(Icons.more_horiz_rounded, color: RaasteShellColors.muted, size: 20),
+            Icon(
+              Icons.more_horiz_rounded,
+              color: RaasteShellColors.muted,
+              size: 20,
+            ),
           ],
         ),
         const SizedBox(height: 6),
-        const Text(
-          'Lonavala Weekend',
+        Text(
+          title,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(
+          style: const TextStyle(
             color: RaasteShellColors.ink,
             fontFamily: 'serif',
             fontSize: 22,
@@ -900,9 +1048,9 @@ class _CurrentTripContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        const Text(
-          'Day 1 of 3',
-          style: TextStyle(
+        Text(
+          'Day $dayNumber of $totalDays',
+          style: const TextStyle(
             color: RaasteShellColors.clay,
             fontSize: 13,
             fontWeight: FontWeight.w600,
@@ -911,10 +1059,10 @@ class _CurrentTripContent extends StatelessWidget {
         const SizedBox(height: 8),
         ClipRRect(
           borderRadius: BorderRadius.circular(99),
-          child: const LinearProgressIndicator(
+          child: LinearProgressIndicator(
             minHeight: 4,
-            value: 0.32,
-            backgroundColor: Color(0x14000000),
+            value: dayNumber / totalDays,
+            backgroundColor: const Color(0x14000000),
             color: RaasteShellColors.clay,
           ),
         ),
@@ -923,9 +1071,15 @@ class _CurrentTripContent extends StatelessWidget {
           spacing: 6,
           runSpacing: 6,
           children: [
-            _SmallAction(icon: Icons.calendar_month_outlined, label: "Today's Plan"),
+            _SmallAction(
+              icon: Icons.calendar_month_outlined,
+              label: "Today's Plan",
+            ),
             _SmallAction(icon: Icons.download_rounded, label: 'Offline Guide'),
-            _SmallAction(icon: Icons.chat_bubble_outline_rounded, label: 'Ask Guide'),
+            _SmallAction(
+              icon: Icons.chat_bubble_outline_rounded,
+              label: 'Ask Guide',
+            ),
           ],
         ),
       ],
@@ -933,7 +1087,350 @@ class _CurrentTripContent extends StatelessWidget {
   }
 }
 
-// ─── Popular Destinations ─────────────────────────────────────────────────────
+class _CurrentTripLoadingCard extends StatelessWidget {
+  const _CurrentTripLoadingCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: RaasteShellColors.surfaceAlt,
+        border: Border.all(color: RaasteShellColors.outline),
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: const [
+          BoxShadow(
+            color: RaasteShellColors.shadow,
+            blurRadius: 16,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
+      child: const Row(
+        children: [
+          SizedBox(
+            height: 28,
+            width: 28,
+            child: CircularProgressIndicator(
+              strokeWidth: 2.5,
+              color: RaasteShellColors.ink,
+            ),
+          ),
+          SizedBox(width: 14),
+          Expanded(
+            child: Text(
+              'Checking your saved trips...',
+              style: TextStyle(
+                color: RaasteShellColors.muted,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NoCurrentTripCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+
+  const _NoCurrentTripCard({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: RaasteShellColors.surfaceAlt,
+        border: Border.all(color: RaasteShellColors.outline),
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: const [
+          BoxShadow(
+            color: RaasteShellColors.shadow,
+            blurRadius: 16,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: 58,
+            width: 58,
+            decoration: BoxDecoration(
+              color: const Color(0xFFE5D8C7),
+              borderRadius: BorderRadius.circular(18),
+            ),
+            child: Icon(icon, color: RaasteShellColors.ink, size: 28),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: RaasteShellColors.ink,
+                    fontFamily: 'serif',
+                    fontSize: 23,
+                    fontWeight: FontWeight.w700,
+                    height: 1.05,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  subtitle,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: RaasteShellColors.muted,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    height: 1.28,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TripDateRange {
+  final DateTime start;
+  final DateTime end;
+
+  const _TripDateRange({required this.start, required this.end});
+
+  int get totalDays => end.difference(start).inDays + 1;
+
+  bool contains(DateTime value) {
+    final day = _dateOnly(value);
+    return !day.isBefore(start) && !day.isAfter(end);
+  }
+
+  int dayNumber(DateTime value) {
+    final rawDay = _dateOnly(value).difference(start).inDays + 1;
+    return rawDay.clamp(1, totalDays).toInt();
+  }
+}
+
+String _tripDateText(SavedTrip trip) {
+  final savedDates = trip.dates.trim();
+  if (savedDates.isNotEmpty) return savedDates;
+  return trip.guide.intake.dates.trim();
+}
+
+_TripDateRange? _parseTripDateRange(String raw, DateTime now) {
+  var text = raw.trim().toLowerCase();
+  if (text.isEmpty) return null;
+
+  text = text
+      .replaceAll(',', ' ')
+      .replaceAll('.', ' ')
+      .replaceAll('until', 'to')
+      .replaceAll('till', 'to')
+      .replaceAll('through', 'to')
+      .replaceAll('â€“', '-')
+      .replaceAll('â€”', '-')
+      .replaceAll(RegExp(r'(\d)(st|nd|rd|th)([a-z])'), r'$1$2 $3')
+      .replaceAll(RegExp(r'(\d)([a-z])'), r'$1 $2')
+      .replaceAll(RegExp(r'\s+'), ' ');
+
+  final fallbackYear = _extractYear(text) ?? now.year;
+
+  final isoMatches =
+      RegExp(
+        r'\b(20\d{2})[-/](\d{1,2})[-/](\d{1,2})\b',
+      ).allMatches(text).toList();
+  if (isoMatches.length >= 2) {
+    return _buildDateRange(
+      _intValue(isoMatches.first.group(1)),
+      _intValue(isoMatches.first.group(2)),
+      _intValue(isoMatches.first.group(3)),
+      _intValue(isoMatches[1].group(1)),
+      _intValue(isoMatches[1].group(2)),
+      _intValue(isoMatches[1].group(3)),
+    );
+  }
+
+  final numericRange = RegExp(
+    r'\b(\d{1,2})[/-](\d{1,2})(?:[/-](\d{2,4}))?\s*(?:-|to)\s*(\d{1,2})[/-](\d{1,2})(?:[/-](\d{2,4}))?\b',
+  ).firstMatch(text);
+  if (numericRange != null) {
+    final startYear = _normalizeYear(numericRange.group(3), fallbackYear);
+    final endYear = _normalizeYear(numericRange.group(6), startYear);
+    return _buildDateRange(
+      startYear,
+      _intValue(numericRange.group(2)),
+      _intValue(numericRange.group(1)),
+      endYear,
+      _intValue(numericRange.group(5)),
+      _intValue(numericRange.group(4)),
+    );
+  }
+
+  final dayMonthRange = RegExp(
+    '\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+($_monthPattern)\\s*(?:-|to)\\s*(\\d{1,2})(?:st|nd|rd|th)?(?:\\s+($_monthPattern))?\\b',
+  ).firstMatch(text);
+  if (dayMonthRange != null) {
+    final startMonth = _monthNumber(dayMonthRange.group(2));
+    final endMonth = _monthNumber(dayMonthRange.group(4)) ?? startMonth;
+    if (startMonth != null && endMonth != null) {
+      return _buildDateRange(
+        fallbackYear,
+        startMonth,
+        _intValue(dayMonthRange.group(1)),
+        fallbackYear,
+        endMonth,
+        _intValue(dayMonthRange.group(3)),
+      );
+    }
+  }
+
+  final dayRangeMonth = RegExp(
+    '\\b(\\d{1,2})(?:st|nd|rd|th)?\\s*(?:-|to)\\s*(\\d{1,2})(?:st|nd|rd|th)?\\s+($_monthPattern)\\b',
+  ).firstMatch(text);
+  if (dayRangeMonth != null) {
+    final month = _monthNumber(dayRangeMonth.group(3));
+    if (month != null) {
+      return _buildDateRange(
+        fallbackYear,
+        month,
+        _intValue(dayRangeMonth.group(1)),
+        fallbackYear,
+        month,
+        _intValue(dayRangeMonth.group(2)),
+      );
+    }
+  }
+
+  final monthDayRange = RegExp(
+    '\\b($_monthPattern)\\s+(\\d{1,2})(?:st|nd|rd|th)?\\s*(?:-|to)\\s*(?:(\\w+)\\s+)?(\\d{1,2})(?:st|nd|rd|th)?\\b',
+  ).firstMatch(text);
+  if (monthDayRange != null) {
+    final startMonth = _monthNumber(monthDayRange.group(1));
+    final endMonth = _monthNumber(monthDayRange.group(3)) ?? startMonth;
+    if (startMonth != null && endMonth != null) {
+      return _buildDateRange(
+        fallbackYear,
+        startMonth,
+        _intValue(monthDayRange.group(2)),
+        fallbackYear,
+        endMonth,
+        _intValue(monthDayRange.group(4)),
+      );
+    }
+  }
+
+  final singleDay = RegExp(
+    '\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+($_monthPattern)\\b',
+  ).firstMatch(text);
+  if (singleDay != null) {
+    final month = _monthNumber(singleDay.group(2));
+    if (month != null) {
+      return _buildDateRange(
+        fallbackYear,
+        month,
+        _intValue(singleDay.group(1)),
+        fallbackYear,
+        month,
+        _intValue(singleDay.group(1)),
+      );
+    }
+  }
+
+  return null;
+}
+
+const _monthPattern =
+    'jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december';
+
+const _monthNumbers = {
+  'jan': 1,
+  'january': 1,
+  'feb': 2,
+  'february': 2,
+  'mar': 3,
+  'march': 3,
+  'apr': 4,
+  'april': 4,
+  'may': 5,
+  'jun': 6,
+  'june': 6,
+  'jul': 7,
+  'july': 7,
+  'aug': 8,
+  'august': 8,
+  'sep': 9,
+  'sept': 9,
+  'september': 9,
+  'oct': 10,
+  'october': 10,
+  'nov': 11,
+  'november': 11,
+  'dec': 12,
+  'december': 12,
+};
+
+int? _monthNumber(String? value) => _monthNumbers[value?.trim().toLowerCase()];
+
+int? _extractYear(String text) {
+  final match = RegExp(r'\b(20\d{2}|19\d{2})\b').firstMatch(text);
+  return int.tryParse(match?.group(1) ?? '');
+}
+
+int _normalizeYear(String? rawYear, int fallbackYear) {
+  final parsed = int.tryParse(rawYear ?? '');
+  if (parsed == null) return fallbackYear;
+  return parsed < 100 ? 2000 + parsed : parsed;
+}
+
+int _intValue(String? value) => int.tryParse(value ?? '') ?? 1;
+
+_TripDateRange? _buildDateRange(
+  int startYear,
+  int startMonth,
+  int startDay,
+  int endYear,
+  int endMonth,
+  int endDay,
+) {
+  final start = _safeDate(startYear, startMonth, startDay);
+  var end = _safeDate(endYear, endMonth, endDay);
+  if (start == null || end == null) return null;
+  if (end.isBefore(start)) {
+    end = _safeDate(end.year + 1, end.month, end.day);
+  }
+  if (end == null) return null;
+  return _TripDateRange(start: start, end: end);
+}
+
+DateTime? _safeDate(int year, int month, int day) {
+  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+  final value = DateTime(year, month, day);
+  if (value.year != year || value.month != month || value.day != day) {
+    return null;
+  }
+  return _dateOnly(value);
+}
+
+DateTime _dateOnly(DateTime value) =>
+    DateTime(value.year, value.month, value.day);
+// Popular Destinations
 
 class _PopularHeader extends StatelessWidget {
   const _PopularHeader();
@@ -941,33 +1438,66 @@ class _PopularHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const Expanded(
-          child: Text(
-            'Popular right now',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: RaasteShellColors.ink,
-              fontFamily: 'serif',
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Popular place types',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: RaasteShellColors.ink,
+                  fontFamily: 'serif',
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                'Travel styles people are planning across India',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: RaasteShellColors.muted,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
-        TextButton(
-          onPressed: () => showImplementingSoon(context),
-          style: TextButton.styleFrom(
-            foregroundColor: RaasteShellColors.clay,
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          ),
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('View all'),
-              SizedBox(width: 4),
-              Icon(Icons.chevron_right_rounded, size: 18),
-            ],
+        const SizedBox(width: 10),
+        Material(
+          color: RaasteShellColors.ink,
+          borderRadius: BorderRadius.circular(99),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(99),
+            onTap: () => context.go(AppRoutes.popularAttractions),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 13, vertical: 9),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'View more',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ],
@@ -982,34 +1512,26 @@ class _PopularDestinations extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final w = constraints.maxWidth;
-        final cardWidth = ((w - 14) / 1.85).clamp(190.0, 320.0);
+        final previewCount = constraints.maxWidth < 350 ? 1 : 2;
+        final attractions = popularAttractions.take(previewCount).toList();
 
-        return SizedBox(
-          height: 110,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            child: Row(
-              children: [
-                _PopularCard(
-                  image: 'assets/images/home_popular_jaipur_light.png',
-                  title: 'Jaipur',
-                  tag: 'Heritage',
-                  meta: '4.6 · Rajasthan',
-                  width: cardWidth,
+        if (previewCount == 1) {
+          return _PopularCard(attraction: attractions.first);
+        }
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var index = 0; index < attractions.length; index++) ...[
+              if (index > 0) const SizedBox(width: 12),
+              Expanded(
+                child: _PopularCard(
+                  attraction: attractions[index],
+                  compact: true,
                 ),
-                const SizedBox(width: 14),
-                _PopularCard(
-                  image: 'assets/images/home_popular_coorg_light.png',
-                  title: 'Coorg',
-                  tag: 'Nature',
-                  meta: '4.7 · Karnataka',
-                  width: cardWidth,
-                ),
-              ],
-            ),
-          ),
+              ),
+            ],
+          ],
         );
       },
     );
@@ -1017,97 +1539,94 @@ class _PopularDestinations extends StatelessWidget {
 }
 
 class _PopularCard extends StatelessWidget {
-  final String image;
-  final String title;
-  final String tag;
-  final String meta;
-  final double width;
+  final PopularAttraction attraction;
+  final bool compact;
 
-  const _PopularCard({
-    required this.image,
-    required this.title,
-    required this.tag,
-    required this.meta,
-    required this.width,
-  });
+  const _PopularCard({required this.attraction, this.compact = false});
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: RaasteShellColors.surface,
-      borderRadius: BorderRadius.circular(18),
+      color: const Color(0xFFFFFCF7),
+      borderRadius: BorderRadius.circular(22),
       child: InkWell(
-        borderRadius: BorderRadius.circular(18),
-        onTap: () => showImplementingSoon(context),
+        borderRadius: BorderRadius.circular(22),
+        onTap: () => _openAttraction(context),
         child: Container(
-          width: width,
-          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             border: Border.all(color: RaasteShellColors.outline),
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(22),
             boxShadow: const [
               BoxShadow(
                 color: RaasteShellColors.shadow,
-                blurRadius: 14,
-                offset: Offset(0, 6),
+                blurRadius: 18,
+                offset: Offset(0, 8),
               ),
             ],
           ),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(22),
+                ),
                 child: Image.asset(
-                  image,
+                  attraction.image,
+                  height: compact ? 104 : 150,
+                  width: double.infinity,
                   fit: BoxFit.cover,
-                  height: 92,
-                  width: 92,
                 ),
               ),
-              const SizedBox(width: 10),
-              Expanded(
+              Padding(
+                padding: EdgeInsets.all(compact ? 12 : 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: RaasteShellColors.ink,
-                        fontFamily: 'serif',
-                        fontSize: 19,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: const Color(0x29C96F3D),
-                        borderRadius: BorderRadius.circular(99),
-                      ),
-                      child: Text(
-                        tag,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: RaasteShellColors.clay,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            attraction.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: RaasteShellColors.ink,
+                              fontFamily: 'serif',
+                              fontSize: compact ? 18 : 25,
+                              fontWeight: FontWeight.w700,
+                              height: 1.05,
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 10),
+                        const Icon(
+                          Icons.chevron_right_rounded,
+                          color: RaasteShellColors.clay,
+                          size: 28,
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 7),
                     Text(
-                      '★ $meta',
+                      attraction.location,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: RaasteShellColors.muted,
-                        fontSize: 12,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
                       ),
+                    ),
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children:
+                          attraction.tags
+                              .take(compact ? 2 : 3)
+                              .map((tag) => _PopularTag(label: tag))
+                              .toList(),
                     ),
                   ],
                 ),
@@ -1118,9 +1637,47 @@ class _PopularCard extends StatelessWidget {
       ),
     );
   }
+
+  void _openAttraction(BuildContext context) {
+    final uri = Uri(
+      path: AppRoutes.destinationChat,
+      queryParameters: {
+        'destination': attraction.planningDestination,
+        'sourceId': attraction.sourceId,
+        'displayAddress': attraction.address,
+        'lat': attraction.lat.toString(),
+        'lon': attraction.lon.toString(),
+      },
+    );
+    context.go(uri.toString());
+  }
 }
 
-// ─── Shared small widgets ─────────────────────────────────────────────────────
+class _PopularTag extends StatelessWidget {
+  final String label;
+
+  const _PopularTag({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF3E8D8),
+        borderRadius: BorderRadius.circular(99),
+        border: Border.all(color: RaasteShellColors.outline),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: RaasteShellColors.ink,
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}
 
 class _RoundIconButton extends StatelessWidget {
   final IconData icon;
@@ -1160,37 +1717,34 @@ class _Chip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
-      child: Material(
-        color: RaasteShellColors.surface,
-        borderRadius: BorderRadius.circular(14),
-        child: InkWell(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: RaasteShellColors.surface,
+          border: Border.all(color: RaasteShellColors.outline),
           borderRadius: BorderRadius.circular(14),
-          onTap: () => showImplementingSoon(context),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              border: Border.all(color: RaasteShellColors.outline),
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: const [
-                BoxShadow(color: RaasteShellColors.shadow, blurRadius: 8, offset: Offset(0, 4)),
-              ],
+          boxShadow: const [
+            BoxShadow(
+              color: RaasteShellColors.shadow,
+              blurRadius: 8,
+              offset: Offset(0, 4),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(icon, color: RaasteShellColors.sage, size: 18),
-                const SizedBox(width: 7),
-                Text(
-                  label,
-                  style: const TextStyle(
-                    color: RaasteShellColors.muted,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: RaasteShellColors.sage, size: 18),
+            const SizedBox(width: 7),
+            Text(
+              label,
+              style: const TextStyle(
+                color: RaasteShellColors.muted,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -1207,44 +1761,41 @@ class _ChipTextIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
-      child: Material(
-        color: RaasteShellColors.surface,
-        borderRadius: BorderRadius.circular(14),
-        child: InkWell(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: RaasteShellColors.surface,
+          border: Border.all(color: RaasteShellColors.outline),
           borderRadius: BorderRadius.circular(14),
-          onTap: () => showImplementingSoon(context),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              border: Border.all(color: RaasteShellColors.outline),
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: const [
-                BoxShadow(color: RaasteShellColors.shadow, blurRadius: 8, offset: Offset(0, 4)),
-              ],
+          boxShadow: const [
+            BoxShadow(
+              color: RaasteShellColors.shadow,
+              blurRadius: 8,
+              offset: Offset(0, 4),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  text,
-                  style: const TextStyle(
-                    color: RaasteShellColors.sage,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(width: 7),
-                Text(
-                  label,
-                  style: const TextStyle(
-                    color: RaasteShellColors.muted,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              text,
+              style: const TextStyle(
+                color: RaasteShellColors.sage,
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
+            const SizedBox(width: 7),
+            Text(
+              label,
+              style: const TextStyle(
+                color: RaasteShellColors.muted,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -1290,4 +1841,3 @@ class _SmallAction extends StatelessWidget {
     );
   }
 }
-

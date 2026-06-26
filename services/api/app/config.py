@@ -20,10 +20,13 @@ class Settings(BaseSettings):
 
     supabase_url: str | None = None
     supabase_key: str | None = None
+    supabase_service_role_key: str | None = None
+    cron_secret: str | None = None
 
     redis_url: str = "redis://localhost:6379/0"
 
     openai_api_key: str | None = None
+    openai_model: str = "gpt-4o-mini"
 
     cors_origins: list[str] = ["*"]
 

@@ -6,10 +6,7 @@ import 'package:raaste/config/routes.dart';
 class TripPlanningScreen extends StatefulWidget {
   final String destinationId;
 
-  const TripPlanningScreen({
-    super.key,
-    required this.destinationId,
-  });
+  const TripPlanningScreen({super.key, required this.destinationId});
 
   @override
   State<TripPlanningScreen> createState() => _TripPlanningScreenState();
@@ -21,7 +18,20 @@ class _TripPlanningScreenState extends State<TripPlanningScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Plan your trip')),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+              return;
+            }
+            context.go(AppRoutes.home);
+          },
+          icon: const Icon(Icons.arrow_back_rounded),
+        ),
+        title: const Text('Plan your trip'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -47,9 +57,10 @@ class _TripPlanningScreenState extends State<TripPlanningScreen> {
             Text('$_days days', style: Theme.of(context).textTheme.bodyLarge),
             const Spacer(),
             ElevatedButton(
-              onPressed: () => context.go(
-                '${AppRoutes.itinerary}?tripId=demo-${widget.destinationId}-$_days',
-              ),
+              onPressed:
+                  () => context.go(
+                    '${AppRoutes.itinerary}?tripId=demo-${widget.destinationId}-$_days',
+                  ),
               child: const Text('Build my itinerary'),
             ),
           ],

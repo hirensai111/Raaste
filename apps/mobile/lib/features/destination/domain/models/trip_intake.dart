@@ -8,6 +8,8 @@ class TripIntake {
   final String landingTime;
   final String departureTime;
   final int peopleCount;
+  final String travelMode;
+  final String pacePreference;
   final List<String> interests;
   final String dietaryPreference;
 
@@ -21,41 +23,45 @@ class TripIntake {
     required this.landingTime,
     required this.departureTime,
     required this.peopleCount,
+    required this.travelMode,
+    required this.pacePreference,
     required this.interests,
     required this.dietaryPreference,
   });
 
   Map<String, dynamic> toJson() => {
-        'destination': destination,
-        'sourceId': sourceId,
-        'displayAddress': displayAddress,
-        'lat': lat,
-        'lon': lon,
-        'dates': dates,
-        'landingTime': landingTime,
-        'departureTime': departureTime,
-        'peopleCount': peopleCount,
-        'interests': interests,
-        'dietaryPreference': dietaryPreference,
-      };
+    'destination': destination,
+    'sourceId': sourceId,
+    'displayAddress': displayAddress,
+    'lat': lat,
+    'lon': lon,
+    'dates': dates,
+    'landingTime': landingTime,
+    'departureTime': departureTime,
+    'peopleCount': peopleCount,
+    'travelMode': travelMode,
+    'pacePreference': pacePreference,
+    'interests': interests,
+    'dietaryPreference': dietaryPreference,
+  };
 
   factory TripIntake.fromJson(Map<String, dynamic> json) => TripIntake(
-        destination: json['destination'] as String? ?? '',
-        sourceId: (json['sourceId'] as String?) ??
-            (json['placeId'] as String?) ??
-            '',
-        displayAddress: json['displayAddress'] as String? ?? '',
-        lat: (json['lat'] as num?)?.toDouble(),
-        lon: (json['lon'] as num?)?.toDouble(),
-        dates: json['dates'] as String? ?? '',
-        landingTime: json['landingTime'] as String? ?? '',
-        departureTime: json['departureTime'] as String? ?? '',
-        peopleCount: (json['peopleCount'] as num?)?.toInt() ?? 1,
-        interests: (json['interests'] as List<dynamic>? ?? const [])
+    destination: json['destination'] as String? ?? '',
+    sourceId:
+        (json['sourceId'] as String?) ?? (json['placeId'] as String?) ?? '',
+    displayAddress: json['displayAddress'] as String? ?? '',
+    lat: (json['lat'] as num?)?.toDouble(),
+    lon: (json['lon'] as num?)?.toDouble(),
+    dates: json['dates'] as String? ?? '',
+    landingTime: json['landingTime'] as String? ?? '',
+    departureTime: json['departureTime'] as String? ?? '',
+    peopleCount: (json['peopleCount'] as num?)?.toInt() ?? 1,
+    travelMode: json['travelMode'] as String? ?? 'Not specified',
+    pacePreference: json['pacePreference'] as String? ?? 'Balanced',
+    interests:
+        (json['interests'] as List<dynamic>? ?? const [])
             .whereType<String>()
             .toList(),
-        dietaryPreference: json['dietaryPreference'] as String? ?? '',
-      );
+    dietaryPreference: json['dietaryPreference'] as String? ?? '',
+  );
 }
-
-

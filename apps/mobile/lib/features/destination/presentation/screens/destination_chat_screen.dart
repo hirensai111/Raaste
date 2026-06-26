@@ -18,11 +18,15 @@ enum _IntakeStep {
   dates,
   landingTime,
   departureTime,
+  travelMode,
   people,
+  pace,
   interests,
   dietary,
   generating,
 }
+
+enum _EditFollowUpStep { none, landingTime, endDate, departureTime }
 
 class DestinationChatScreen extends StatefulWidget {
   final String destinationName;
@@ -63,15 +67,25 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   final _savedTrips = getIt<SavedTripRepository>();
 
   _IntakeStep _step = _IntakeStep.dates;
+  _EditFollowUpStep _editFollowUpStep = _EditFollowUpStep.none;
   DestinationGuide? _editingGuide;
   String? _editingTripId;
   bool _isLoading = false;
+
   String? _dates;
   String? _landingTime;
   String? _departureTime;
+  String? _travelMode;
   int? _peopleCount;
+  String? _pacePreference;
   final Set<String> _selectedInterests = {};
   String? _dietaryPreference;
+
+  String? _pendingEditRequest;
+  String? _pendingEditLandingTime;
+  String? _pendingEditEndDateAnswer;
+  String? _pendingEditDepartureTime;
+  bool _pendingEditStartedWithStartDate = false;
 
   @override
   void initState() {
@@ -133,7 +147,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   Future<void> _sendMessage() async {
     final text = _controller.text.trim();
     if (_isLoading) return;
-    if (text.isEmpty && _step == _IntakeStep.interests) {
+    if (!widget.isEditMode && text.isEmpty && _step == _IntakeStep.interests) {
       _continueWithSelectedInterests();
       return;
     }
@@ -144,7 +158,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
     _scrollToEnd();
 
     if (widget.isEditMode) {
-      await _reviseGuide(text);
+      await _handleEditText(text);
       return;
     }
 
@@ -167,6 +181,13 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
         return;
       case _IntakeStep.departureTime:
         _departureTime = text;
+        _step = _IntakeStep.travelMode;
+        _addAssistant(
+          'How are you travelling there: car, bus, train, aeroplane, or some other way?',
+        );
+        return;
+      case _IntakeStep.travelMode:
+        _travelMode = text;
         _step = _IntakeStep.people;
         _addAssistant('How many people are travelling?');
         return;
@@ -177,6 +198,13 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
           return;
         }
         _peopleCount = count;
+        _step = _IntakeStep.pace;
+        _addAssistant(
+          'Do you want this to be a leisure, balanced, or packed trip? You can also say things like: leisure on day 1, packed on day 2.',
+        );
+        return;
+      case _IntakeStep.pace:
+        _pacePreference = text;
         _step = _IntakeStep.interests;
         _addAssistant(
           'Pick a few interests or type your own. What should this trip focus on?',
@@ -237,6 +265,8 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
       landingTime: _landingTime ?? '',
       departureTime: _departureTime ?? '',
       peopleCount: _peopleCount ?? 1,
+      travelMode: _travelMode ?? 'Not specified',
+      pacePreference: _pacePreference ?? 'Balanced',
       interests: _selectedInterests.toList(),
       dietaryPreference: _dietaryPreference ?? 'No specific preference',
     );
@@ -261,7 +291,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
           setState(
             () => _messages.add(
               _ChatMessage.assistant(
-                'Using Raaste\'s curated Hyderabad research for a richer itinerary.',
+                'Using Raaste\'s curated ${research.destinationName} research for a richer itinerary.',
               ),
             ),
           );
@@ -318,6 +348,163 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
     }
   }
 
+  Future<void> _handleEditText(String text) async {
+    switch (_editFollowUpStep) {
+      case _EditFollowUpStep.none:
+        if (_shouldAskDateEditFollowUps(text)) {
+          _pendingEditRequest = text;
+          _pendingEditStartedWithStartDate = !_isEndDateOnlyEdit(text);
+
+          if (_pendingEditStartedWithStartDate) {
+            _editFollowUpStep = _EditFollowUpStep.landingTime;
+            _addAssistant(
+              'Got it. What time will you land or arrive on the revised start date?',
+            );
+          } else {
+            _pendingEditEndDateAnswer = text;
+            _editFollowUpStep = _EditFollowUpStep.departureTime;
+            _addAssistant(
+              'Got it. What time do you plan to depart or leave on the revised end date?',
+            );
+          }
+          return;
+        }
+        await _reviseGuide(text);
+        return;
+      case _EditFollowUpStep.landingTime:
+        _pendingEditLandingTime = text;
+        _editFollowUpStep = _EditFollowUpStep.endDate;
+        final currentDates = _editingGuide?.intake.dates.trim();
+        _addAssistant(
+          currentDates?.isNotEmpty == true
+              ? 'Your trip is currently saved as $currentDates. Is the current end date still correct, or do you want to change it too? Send "same" or the new end date.'
+              : 'Is the current end date still correct, or do you want to change it too? Send "same" or the new end date.',
+        );
+        return;
+      case _EditFollowUpStep.endDate:
+        _pendingEditEndDateAnswer = text;
+        if (_keepsCurrentEndDate(text)) {
+          final request = _buildDateEditRequest();
+          _clearPendingDateEdit();
+          await _reviseGuide(request);
+          return;
+        }
+        _editFollowUpStep = _EditFollowUpStep.departureTime;
+        _addAssistant(
+          'What time do you plan to depart or leave on the revised end date?',
+        );
+        return;
+      case _EditFollowUpStep.departureTime:
+        _pendingEditDepartureTime = text;
+        final request = _buildDateEditRequest();
+        _clearPendingDateEdit();
+        await _reviseGuide(request);
+        return;
+    }
+  }
+
+  bool _shouldAskDateEditFollowUps(String text) {
+    final lower = text.toLowerCase();
+    final directDateChange =
+        lower.contains('date') ||
+        lower.contains('start') ||
+        lower.contains('begin') ||
+        lower.contains('arrival date') ||
+        lower.contains('end date') ||
+        lower.contains('last day') ||
+        lower.contains('departure date') ||
+        lower.contains('return date') ||
+        lower.contains('extend') ||
+        lower.contains('shorten') ||
+        lower.contains('night');
+    if (directDateChange) return true;
+
+    final hasOrdinal = RegExp(r'\b\d{1,2}(?:st|nd|rd|th)\b').hasMatch(lower);
+    final hasMonth = RegExp(
+      r'\b(?:jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december)\b',
+    ).hasMatch(lower);
+    final hasChangeWord = RegExp(
+      r'\b(?:change|move|shift|instead|from|to|make)\b',
+    ).hasMatch(lower);
+    return hasChangeWord && (hasOrdinal || hasMonth);
+  }
+
+  bool _isEndDateOnlyEdit(String text) {
+    final lower = text.toLowerCase();
+    final mentionsEndDate =
+        lower.contains('end date') ||
+        lower.contains('last day') ||
+        lower.contains('departure date') ||
+        lower.contains('return date') ||
+        lower.contains('checkout date') ||
+        lower.contains('check-out date');
+    final mentionsStartDate =
+        lower.contains('start date') ||
+        lower.contains('start') ||
+        lower.contains('begin') ||
+        lower.contains('arrival date') ||
+        lower.contains('landing date') ||
+        lower.contains('first day');
+    return mentionsEndDate && !mentionsStartDate;
+  }
+
+  String _buildDateEditRequest() {
+    final original = _pendingEditRequest?.trim() ?? '';
+    final landing = _pendingEditLandingTime?.trim() ?? '';
+    final departure = _pendingEditDepartureTime?.trim() ?? '';
+    final endDateAnswer = _pendingEditEndDateAnswer?.trim() ?? '';
+    final currentDates = _editingGuide?.intake.dates.trim() ?? '';
+    final keepsEnd =
+        endDateAnswer.isNotEmpty && _keepsCurrentEndDate(endDateAnswer);
+
+    final startInstruction =
+        _pendingEditStartedWithStartDate
+            ? 'Update the start date from the original request and set intake.landingTime to: $landing.'
+            : 'Keep the existing start date and existing intake.landingTime unchanged.';
+    final endInstruction =
+        keepsEnd
+            ? 'Keep the current end date from the existing itinerary ($currentDates).'
+            : _pendingEditStartedWithStartDate
+            ? 'Change the end date to: $endDateAnswer.'
+            : 'Apply the end-date change from the original request.';
+    final departureInstruction =
+        departure.isEmpty
+            ? 'Keep the existing intake.departureTime unless the revised end date requires a sensible adjustment.'
+            : 'Set intake.departureTime to: $departure.';
+
+    return '''
+Original user edit request:
+$original
+
+Follow-up answers:
+- Start date handling: $startInstruction
+- End date handling: $endInstruction
+- Departure time handling: $departureInstruction
+
+Apply these changes to the trip intake. Update intake.dates to the full revised date range, preserving unchanged start/end dates where instructed. Regenerate itineraryDays for every day in the revised date range. Retime Day 1 only if the start date or landing time changed, and retime the final day around the revised departure time when provided.
+''';
+  }
+
+  void _clearPendingDateEdit() {
+    _pendingEditRequest = null;
+    _pendingEditLandingTime = null;
+    _pendingEditEndDateAnswer = null;
+    _pendingEditDepartureTime = null;
+    _pendingEditStartedWithStartDate = false;
+    _editFollowUpStep = _EditFollowUpStep.none;
+  }
+
+  bool _keepsCurrentEndDate(String answer) {
+    final lower = answer.trim().toLowerCase();
+    return lower == 'same' ||
+        lower == 'yes' ||
+        lower == 'correct' ||
+        lower.contains('same') ||
+        lower.contains('current') ||
+        lower.contains('keep') ||
+        lower.contains('no change');
+  }
+
   Future<void> _reviseGuide(String editRequest) async {
     final guide = _editingGuide;
     if (guide == null) return;
@@ -368,6 +555,28 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
     });
   }
 
+  void _selectTravelMode(String value) {
+    if (_isLoading) return;
+    setState(() {
+      _travelMode = value;
+      _step = _IntakeStep.people;
+      _messages.add(_ChatMessage.user(value));
+    });
+    _addAssistant('How many people are travelling?');
+  }
+
+  void _selectPace(String value) {
+    if (_isLoading) return;
+    setState(() {
+      _pacePreference = value;
+      _step = _IntakeStep.interests;
+      _messages.add(_ChatMessage.user(value));
+    });
+    _addAssistant(
+      'Pick a few interests or type your own. What should this trip focus on?',
+    );
+  }
+
   void _selectDietary(String value) {
     if (_isLoading) return;
     setState(() {
@@ -403,6 +612,32 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
     return null;
   }
 
+  void _handleBack() {
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+
+    if (widget.isEditMode) {
+      final tripId = _editingTripId ?? widget.tripId?.trim();
+      if (tripId != null && tripId.isNotEmpty) {
+        context.go('${AppRoutes.destination}?tripId=$tripId');
+        return;
+      }
+
+      final guideId = widget.guideId?.trim();
+      if (guideId != null && guideId.isNotEmpty) {
+        context.go('${AppRoutes.destination}?id=$guideId');
+        return;
+      }
+
+      context.go(AppRoutes.trips);
+      return;
+    }
+
+    context.go(AppRoutes.home);
+  }
+
   @override
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -418,6 +653,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
                   widget.isEditMode
                       ? 'Ask Raaste to refine the plan'
                       : 'Raaste AI trip intake',
+              onBack: _handleBack,
             ),
             Expanded(
               child: ListView.builder(
@@ -429,6 +665,18 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
                         _MessageBubble(message: _messages[index]),
               ),
             ),
+            if (_step == _IntakeStep.travelMode && !widget.isEditMode)
+              _ChoiceChips(
+                values: const ['Car', 'Bus', 'Train', 'Aeroplane', 'Other'],
+                selected: {if (_travelMode != null) _travelMode!},
+                onTap: _selectTravelMode,
+              ),
+            if (_step == _IntakeStep.pace && !widget.isEditMode)
+              _ChoiceChips(
+                values: const ['Leisure', 'Balanced', 'Packed'],
+                selected: {if (_pacePreference != null) _pacePreference!},
+                onTap: _selectPace,
+              ),
             if (_step == _IntakeStep.interests && !widget.isEditMode)
               _ChoiceChips(
                 values: AppConstants.interests,
@@ -506,7 +754,19 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   }
 
   String get _hintText {
-    if (widget.isEditMode) return 'Ask for a change...';
+    if (widget.isEditMode) {
+      switch (_editFollowUpStep) {
+        case _EditFollowUpStep.landingTime:
+          return 'Example: 10:30 AM';
+        case _EditFollowUpStep.endDate:
+          return 'Example: Same, or 30 August';
+        case _EditFollowUpStep.departureTime:
+          return 'Example: 6:00 PM';
+        case _EditFollowUpStep.none:
+          return 'Ask for a change...';
+      }
+    }
+
     switch (_step) {
       case _IntakeStep.dates:
         return 'Example: 12-16 August';
@@ -514,8 +774,12 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
         return 'Example: 10:30 AM';
       case _IntakeStep.departureTime:
         return 'Example: 6:00 PM';
+      case _IntakeStep.travelMode:
+        return 'Example: Train, car, bus, or flight';
       case _IntakeStep.people:
         return 'Example: 2';
+      case _IntakeStep.pace:
+        return 'Example: Leisure, Packed, or Packed on day 2';
       case _IntakeStep.interests:
         return 'Tap chips, then press send';
       case _IntakeStep.dietary:
@@ -529,8 +793,13 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
 class _ChatHeader extends StatelessWidget {
   final String title;
   final String subtitle;
+  final VoidCallback onBack;
 
-  const _ChatHeader({required this.title, required this.subtitle});
+  const _ChatHeader({
+    required this.title,
+    required this.subtitle,
+    required this.onBack,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -539,7 +808,7 @@ class _ChatHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            onPressed: () => context.pop(),
+            onPressed: onBack,
             icon: const Icon(
               Icons.arrow_back_rounded,
               color: RaasteShellColors.ink,

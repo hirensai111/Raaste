@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:raaste/features/auth/presentation/screens/sign_in_screen.dart';
+import 'package:raaste/features/checklist/presentation/screens/checklist_screen.dart';
 import 'package:raaste/features/companion/presentation/screens/companion_screen.dart';
 import 'package:raaste/features/destination/presentation/screens/destination_chat_screen.dart';
 import 'package:raaste/features/destination/presentation/screens/destination_detail_screen.dart';
 import 'package:raaste/features/explore/presentation/screens/explore_screen.dart';
 import 'package:raaste/features/home/presentation/screens/home_screen.dart';
-import 'package:raaste/features/home/presentation/screens/implementing_soon_screen.dart';
+import 'package:raaste/features/home/presentation/screens/popular_attractions_screen.dart';
 import 'package:raaste/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:raaste/features/onboarding/presentation/screens/profile_setup_screen.dart';
 import 'package:raaste/features/profile/presentation/screens/profile_screen.dart';
@@ -15,7 +16,6 @@ import 'package:raaste/features/splash/presentation/screens/splash_screen.dart';
 import 'package:raaste/features/trip/presentation/screens/itinerary_screen.dart';
 import 'package:raaste/features/trip/presentation/screens/my_trips_screen.dart';
 import 'package:raaste/features/trip/presentation/screens/trip_planning_screen.dart';
-import 'package:raaste/shared/widgets/raaste_nav_shell.dart';
 
 class AppRoutes {
   AppRoutes._();
@@ -30,6 +30,7 @@ class AppRoutes {
   static const String saved = '/saved';
   static const String destination = '/destination';
   static const String destinationChat = '/destination-chat';
+  static const String popularAttractions = '/popular-attractions';
   static const String tripPlanning = '/trip-planning';
   static const String itinerary = '/itinerary';
   static const String companion = '/companion';
@@ -56,6 +57,10 @@ class AppRouter {
       ),
       GoRoute(path: AppRoutes.signIn, builder: (_, __) => const SignInScreen()),
       GoRoute(path: AppRoutes.home, builder: (_, __) => const HomeScreen()),
+      GoRoute(
+        path: AppRoutes.popularAttractions,
+        builder: (_, __) => const PopularAttractionsScreen(),
+      ),
       GoRoute(path: AppRoutes.trips, builder: (_, __) => const MyTripsScreen()),
       GoRoute(
         path: AppRoutes.explore,
@@ -63,12 +68,7 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.saved,
-        builder:
-            (_, __) => const ImplementingSoonScreen(
-              title: 'Saved',
-              icon: Icons.favorite_border_rounded,
-              tab: RaasteNavTab.saved,
-            ),
+        builder: (_, __) => const ChecklistScreen(),
       ),
       GoRoute(
         path: AppRoutes.destination,

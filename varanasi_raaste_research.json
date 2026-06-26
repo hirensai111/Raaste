@@ -1,0 +1,1044 @@
+{
+  "destination": {
+    "name": "Varanasi",
+    "state": "Uttar Pradesh",
+    "tagline": "Where death is a celebration and life finds meaning",
+    "description": "One of the world's oldest continuously inhabited cities, Varanasi is the spiritual capital of India, sacred to Hindus as the city of Lord Shiva. Spread along the banks of the holy Ganges, its labyrinthine galis (narrow lanes), 84 ghats, and the iconic Kashi Vishwanath Temple draw millions of pilgrims and seekers each year. It is a city of profound contradictions — ancient yet alive, chaotic yet meditative, overwhelming yet deeply transformative.",
+    "best_for": [
+      "spiritual seekers and pilgrims",
+      "photography enthusiasts",
+      "culture and heritage lovers",
+      "street food connoisseurs",
+      "solo travellers seeking introspection",
+      "history and architecture buffs"
+    ],
+    "not_ideal_for": "Travellers seeking beach-style relaxation, luxury resort experiences, or those who cannot handle extreme sensory stimulation, crowds, and urban chaos. Also not suitable for travellers averse to witnessing open cremations or raw poverty."
+  },
+  "when_to_visit": {
+    "best_months": [
+      "november",
+      "december",
+      "january",
+      "february"
+    ],
+    "avoid_months": [
+      "may",
+      "june",
+      "july",
+      "august"
+    ],
+    "peak_season": "October to March — pleasant daytime temperatures (8-27°C), cool evenings perfect for ghat walks and boat rides. Hotel rates 30-60% higher than base. Dev Deepawali (November) sees 10+ lakh visitors and ghats lit with millions of diyas. Book accommodation 2-3 months ahead for November-February.",
+    "off_season": "April to June — extreme heat up to 45°C makes outdoor exploration miserable between 10 AM and 5 PM. Hotels drop prices 30-50%. Only early morning and late evening activities are viable. Monsoon (July-September) brings heavy rainfall, Ganga flooding submerging all 84 ghats, and chronic waterlogging in low-lying areas.",
+    "shoulder_season": "September to early October — post-monsoon greenery, receding crowds, moderate prices. Ganga water levels return to normal. Residual humidity and some rain possible early in the month. Good for budget-conscious travellers.",
+    "monthly_breakdown": {
+      "january": {
+        "weather": "Cool and foggy, 8-22°C. Morning fog creates mystical atmosphere on ghats.",
+        "crowd_level": "medium",
+        "notes": "Makar Sankranti (mid-Jan) brings kite-flying festivities. Carry heavy woolens — mornings can be near-freezing. Best month for photography. Malaiyo (winter sweet) available."
+      },
+      "february": {
+        "weather": "Mild and pleasant, 10-25°C. Low humidity.",
+        "crowd_level": "extreme",
+        "notes": "Mahashivratri (Feb 26, 2025 / Feb 15, 2026) is the biggest event — 10-15 lakh devotees, temple queues 4-8 hours. Book months ahead. Temple stays open 44 hours straight. Least crowded month if you avoid Shivratri."
+      },
+      "march": {
+        "weather": "Warming up, dry, 15-32°C. Comfortable first half.",
+        "crowd_level": "high",
+        "notes": "Holi (mid-March) is massive. Unique Masan Holi at Manikarnika Ghat with cremation ashes a few days before main Holi. Temperatures rise sharply by month-end. Good weather in first half."
+      },
+      "april": {
+        "weather": "Hot and dry, 22-38°C. Summer begins.",
+        "crowd_level": "low",
+        "notes": "Budget-friendly — hotels 30-50% cheaper. Sightseeing only comfortable early morning and late evening. Old city lanes trap heat like an oven. Carry sun protection."
+      },
+      "may": {
+        "weather": "Extreme heat, 27-41°C. Peak summer.",
+        "crowd_level": "very low",
+        "notes": "Temperatures up to 45°C. Most activities impossible 10 AM – 4 PM. Very few tourists. Stay indoors midday. Hydrate constantly. Cheapest hotel rates of the year."
+      },
+      "june": {
+        "weather": "Pre-monsoon, humid, 28-38°C.",
+        "crowd_level": "low",
+        "notes": "Slightly cooler than May but very humid. Pre-monsoon showers may begin. Ganga water levels start rising. Hope of rain by month-end."
+      },
+      "july": {
+        "weather": "Monsoon peak, heavy rain, 27-33°C.",
+        "crowd_level": "very low",
+        "notes": "All 84 ghats can be completely submerged during heavy rain. Boats cancelled frequently. Road flooding in low-lying areas. Ganga Mahotsav sometimes held but dates vary. VERIFY: Check water levels before planning."
+      },
+      "august": {
+        "weather": "Monsoon continues, 26-32°C. Heavy rain and humidity.",
+        "crowd_level": "very low",
+        "notes": "Flooding risk persists. Ganga remains high. Raksha Bandhan brings some local crowd. Carry rain gear. City has chronic waterlogging due to poor drainage."
+      },
+      "september": {
+        "weather": "Post-monsoon, receding rain, 25-32°C.",
+        "crowd_level": "low",
+        "notes": "Rain reduces by mid-month. Landscapes lush and green. Good shoulder season with moderate prices. Some residual flooding possible early month. Ganga levels recede."
+      },
+      "october": {
+        "weather": "Pleasant, warming dry, 19-31°C.",
+        "crowd_level": "medium",
+        "notes": "Dussehra at Ramnagar features traditional month-long Ramlila performances. Weather turns pleasant. Good time to visit before peak season prices kick in. Festival season begins."
+      },
+      "november": {
+        "weather": "Cool, best weather, 12-27°C.",
+        "crowd_level": "extreme",
+        "notes": "Dev Deepawali (Kartik Purnima) — THE biggest event. 21+ lakh diyas lit across 84 ghats. 10+ lakh visitors. Hotels book out 2-3 months in advance; rates rise 30-60%. Ganga Mahotsav 5-day cultural festival coincides. Malaiyo available. Prime time for ghats: 5:30-6:30 PM."
+      },
+      "december": {
+        "weather": "Chilly mornings, 8-22°C. Pleasant winter.",
+        "crowd_level": "high",
+        "notes": "Foggy mornings return. Christmas-New Year brings tourist crowd. Good time for ghat walks and boat rides. Malaiyo (winter saffron sweet) available."
+      }
+    },
+    "festival_calendar": [
+      {
+        "name": "Dev Deepawali (Kartik Purnima)",
+        "month": "November",
+        "impact_on_travel": "EXTREME — 10+ lakh visitors, 21+ lakh diyas lit across 84 ghats. Hotels fully booked 2-3 months ahead; rates rise 30-60%. Roads jammed. Arrive at ghats by afternoon to get spots. Book boats 2-3 weeks ahead."
+      },
+      {
+        "name": "Mahashivratri",
+        "month": "February/March",
+        "impact_on_travel": "VERY HIGH — Kashi Vishwanath Temple open 44 hours straight. 10-15 lakh devotees in 24 hours. Queues 4-8 hours. VIP darshan suspended. Book accommodation months ahead. Best darshan window: 4-6 AM."
+      },
+      {
+        "name": "Holi",
+        "month": "March",
+        "impact_on_travel": "HIGH — Unique Masan Holi at Manikarnika Ghat with cremation ashes. Ghat Holi at sunrise on Dashashwamedh and Assi Ghats. Bhang thandai widespread. Solo women should join guided groups. Carry waterproof phone cover."
+      },
+      {
+        "name": "Dussehra (Ramnagar Ramlila)",
+        "month": "October",
+        "impact_on_travel": "MODERATE — Traditional Ramlila performances at Ramnagar Fort. Month-long preparations culminate on Vijayadashami with burning of Ravana effigy. Unique cultural experience, less touristy than other festivals."
+      },
+      {
+        "name": "Ganga Mahotsav",
+        "month": "October/November",
+        "impact_on_travel": "HIGH — 5-day cultural festival with classical music, dance, boat races, kite flying, crafts fair. Culminates on Dev Deepawali day. Overlaps with Dev Deepawali — combined impact is massive."
+      },
+      {
+        "name": "Buddha Purnima",
+        "month": "April/May",
+        "impact_on_travel": "MODERATE — Celebrated at Sarnath where Buddha gave his first sermon. Processions and prayer ceremonies at Dhamekh Stupa. Sarnath gets crowded. Good for spiritual travellers."
+      }
+    ]
+  },
+  "how_to_reach": {
+    "from_major_cities": {
+      "mumbai": {
+        "distance_km": "~1,530-1,610",
+        "by_road": "24-28 hours via NH52/NH44/NH19. 2-day drive recommended. Mix of excellent highways and variable patches.",
+        "by_train": "24-30 hours. Mahanagari Express, Kamayani Express. Sleeper Rs 700-900; 3AC Rs 1,800-2,500; 2AC Rs 2,500-3,500.",
+        "by_bus": "28-30 hours. AC Sleeper Rs 2,799-3,499. Operators: XElite Travels, Garud Travels.",
+        "by_air": "~2h 5m direct. IndiGo, SpiceJet, Air India. Rs 4,000-8,000 one-way.",
+        "recommended_mode": "Flight (2 hours vs 24+ hours). Train if budget-constrained (3AC recommended).",
+        "travel_time": "Flight: ~2h 05m; Train: 24-30h; Road: 24-28h"
+      },
+      "delhi": {
+        "distance_km": "~799-872",
+        "by_road": "12-14 hours via NH19/Agra-Lucknow Expressway. Excellent multi-lane highways. Fog in winters (Dec-Jan). Chandauli area can have truck jams.",
+        "by_train": "8-11 hours. Vande Bharat Express (22416) — 8 hrs; Shiv Ganga Express (12560) — 10 hrs. 12+ daily trains. Sleeper Rs 450-700; 3AC Rs 1,100-1,500; 2AC Rs 1,500-2,500; CC Rs 1,800-2,500.",
+        "by_bus": "12-14 hours overnight. UPSRTC, Laxmi Holidays, Gola Bus. Rs 499-1,200 (AC Sleeper/Seater).",
+        "by_air": "1h 20m-1h 30m direct. IndiGo, SpiceJet, Air India, Vistara. Rs 2,500-6,000 one-way.",
+        "recommended_mode": "Train (Vande Bharat or Shiv Ganga Express) for convenience; Flight for time-saving.",
+        "travel_time": "Flight: 1h 20m; Train: 8-11h; Road: 12-14h"
+      },
+      "bangalore": {
+        "distance_km": "~1,797-1,810",
+        "by_road": "26-30 hours via NH7/NH44. 2-3 day drive. Long journey requiring multiple overnight stops.",
+        "by_train": "36-51 hours. Only 3-4 weekly trains (Sanghamitra Exp, Gangakaveri Exp). Sleeper Rs 900-1,200; 3AC Rs 2,400-3,000; 2AC Rs 3,500-4,500.",
+        "by_bus": "Very limited direct buses. Multi-stop journeys not practical. Rs 2,000-3,000.",
+        "by_air": "~2h 30m-3h (usually 1 stop via Delhi/Hyderabad). IndiGo, Air India. Rs 5,000-10,000 one-way.",
+        "recommended_mode": "Flight strongly recommended (time-efficient). Train only for adventurous budget travellers.",
+        "travel_time": "Flight: ~3h (with stop); Train: 36-51h; Road: 26-30h"
+      },
+      "hyderabad": {
+        "distance_km": "~1,215-1,288",
+        "by_road": "17-21 hours via NH44/NH30. Good highway roads. Nagpur-Jabalpur stretch can be patchy.",
+        "by_train": "28-32 hours. 1 daily train (SC DNR SF Express 12791). Sleeper Rs 685-900; 3AC Rs 1,800-2,400; 2AC Rs 2,500-3,500.",
+        "by_bus": "24-28 hours multi-stop. Rs 1,500-2,500.",
+        "by_air": "1h 20m-1h 45m direct. IndiGo, Air India. Rs 3,400-7,000 one-way.",
+        "recommended_mode": "Flight (direct available, only 1h 40m). Train for overnight budget travel.",
+        "travel_time": "Flight: 1h 40m; Train: 28-32h; Road: 17-21h"
+      },
+      "pune": {
+        "distance_km": "~1,420-1,654",
+        "by_road": "21-26 hours. 2-day drive via Nashik, Indore, Bhopal, Prayagraj.",
+        "by_train": "25-30 hours. 2-3 trains weekly. Sleeper Rs 800-1,000; 3AC Rs 2,000-2,800; 2AC Rs 3,000-4,000.",
+        "by_bus": "30-35 hours multi-stop. Rs 1,500-2,500.",
+        "by_air": "~2h direct (limited) or 3h 45m with stops. IndiGo. Rs 5,500-9,000 one-way.",
+        "recommended_mode": "Flight via Delhi/Mumbai; Train for budget (book in advance, limited frequency).",
+        "travel_time": "Flight: ~3h 45m (with stops); Train: 25-30h; Road: 21-26h"
+      },
+      "chennai": {
+        "distance_km": "~1,797",
+        "by_road": "26-30 hours via Vijayawada, Visakhapatnam, Bhubaneswar. Long multi-state journey. Mixed road conditions.",
+        "by_train": "34-40 hours. 10+ weekly trains (MAS Gaya SF Exp, Sanghamitra Exp). Sleeper Rs 900-1,200; 3AC Rs 2,400-3,200; 2AC Rs 3,500-4,500.",
+        "by_bus": "Multi-stop via Vijayawada, Bhubaneswar — not practical.",
+        "by_air": "2h 30m-6h (mostly 1 stop via Delhi/Hyderabad). Air India, IndiGo. Rs 5,500-9,000 one-way.",
+        "recommended_mode": "Flight strongly recommended (34+ hour train journey). Train only for budget rail enthusiasts.",
+        "travel_time": "Flight: ~5h (with stop); Train: 34-40h; Road: 26-30h"
+      }
+    },
+    "nearest_airport": {
+      "name": "Lal Bahadur Shastri International Airport (VNS), Babatpur",
+      "distance_from_destination": "~25-30 km northwest of city centre (40-60 min drive depending on traffic)",
+      "cab_cost_from_airport": "VERIFY: confirm current rate. Prepaid cab: Rs 850-1,000 (sedan), Rs 1,100-1,300 (SUV). Ola/Uber: Rs 620-750. Auto: Rs 500-600."
+    },
+    "nearest_railway_station": {
+      "name": "Varanasi Junction (BSB) — main station; also Banaras (BSBS) newer/cleaner, Kashi (KEI) closest to ghats (~3km), Varanasi City (BCY) ~2km",
+      "distance_from_main_area": "~4 km from ghats (20-30 min by auto). Kashi Station is ~3 km (15-20 min).",
+      "auto_cab_cost": "VERIFY: confirm current rate. Auto: Rs 80-150; E-rickshaw: Rs 60-100; Ola/Uber: Rs 120-200 from BSB to ghats. Prepaid auto booth available at BSB exit."
+    },
+    "entry_permits_required": false,
+    "permit_details": "No entry permits or restricted area permits required for Varanasi. Foreign nationals can visit freely. Non-Hindus are technically not allowed inside Kashi Vishwanath Temple sanctum (viewing gallery accessible)."
+  },
+  "local_transport": {
+    "uber_available": true,
+    "ola_available": true,
+    "rapido_available": true,
+    "auto_rickshaw_available": true,
+    "local_taxi_available": true,
+    "bus_service": "Varanasi City Transport Service (VCTSL) operates ~120 city buses plus UPSRTC services. Routes cover urban and suburban areas. Fares cheap (Rs 10-30). However, buses are crowded, infrequent, and routes confusing. Most tourists prefer autos and e-rickshaws.",
+    "bike_rental_available": true,
+    "car_rental_available": true,
+    "primary_recommendation": "E-rickshaws are the real MVP for navigating narrow old city lanes where cars cannot go. Uber/Ola work well for Cantonment and longer distances but patchy in the old city. Boats between ghats are an essential experience, not just transport. Walking is often fastest in the old city.",
+    "cab_rates": {
+      "local_sightseeing_full_day": "VERIFY: Rs 2,000-2,500 for 8hrs/80km AC sedan; Rs 3,000-3,600 for Innova Crysta. Extra km: Rs 11-18.",
+      "per_km_sedan": "VERIFY: Rs 9-14/km for sedan (Ola/Uber Rs 9.20/km base); Rs 15-18/km for Innova Crysta.",
+      "per_km_suv": "VERIFY: Rs 15-18/km for Innova Crysta; Rs 20-25/km for Tempo Traveller.",
+      "airport_transfer": "VERIFY: Rs 750-950 for sedan one-way; Rs 850-1,100 for SUV. Night surcharge (9PM-6AM): +Rs 150-300."
+    },
+    "negotiation_tips": "ALWAYS negotiate before boarding autos — fares are NEVER metered. Know fair prices: short hop Rs 40-60, 5km Rs 80-100, 8km+ Rs 120-150. Drivers quote 2-3x — counter with 60% of asking price. Use Ola/Uber as benchmark before haggling. Walk away — there are 10 more autos waiting. For boats: confirm TOTAL price (not per person), duration, route, and return ghat BEFORE boarding. Shared autos are cheapest at Rs 15-30/seat on fixed routes (daytime only). Prepaid auto booth at railway station is safer than street negotiation.",
+    "scam_warnings": [
+      "Boat price inflation: Boatman quotes Rs 100/person, then demands Rs 1,000 at end claiming per person per hour. Always agree total price before boarding.",
+      "Tilak/Priest scam: Saffron-clad person applies tilak unasked, then demands Rs 500-1,000 donation. Say 'Nahi, bhaiyya' firmly and keep walking.",
+      "Auto 'hotel closed' scam: Driver claims your hotel is closed/burned down, takes you to his commission hotel. Show WhatsApp confirmation.",
+      "Fake guides at ghats: 'Explain history' for 20 min, then demand Rs 500-2,000. Firmly decline from start.",
+      "Silk shop touts: Friendly chat leads to 'family silk factory' with 2-5x overpriced goods. Never follow anyone to a shop.",
+      "Shoe locker hostage at Kashi Vishwanath: Private shops demand you store shoes, then pressure to buy overpriced prasad. Walk past to Temple Trust's FREE official lockers.",
+      "Wood donation scam at Manikarnika: Claims to be collecting for poor families' cremation wood. NEVER give money at cremation ghats.",
+      "Sympathy scam: 'Lost wallet,' 'need medicine,' 'stranded student' stories. Do not give money to strangers."
+    ],
+    "transport_reality_check": "Old City around Kashi Vishwanath is entirely pedestrian — you WILL walk 1-2 km from the nearest vehicle drop point. Ghats are your compass: if lost in old city lanes, walk downhill toward the river. Auto drivers work on commission (30-50%) — their recommendations are never unbiased. E-rickshaws are often faster than cars in narrow lanes. Ola/Uber availability drops 2-5 AM — book pre-paid cabs for early flights. Google Maps is unreliable in old city lanes — ask shopkeepers for directions. Night transport is limited: autos become rare after 10 PM, e-rickshaws mostly stop. Dev Deepawali is transport chaos — everything costs 2-3x normal rates."
+  },
+  "connectivity": {
+    "overall_rating": "good",
+    "jio_coverage": "Good overall with 5G available in 70%+ of areas. Best 5G availability in Varanasi. Some dead zones in narrow old city lanes. Generally reliable.",
+    "airtel_coverage": "Good overall with strong 5G speeds. Good coverage in main city areas. May struggle in deep old city lanes near Kashi Vishwanath.",
+    "vi_coverage": "Fair to Good. 4G works in most areas. 5G is limited. Struggles more than Jio/Airtel in old city narrow lanes.",
+    "bsnl_coverage": "Patchy. Works in some areas. Not recommended as primary connection.",
+    "specific_dead_zones": [
+      "Narrow old city lanes near Kashi Vishwanath Temple — all networks can struggle",
+      "Deep ghat areas at water level — signal weakens closer to river",
+      "Inner lanes between Manikarnika and Chowk — patchy coverage",
+      "During festivals (Dev Deepawali, Mahashivratri) — network congestion affects all operators"
+    ],
+    "wifi_availability": "Wi-Fi available at most hotels, cafes, and the airport. Many hostels and boutique stays offer free Wi-Fi. Cafe culture at Assi Ghat provides reliable internet for digital nomads.",
+    "offline_map_recommendation": "Download offline Google Maps before arriving — mobile data can be patchy in old city lanes. Carry a power bank — getting lost in dark lanes without phone battery is genuinely stressful.",
+    "atm_availability": "ATMs available at Godowlia (multiple: SBI, PNB, Axis, HDFC), Lanka (BHU area), and Cantonment. ATMs near immediate ghat areas are scarce — withdraw cash before heading to the riverfront. Most ATMs dispense cash reliably but queues can be long at popular ones."
+  },
+  "money": {
+    "cash_vs_upi": "Varanasi is a cash-heavy city. Street food stalls, boat rides, temple donations, paan shops, and auto-rickshaws operate largely on cash. UPI/QR works at mid-range hotels, restaurants, silk shops, and for Ola/Uber rides. Always carry Rs 1,000-2,000 in cash as backup. Small notes (Rs 10, 20, 50, 100) are essential for ghats and street food.",
+    "atm_availability": "Multiple ATMs at Godowlia, Lanka (BHU area), and Cantonment. ATMs near immediate ghats are scarce — withdraw cash before reaching the riverfront. SBI, PNB, Axis, HDFC ATMs all available.",
+    "budget_per_day": {
+      "backpacker": "VERIFY: Rs 1,100-2,100. Dorm/guesthouse Rs 500-1,000 + street food Rs 300-500 + shared autos/walking Rs 100-200 + shared boat/temples Rs 200-400.",
+      "mid_range": "VERIFY: Rs 3,300-6,500. 3-star hotel/B&B Rs 2,000-4,000 + mix of street food and restaurants Rs 500-1,000 + autos and taxis Rs 300-500 + private boat/guided tours Rs 500-1,000.",
+      "comfortable": "VERIFY: Rs 6,500-11,500. Boutique hotel Rs 4,000-7,000 + restaurants + street food Rs 1,000-1,500 + taxis/app cabs Rs 500-1,000 + guided experiences Rs 1,000-2,000.",
+      "luxury": "VERIFY: Rs 12,000-18,000+. Taj Ganges/BrijRama Palace Rs 7,000+ + fine dining Rs 1,500-3,000 + private car Rs 1,500-3,000 + premium boat/private tours Rs 2,000-5,000."
+    },
+    "where_to_carry_cash": "Street food at Kachori Gali, Vishwanath Gali, Dashashwamedh. Boat rides negotiated directly at ghats. Tips for boatmen, priests, guides. Small donations at temples. Paan shops. Rickshaws and e-rickshaws. Areas around ghats where network connectivity is patchy.",
+    "overpriced_tourist_areas": [
+      "Shops immediately outside Kashi Vishwanath Temple corridor — prasad, flowers, and souvenirs at 2-3x normal prices",
+      "Riverside restaurants with 'view' near Dashashwamedh Ghat targeting foreign tourists",
+      "Silk shops recommended by auto drivers or boatmen — commission-inflated prices",
+      "Restaurants recommended by taxi/auto drivers — they get 30-50% commission",
+      "Shops selling 'special prasad' or 'guaranteed VIP darshan' near temples"
+    ]
+  },
+  "attractions": [
+    {
+      "name": "Kashi Vishwanath Temple",
+      "type": "temple",
+      "description": "The spiritual nucleus of Varanasi and one of the 12 Jyotirlingas of Lord Shiva. The expanded Kashi Vishwanath Dham Corridor (2021) connects the temple to the Ganges via a spectacular 50-foot wide pathway with courtyards and escalators. The golden spire is iconic.",
+      "why_worth_it": "The most sacred site in Varanasi. For Hindus, darshan here is a once-in-a-lifetime spiritual goal. The electrifying atmosphere of devotion is unmatched.",
+      "best_time_to_visit": "4:00-6:00 AM on weekdays for shortest free darshan queue. October-March for pleasant weather.",
+      "avoid_when": "Shravan Mondays (massive crowds). After 10 AM in peak season (2-4 hour queues).",
+      "entry_fee": "General Darshan: FREE. Sugam Darshan (VIP): Rs 250. Mangala Aarti: Rs 500 (pre-book only).",
+      "time_needed": "2-4 hours (including queue time)",
+      "crowd_reality": "1+ lakh visitors daily. Mondays, Shivratri, Sawan month = extreme crowds. Navratri and Diwali: plan 3+ hours for general darshan.",
+      "local_tip": "Visit Kal Bhairav Temple FIRST before Kashi Vishwanath (local tradition — he is the Kotwal/guardian). Leave ALL prohibited items at hotel. Carry only ID and printed e-ticket. Use official Temple Trust free lockers, NOT private shops.",
+      "accessibility": "Vehicle drops at Godowlia crossing or Maidagin. 10-15 minute walk through narrow Vishwanath Gali. New corridor has escalators for elderly. No vehicles reach the temple gate.",
+      "distance_from_town_center": "~1 km from Godowlia Chowk (old city center)",
+      "coordinates": {
+        "lat": 25.3176,
+        "lng": 83.0105
+      }
+    },
+    {
+      "name": "Dashashwamedh Ghat & Ganga Aarti",
+      "type": "experience",
+      "description": "The most iconic ghat in Varanasi, named after the legend of Brahma's ten Ashwamedha sacrifices. Every evening, seven Brahmin priests perform one of the most spectacular fire rituals on earth — the Ganga Aarti — with massive brass lamps, synchronized movements, conch shells, and chanting.",
+      "why_worth_it": "This is THE defining experience of Varanasi. The atmosphere of fire, chanting, and flower diyas released onto the river is unlike anything else in the world.",
+      "best_time_to_visit": "Arrive 60-90 minutes before aarti for good spot. Winter: 5:45 PM start. Summer: 6:45 PM start.",
+      "avoid_when": "Dev Deepawali (10+ lakh visitors, need to arrive 2+ hours early). Full moon nights (90+ min early needed).",
+      "entry_fee": "Watching from ghat steps: FREE. VIP seating: Rs 1,100-1,500 per person. Private boat for aarti view: Rs 1,500-3,500 per boat.",
+      "time_needed": "2 hours (including arrival time before aarti)",
+      "crowd_reality": "Gets PACKED on weekends and festivals. Dev Deepawali: 10+ lakh visitors. Weekdays more manageable.",
+      "local_tip": "Best panoramic view is from a boat on the river. Book boat by 4:30-5:00 PM. After aarti, release a flower diya onto the river — deeply moving. Photography allowed but keep camera at chest level.",
+      "accessibility": "Easy walk from Godowlia Chowk. Well-lit and crowded until ~9:30 PM. E-rickshaw drops nearby.",
+      "distance_from_town_center": "~0.5 km from Godowlia Chowk",
+      "coordinates": {
+        "lat": 25.3066,
+        "lng": 83.0106
+      }
+    },
+    {
+      "name": "Assi Ghat & Subah-e-Banaras",
+      "type": "experience",
+      "description": "The southernmost major ghat where the Ganga meets the Assi River. Known for its relaxed, youthful, bohemian vibe compared to Dashashwamedh. The morning Subah-e-Banaras program features morning aarti, classical music, yoga, and Vedic yajna — all free.",
+      "why_worth_it": "More peaceful and less crowded than Dashashwamedh. Best ghat for sunrise viewing. The cultural morning program is magical. Cafe culture here is the best in Varanasi.",
+      "best_time_to_visit": "Sunrise: 5:30-6:30 AM (Oct-Mar). Subah-e-Banaras: 5:30-7:30 AM winter, 5:00-7:00 AM summer.",
+      "avoid_when": "Evening can get busy but never as chaotic as Dashashwamedh.",
+      "entry_fee": "FREE. Morning yoga and cultural program completely free.",
+      "time_needed": "2-3 hours (including boat ride or yoga session)",
+      "crowd_reality": "Moderate. Backpacker and student crowd. Much calmer than Dashashwamedh. Sunrise is the busiest time.",
+      "local_tip": "Book a hotel walking distance from Assi Ghat for easy morning access. Wake up by 4:30 AM, grab kulhad chai en-route. Offer a small diya (Rs 20) to support the classical music troupe. Photography paradise at sunrise.",
+      "accessibility": "Easy access by auto, e-rickshaw. 3 km from Vishwanath Temple. Walking distance from BHU (~1.5 km).",
+      "distance_from_town_center": "~3 km from Godowlia/Dashashwamedh area",
+      "coordinates": {
+        "lat": 25.289,
+        "lng": 83.0068
+      }
+    },
+    {
+      "name": "Manikarnika Ghat",
+      "type": "experience",
+      "description": "Varanasi's primary and most sacred cremation ghat. According to Hindu belief, those cremated here attain moksha (liberation). The eternal fire (Akhanda Dhuni) is said to have burned since the beginning of time. 100-300 bodies are cremated daily, 24/7.",
+      "why_worth_it": "A profoundly moving experience that confronts visitors with Hindu philosophy of life, death, and impermanence. Not a tourist attraction in the conventional sense — it is a deeply spiritual site.",
+      "best_time_to_visit": "8:00 AM - 7:00 PM (daylight hours). 8-10 AM recommended for guided visits.",
+      "avoid_when": "Pitru Paksha (Sep/Oct) when cremation numbers rise significantly. Night visits not recommended for safety.",
+      "entry_fee": "FREE",
+      "time_needed": "30-45 minutes for respectful observation",
+      "crowd_reality": "Active cremations ongoing constantly. Tourist visitors peak 12-2 PM. Quietest at 5-6 AM.",
+      "local_tip": "NO photography of cremations — phones have been confiscated. Dress in sober, dark/neutral colours. Maintain silence. Do NOT ask about cost of cremation or identity of deceased. Smoke can be heavy — those with respiratory issues should view from a boat.",
+      "accessibility": "Reach by taxi/auto to nearby drop point (Godowlia or Maidagin), then walk through narrow old-city lanes (20-40 min navigation). No vehicles reach the ghat itself.",
+      "distance_from_town_center": "~1 km from Godowlia Chowk (walking through lanes)",
+      "coordinates": {
+        "lat": 25.3115,
+        "lng": 83.0135
+      }
+    },
+    {
+      "name": "Sarnath",
+      "type": "temple",
+      "description": "One of the most important Buddhist pilgrimage sites in the world. Located 10 km northeast of Varanasi, this is where Gautama Buddha delivered his first sermon after attaining enlightenment. Features the 43.6m Dhamek Stupa (5th century), Ashoka Pillar ruins, and an archaeological museum with the Lion Capital (India's national emblem).",
+      "why_worth_it": "Completely different atmosphere from chaotic Varanasi — serene, clean, calm. Essential for understanding Buddhism's origins. Deer Park setting with actual deer roaming.",
+      "best_time_to_visit": "October-March. Museum: 10 AM-5 PM (closed Fridays). Dhamek Stupa: sunrise to sunset.",
+      "avoid_when": "Friday (museum closed). Buddha Purnima (April/May) gets crowded.",
+      "entry_fee": "Dhamek Stupa: Rs 25 (Indian). Museum: Rs 25 (Indian). Combo ticket: Rs 20 (Indian).",
+      "time_needed": "3-4 hours minimum for complete visit. Half-day trip from Varanasi.",
+      "crowd_reality": "Moderate crowds. Much calmer than Varanasi ghats. Museum usually quiet. Buddha Purnima sees higher pilgrim numbers.",
+      "local_tip": "Best done as a morning half-day trip. Start with Dhamek Stupa, then museum (Lion Capital), then Mulagandha Kuti Vihar. Beyond main sites, explore hidden Chinese, Korean, and Tibetan temples for peace.",
+      "accessibility": "Vehicle accessible. Auto-rickshaw Rs 200-400 one way. Taxi Rs 500-800 one way. E-rickshaw also available.",
+      "distance_from_town_center": "10 km northeast of Varanasi city center",
+      "coordinates": {
+        "lat": 25.3811,
+        "lng": 83.0214
+      }
+    },
+    {
+      "name": "Ramnagar Fort",
+      "type": "fort",
+      "description": "The 18th-century fort-palace of the Kashi Naresh (King of Varanasi), located on the eastern bank of the Ganga. Still partially used by the royal family. Houses a museum with over 500 artifacts including vintage cars, royal costumes, weapons, and rare manuscripts.",
+      "why_worth_it": "Only major historical monument in Varanasi outside the temple circuit. Scenic riverside location. Ramnagar Ramleela during Dussehra is world-famous. Fascinating museum collection.",
+      "best_time_to_visit": "October-March. 10 AM-5 PM daily. Best visited during Dussehra for Ramleela performances.",
+      "avoid_when": "Dussehra day and Muharram (closed). Midday summer (very hot).",
+      "entry_fee": "VERIFY: Rs 50-80 (Indian), Rs 150-200 (foreigner). Camera prohibited.",
+      "time_needed": "2-3 hours",
+      "crowd_reality": "Moderate crowds compared to temples. Busiest 11 AM-2:30 PM. Quietest just after opening or 3-4:30 PM.",
+      "local_tip": "Best approach is by boat from Dashashwamedh or Assi Ghat for spectacular riverside views. Ramnagar is famous for its Lassi — try it outside the fort. Cash only — no cards accepted.",
+      "accessibility": "14 km from city centre by road. Auto/e-rickshaw from Godowlia ~Rs 100. Or scenic boat from ghats.",
+      "distance_from_town_center": "14 km (by road) or river crossing by boat",
+      "coordinates": {
+        "lat": 25.2762,
+        "lng": 83.0304
+      }
+    },
+    {
+      "name": "BHU & New Vishwanath Temple (Birla Mandir)",
+      "type": "temple",
+      "description": "The 1,300+ acre campus of Banaras Hindu University, established in 1916, is like a city within a city. The New Vishwanath Temple (Birla Temple) is a magnificent marble replica of Kashi Vishwanath, open to ALL visitors with no restrictions. Also visit Bharat Kala Bhavan museum with rare Mughal paintings.",
+      "why_worth_it": "Much more peaceful than Kashi Vishwanath — no queues, no security hassles. Beautiful marble architecture. Campus is a green escape from old city chaos. Museum has one of India's finest collections.",
+      "best_time_to_visit": "Temple: 4 AM-11 PM. Museum: 10 AM-5 PM. Campus: anytime.",
+      "avoid_when": "University holidays (museum closed). Weekends slightly more crowded.",
+      "entry_fee": "Temple: FREE. Museum: Rs 20-50 (Indian). Campus: FREE.",
+      "time_needed": "Half day (4-5 hours) for temple + museum + campus walk",
+      "crowd_reality": "Temple: moderate, much less than Kashi Vishwanath. Museum: usually quiet. Weekdays less crowded.",
+      "local_tip": "Evening aarti at Birla Temple is particularly beautiful. Try the famous cold coffee shop outside the temple (Rs 25 with ice cream). Bhel puri stall near temple is famous. All campus eateries close by 11 PM.",
+      "accessibility": "From Varanasi Junction: ~8 km, 30-45 min by auto. From Assi Ghat: ~1.5 km (walking distance). Buses and e-rickshaws available frequently.",
+      "distance_from_town_center": "~6 km from Godowlia, ~1.5 km from Assi Ghat",
+      "coordinates": {
+        "lat": 25.2676,
+        "lng": 82.9913
+      }
+    },
+    {
+      "name": "Man Mandir Observatory (Jantar Mantar)",
+      "type": "museum",
+      "description": "An 18th-century astronomical observatory built by Maharaja Sawai Jai Singh II (who also built Jaipur and Delhi Jantar Mantars). Located on the roof of King Man Singh's palace at Man Mandir Ghat, it features precise stone instruments including the Samrat Yantra sundial for measuring time.",
+      "why_worth_it": "Fascinating for science, astronomy, and history enthusiasts. One of only 5 such observatories built by Jai Singh II. Excellent views of the river and ghats from the rooftop. Overlooked by most tourists — relatively quiet.",
+      "best_time_to_visit": "Early morning for best light and photography. 6 AM-5 PM.",
+      "avoid_when": "Midday summer (rooftop gets very hot).",
+      "entry_fee": "Rs 20-25 (Indian), Rs 100-300 (foreigner).",
+      "time_needed": "1-2 hours",
+      "crowd_reality": "Usually quiet and uncrowded. Most tourists skip this gem.",
+      "local_tip": "Combine with visit to nearby ghats (Darbhanga Ghat, Nepali Temple). Not wheelchair accessible — stairs to rooftop. Use wide-angle lens for ghat panoramas from the roof.",
+      "accessibility": "Walking distance from Godowlia. Near Dashashwamedh Ghat.",
+      "distance_from_town_center": "~0.5 km from Godowlia Chowk",
+      "coordinates": {
+        "lat": 25.3076,
+        "lng": 83.01
+      }
+    },
+    {
+      "name": "Tulsi Manas Mandir",
+      "type": "temple",
+      "description": "Modern white marble temple (built 1964) dedicated to Lord Rama, where Tulsidas is believed to have composed the Ramcharitmanas. The walls are uniquely inscribed with verses from the epic. Features beautiful paintings depicting scenes from Ramayana.",
+      "why_worth_it": "The inscribed walls make it unique among temples. Beautiful white marble architecture. Lush garden with statue of Tulsidas. Peaceful atmosphere.",
+      "best_time_to_visit": "5:30 AM-12 PM, 3:30-9 PM. Aarti at 6 AM and 4 PM.",
+      "avoid_when": "12-3:30 PM (midday closure).",
+      "entry_fee": "FREE (small Rs 3 fee for gallery only — VERIFY at gate)",
+      "time_needed": "1 hour",
+      "crowd_reality": "Moderate. Pilgrim crowd but manageable. Less crowded than Kashi Vishwanath.",
+      "local_tip": "Located 250m south of Durga Temple — visit both together. Wheelchair accessible. Photography generally permitted but confirm on arrival.",
+      "accessibility": "Near Durgakund on Sankat Mochan Road. Auto/e-rickshaw accessible.",
+      "distance_from_town_center": "~4 km from Dashashwamedh Ghat",
+      "coordinates": {
+        "lat": 25.2925,
+        "lng": 83.0137
+      }
+    },
+    {
+      "name": "Sankat Mochan Hanuman Temple",
+      "type": "temple",
+      "description": "One of Varanasi's most beloved temples, dedicated to Lord Hanuman. Founded by Goswami Tulsidas. Famous for its besan ke laddu prasad and tradition of chanting Hanuman Chalisa. Tuesdays and Saturdays are especially auspicious with temple open until midnight.",
+      "why_worth_it": "The spiritual energy here is deeply calming. The famous laddu prasad alone is worth the visit. Founded by Tulsidas himself — immense literary and spiritual significance.",
+      "best_time_to_visit": "Early morning (4:30-7 AM) for peaceful darshan. Tuesdays and Saturdays for special energy (open until midnight).",
+      "avoid_when": "Hanuman Jayanti (extremely crowded). 12-3 PM (afternoon closure).",
+      "entry_fee": "FREE",
+      "time_needed": "1 hour",
+      "crowd_reality": "Moderate on regular days. Very crowded on Tuesdays, Saturdays, and Hanuman Jayanti. Permanent police post inside due to 2006 incident.",
+      "local_tip": "Buy Besan Ke Laddu (famous prasad) from shops inside temple premises. Pick up free Sundarkand booklet. Mobile phones and cameras NOT allowed inside. Use locker facility at temple.",
+      "accessibility": "On Sankat Mochan Road. Auto/e-rickshaw accessible. About 4 km from ghats.",
+      "distance_from_town_center": "~4 km from Dashashwamedh Ghat",
+      "coordinates": {
+        "lat": 25.2885,
+        "lng": 83.01
+      }
+    },
+    {
+      "name": "Durga Temple (Monkey Temple)",
+      "type": "temple",
+      "description": "18th-century Nagara-style temple dedicated to Goddess Durga, painted red and ochre. Known as Monkey Temple due to large monkey population in surrounding trees. Features a large rectangular water tank (Durga Kund) adjacent to the temple.",
+      "why_worth_it": "Unique Nagara architecture and the vibrant red color make it visually striking. The Durga Kund adds serenity. Less touristy than main temples.",
+      "best_time_to_visit": "Early morning or late afternoon. Summer: 4 AM-9 PM. Winter: 5 AM-8 PM.",
+      "avoid_when": "Navratri (extremely crowded with devotees). Midday (monkeys more active and aggressive).",
+      "entry_fee": "FREE",
+      "time_needed": "45 minutes",
+      "crowd_reality": "Moderate. Large monkey population — keep distance, they can be aggressive.",
+      "local_tip": "Do NOT carry food openly — monkeys will snatch it. Be careful with sunglasses and loose items. Visit with Tulsi Manas Mandir (500m away).",
+      "accessibility": "Near Tulsi Manas Temple, on Sankat Mochan Road. Auto/e-rickshaw accessible.",
+      "distance_from_town_center": "~4 km from Dashashwamedh Ghat, ~2 km from BHU",
+      "coordinates": {
+        "lat": 25.2935,
+        "lng": 83.0145
+      }
+    },
+    {
+      "name": "Kaal Bhairav Temple",
+      "type": "temple",
+      "description": "The Kotwal (Guardian) of Varanasi. Dedicated to Lord Shiva in his fierce form as Kaal Bhairav. Local custom dictates visiting Kal Bhairav BEFORE Kashi Vishwanath. Features a silver-faced idol seated on a dog.",
+      "why_worth_it": "Essential first stop before Kashi Vishwanath darshan (local tradition). Unique temple with powerful spiritual energy. The tradition of offering liquor as prasad symbolizes surrendering ego.",
+      "best_time_to_visit": "Early morning (5:00-5:30 AM) for peaceful darshan. Tuesdays and Sundays especially auspicious.",
+      "avoid_when": "Bhairava Ashtami (December) — biggest festival, extreme crowds.",
+      "entry_fee": "FREE",
+      "time_needed": "30-45 minutes",
+      "crowd_reality": "Moderate on regular days. Crowded on Tuesdays, Sundays, and festivals.",
+      "local_tip": "Visit this temple FIRST before Kashi Vishwanath (he is the guardian/Kotwal of Varanasi). Tying a black thread blessed at the temple brings protection. Located in Bhaironath, Vishweshwarganj.",
+      "accessibility": "Walkable from Maidagin/Chowk. About 1.5 km from Varanasi Junction.",
+      "distance_from_town_center": "~1 km from Godowlia Chowk",
+      "coordinates": {
+        "lat": 25.319,
+        "lng": 83.0115
+      }
+    },
+    {
+      "name": "Old City Walking Tour (Galiyan)",
+      "type": "experience",
+      "description": "The old city of Varanasi is a medieval labyrinth of narrow lanes (galis) barely shoulder-width, where temples, shops, cows, food stalls, pilgrims, and funeral processions share the same space. This is the ONLY way to truly experience the city's soul.",
+      "why_worth_it": "The galis ARE Varanasi. Every lane tells a story. You'll discover hidden temples, ancient architecture, artisans at work, and the raw, unfiltered pulse of the city. This is living heritage.",
+      "best_time_to_visit": "Early morning (5:30-8 AM) for quiet, atmospheric walks. After 10 AM for dramatic sun rays in narrow lanes.",
+      "avoid_when": "Midday summer (extremely hot and exhausting). After 10 PM (dark, empty lanes).",
+      "entry_fee": "FREE (guided walks Rs 500-2,000)",
+      "time_needed": "2-3 hours for a good exploration. Plan on walking 5-10 km per day in Varanasi.",
+      "crowd_reality": "Extremely crowded during peak hours. Cows, motorcycles, and pedestrians compete for space. Pickpockets operate in crowded lanes.",
+      "local_tip": "Don't rely on Google Maps — it gets confused in the galis. Ask shopkeepers for directions (they're honest). Wear comfortable closed walking shoes. If lost, head toward any ghat (walk downhill). Carry a power bank.",
+      "accessibility": "Entirely pedestrian. No vehicles can enter. Walking only. Backpack essential — suitcases impossible.",
+      "distance_from_town_center": "Starts from Godowlia Chowk",
+      "coordinates": {
+        "lat": 25.317,
+        "lng": 83.01
+      }
+    },
+    {
+      "name": "Vishwanath Gali & Chowk Markets",
+      "type": "market",
+      "description": "The main shopping artery leading to Kashi Vishwanath Temple. Vishwanath Gali is famous for Banarasi silk sarees, dupattas, Rudraksha beads, and religious souvenirs. Chowk is Varanasi's oldest commercial center with silk, jewelry, and food.",
+      "why_worth_it": "Best place to buy authentic Banarasi silk directly. Thatheri Bazaar (UNESCO-recognized brass market) nearby. Kachori Gali for legendary breakfast. The sensory experience of these ancient markets is unforgettable.",
+      "best_time_to_visit": "8 AM-9 PM. Morning shopping = better prices (shopkeepers value 'bohni' or first sale).",
+      "avoid_when": "Monday mornings (many shops closed). Rush hours (extremely crowded).",
+      "entry_fee": "FREE",
+      "time_needed": "2-3 hours",
+      "crowd_reality": "Extremely crowded. Narrow lanes with shoulder-to-shoulder traffic. Intense but exhilarating.",
+      "local_tip": "Bargain: start at 40-50% of quoted price. Ask to see reverse side of saree — authentic handloom has clean mirror-image pattern. Burn test: real silk smells like burnt hair. Shop one street behind Dashashwamedh Ghat for 30-40% lower prices.",
+      "accessibility": "Pedestrian only. Walk from Godowlia Chowk. No vehicles.",
+      "distance_from_town_center": "~0.5-1 km from Godowlia Chowk",
+      "coordinates": {
+        "lat": 25.3175,
+        "lng": 83.011
+      }
+    }
+  ],
+  "food": {
+    "must_try_dishes": [
+      {
+        "dish": "Tamatar Chaat",
+        "what_it_is": "A Varanasi-only creation found nowhere else in India — spiced, cooked tomato base topped with crispy fried bread pieces, green chutney, sev, and lime. Served in an earthen pot (dona). Semi-liquid, tangy and spicy. This is Varanasi's signature dish.",
+        "where_to_find_best": "Deena Chaat Bhandar (Luxa Road, near Dashashwamedh, since 1960s, Rs 30-50) or Kashi Chaat Bhandar (Godowlia Chowk, Rs 30-50). Locals are divided on which is better. Both open 2 PM-10 PM."
+      },
+      {
+        "dish": "Kachori Sabzi",
+        "what_it_is": "The king of Banarasi breakfast — golden, crisp whole wheat kachoris stuffed with spiced urad dal and hing (asafoetida), served with thin, tangy potato curry (aloo sabzi) poured on top. The hing-flavoured, wheat-based version is uniquely Banarasi.",
+        "where_to_find_best": "Shri Ram Bhandar (Thatheri Bazar, Chowk — THE undisputed king, 40+ years, open 6 AM-12 PM, sells out by 10 AM, Rs 25-35) or Chachi ki Kachori (Lanka near BHU Gate, Rs 20)."
+      },
+      {
+        "dish": "Malaiyo / Makkhan Malai",
+        "what_it_is": "A cloud-like, ethereal milk foam dessert and Varanasi's best-kept secret. Made by leaving milk out overnight in winter (dew creates froth), then churning into creamy foam. Flavoured with saffron and cardamom. Extraordinarily light and perfectly sweet. WINTER ONLY (November-February).",
+        "where_to_find_best": "Dugdh Sagar (Godowlia-Luxa Road, Rs 15) or vendors near Thatheri Bazar/Chaukhamba Lane. Available only 6-11 AM, sells out fast. If visiting in summer, you will NOT find malaiyo."
+      },
+      {
+        "dish": "Thandai",
+        "what_it_is": "A chilled milk-based drink made with almonds, cashews, pistachios, fennel seeds, pepper, vetiver, cardamom, and saffron. Topped with malai. Bhang (cannabis) can be added at government-approved shops. Deeply tied to Shaivite culture.",
+        "where_to_find_best": "Mishrambu Thandai (Godowlia Chowk, since 1980s, thickest and milkiest, Rs 50-80, Phone: 09415224848) or Baba Thandai (by-lane near Godowlia Chowk, local favourite, more subtle flavours, Rs 40-50)."
+      },
+      {
+        "dish": "Banarasi Paan",
+        "what_it_is": "Betel leaf stuffed with areca nut, cardamom, fennel seeds, menthol, clove, sweetened rose petals, and condiments. Comes in saada (with tobacco) and meetha (sweet, without tobacco). Eating paan is a meal-ending ritual for locals.",
+        "where_to_find_best": "Keshav Tambul Bhandar (near Ravidas Gate, Lanka Road, most famous — Rs 20-80) or Rajendra Chaurasia Paan (Chowk Thana near Godowlia, even Indira Gandhi reportedly ate here)."
+      },
+      {
+        "dish": "Chena Dahi Vada",
+        "what_it_is": "A Varanasi twist on dahi vada — made with chena (fresh paneer/cottage cheese) instead of lentil batter. Fried chena balls soaked in sweetened yogurt, sprinkled with roasted cumin and black salt. A local invention.",
+        "where_to_find_best": "Deena Chaat Bhandar area or street vendors near Gopal Mandir Gali. Rs 30-50."
+      },
+      {
+        "dish": "Litti/Baati Chokha",
+        "what_it_is": "Whole wheat dough balls stuffed with roasted chana dal and spices, roasted over charcoal, dipped in desi ghee. Served with chokha — spicy mash of boiled potatoes, tomato, and eggplant. A Bihari import that became a Varanasi staple.",
+        "where_to_find_best": "Baati Chokha Restaurant (Teliyabagh, full thali Rs 150-200). Street-side stalls on Puran Das Road also good."
+      },
+      {
+        "dish": "Lal Peda (Banarasi Peda)",
+        "what_it_is": "The most famous sweet of Varanasi — offered as prasad at Kashi Vishwanath Temple. Made from thickened milk, sugar, and cardamom with a distinctive red colour.",
+        "where_to_find_best": "Lal Peda ki Dukaan (inside Uday Pratap College/UP College — one of the oldest and most famous) or Ksheer Sagar (Godowlia area, clean and reliable, Rs 20-50 for 100g)."
+      },
+      {
+        "dish": "Rabri-Jalebi",
+        "what_it_is": "Jalebi (or its bigger cousin imarti) served with thick, creamy rabri. A Banarasi breakfast tradition. The jalebis are big and sugar syrup oozes out as you bite.",
+        "where_to_find_best": "Ksheer Sagar (Godowlia area — clean, reliable, always fresh, Rs 50-80) or Ram Bhandar (desi ghee jalebis with kachori)."
+      },
+      {
+        "dish": "Kulhad Chai",
+        "what_it_is": "Thick, milky tea seasoned with cardamom or ginger, boiled for long, served in unglazed clay cups (kulhads). The clay adds an earthy flavour that defines the Banarasi chai experience.",
+        "where_to_find_best": "Lakshmi Tea Stall (Chowk Police Station area) or any busy street-side stall (Rs 10-20). Pappu Chai at Assi Ghat is famous for lemon tea."
+      }
+    ],
+    "signature_local_food": "Tamatar Chaat (unique to Varanasi, found nowhere else in India) is the undisputed signature dish. The city's food identity is built on dairy dominance (excellent milk products from vast cow herds across the river), hing-flavoured kachori-sabzi as the breakfast of generations, winter-only malaiyo that food lovers travel specifically for, and a deep thandai+bhang culture tied to Shaivite worship. Chena-based sweets, chaat culture (eating chaat is a serious evening activity), and the ritual of ending every meal with paan complete the Banarasi food identity.",
+    "vegetarian_friendliness": "excellent",
+    "jain_food_availability": "limited",
+    "halal_availability": "limited",
+    "vegan_options": "limited",
+    "street_food_safety": "Moderate to Good if selective. The popular, well-known shops (Ram Bhandar, Deena Chaat, Kashi Chaat, Mishrambu) have operated for decades and maintain reasonable hygiene. Stick to busy stalls with high turnover — fresh food is safer food. Follow the locals — if mothers with children are eating there, it's likely safe. Avoid food sitting out for hours. Drink ONLY bottled water. Avoid ice in drinks. Avoid dairy-based items during monsoon (July-September) as they spoil quickly. Deep-fried items (kachori, samosa, jalebi) are generally safer than uncooked items.",
+    "restaurant_price_reality": "Street food item: Rs 15-60. Lassi: Rs 30-120. Thandai: Rs 40-80. Full food crawl (5-6 dishes): Rs 200-400 per person. Full day of street food eating: Rs 500-700 per person. Budget thali: Rs 100-200. Mid-range restaurant meal for two: Rs 400-800. Premium thali (Shree Shivay): Rs 300-500. Most street food vendors do NOT accept UPI — carry cash.",
+    "local_market_for_food": "Godowlia Market (oldest market — sweets, snacks, spices, paan). Vishwanath Gali (religious items, Banarasi silk, street food, paan). Thatheri Bazaar (brassware, sweet shops, kachori). Chowk (sweets, launglata, malaiyo in winter). Kachori Gali (near Sindhia Ghat — kachori, lassi shops). Gopal Mandir Gali (sweets, malaiyo). Lanka (student food area — affordable meals, litti chokha).",
+    "tourist_trap_restaurants": "Riverside restaurants with 'view' near Dashashwamedh Ghat targeting foreign tourists — often overpriced and mediocre quality. Restaurants recommended by auto/taxi drivers — they get commission (30-50%). Generic 'multi-cuisine' places in tourist areas — usually mediocre at everything. Shops near Kashi Vishwanath Temple corridor selling 'special prasad' at inflated prices.",
+    "where_locals_eat": "Breakfast: Ram Bhandar (Thatheri Bazar) for kachori sabzi + jalebi, or their neighbourhood kachori guy. Evening chaat: Deena Chaat Bhandar or Kashi Chaat Bhandar (locals have fierce loyalty). Lassi: Pahalwan Lassi at Lanka or their neighbourhood shop. Thandai: Mishrambu Thandai at Godowlia Chowk. Paan: Keshav Tambul or local paanwala. Tea: Street-side kulhad chai from any busy stall (Rs 10-15). Sweets: Ksheer Sagar for reliable quality. Everyday meal: Street parathas, chole-kulche, or home food. Old city residents don't eat at restaurants often — they eat street food or cook at home."
+  },
+  "accommodation": {
+    "areas_to_stay": [
+      {
+        "area": "Assi Ghat",
+        "why": "Vibrant backpacker hub with best cafe culture (Pizzeria Vaatika, Aum Cafe, Kashi Art Cafe). Easy road access for taxis and autos. Relatively cleaner and wider lanes. Morning aarti and sunrise viewing. Safe for solo travellers and women. Good WiFi and backpacker infrastructure.",
+        "best_for": "First-time visitors, solo travellers, backpackers, couples, young travellers, women travellers",
+        "price_range": "VERIFY: Rs 800-5,000 per night (hostel dorms to boutique stays)"
+      },
+      {
+        "area": "Dashashwamedh Ghat / Godowlia",
+        "why": "Right at the centre of the action. Walking distance to Kashi Vishwanath Temple and Ganga Aarti. Maximum street food access (Kashi Chaat, Deena Chaat, thandai). Most atmospheric and authentic. Cheapest budget options available.",
+        "best_for": "Budget travellers, experienced India travellers, spiritual pilgrims, those who want maximum immersion",
+        "price_range": "VERIFY: Rs 400-4,000 per night (basic guesthouses to mid-range)"
+      },
+      {
+        "area": "Cantonment (Cantt)",
+        "why": "Wide roads, modern hotels (Taj Ganges, Radisson), reliable AC and power. Quiet, organized, comfortable. Close to railway station and airport. Hotels have parking, pools, lawns.",
+        "best_for": "Families with children, elderly travellers, business travellers, those prioritising comfort over atmosphere",
+        "price_range": "VERIFY: Rs 3,000-20,000+ per night"
+      },
+      {
+        "area": "BHU / Lanka",
+        "why": "Safe, clean, well-lit university campus. Excellent student food options (cheap — Chachi ki Kachori at Rs 20, Pahalwan Lassi). Green campus, peaceful. Good for long stays.",
+        "best_for": "Long-stay visitors, students, researchers, budget travellers who don't mind commuting",
+        "price_range": "VERIFY: Rs 500-3,000 per night"
+      },
+      {
+        "area": "Gurudham Colony / Bhelupur",
+        "why": "Car accessible — taxis drop at doorstep. 5-10 min drive/e-rickshaw to Assi Ghat. Peaceful, green, residential. Safe neighbourhood. Best of both worlds.",
+        "best_for": "Luxury travellers who want heritage charm without chaos, families wanting peace after sensory overload",
+        "price_range": "VERIFY: Rs 3,000-15,000+ per night"
+      }
+    ],
+    "areas_to_avoid": [
+      {
+        "area": "Deep old city lanes (for families/elderly/solo women at night)",
+        "why": "Extremely narrow lanes become pitch dark and empty after 10 PM. No vehicle access. Families with young children or elderly should avoid due to steps and uneven surfaces. Solo female travellers should avoid after 10 PM. Backpacks essential — suitcases impossible."
+      },
+      {
+        "area": "Varanasi Junction Railway Station area (at night)",
+        "why": "Known for aggressive touts and pickpockets. Fine for transit during day, but avoid wandering at night. Book pre-paid taxis from the station."
+      },
+      {
+        "area": "Isolated ghats north of Manikarnika (after midnight)",
+        "why": "Deserted, no lighting, no police presence. After 11 PM even main ghats begin to empty. Stick to well-lit, populated areas."
+      }
+    ],
+    "booking_advance_required": "Peak season (Oct-Mar): Book 2-4 weeks ahead. Dev Deepawali (Nov): Book 1-2 months ahead minimum — even budget guesthouses charge Rs 3,000+ for basic rooms and hotels get fully booked. Mahashivratri (Feb/Mar): Book months ahead. Mid-season (Apr-Jun, Sep-Oct): 1-2 weeks ahead. Low season (Jul-Aug): Walk-in often possible with best prices.",
+    "budget_options": "VERIFY: Rs 400-1,500 per night. Hostel dorm beds (Zostel, GoStops, Madpackers): Rs 400-1,200. Budget guesthouse private room: Rs 500-1,500 (basic room, fan, mixed hot water reliability). Cheap hotel near ghats: Rs 600-2,000 (often no AC, shared bathrooms possible). BHU/Lanka guest house: Rs 500-1,500 (student-oriented, basic but safe).",
+    "mid_range_options": "VERIFY: Rs 1,500-5,000 per night. Decent hotel with AC: Rs 1,500-4,000 (better comfort, AC, private bathroom). Boutique ghat-side stay: Rs 2,000-5,000 (atmosphere + comfort, rooftop access). Mid-range near Assi Ghat: Rs 1,500-5,000 (better infrastructure, cafes nearby).",
+    "premium_options": "VERIFY: Rs 5,000-20,000+ per night. Heritage riverfront hotel (Brijrama Palace at Darbhanga Ghat, Palace on Ganges): Rs 5,000-15,000 (authentic heritage with river views). 5-star branded (Taj Ganges, Radisson in Cantonment): Rs 5,000-20,000+ (modern luxury but far from ghats). Premium boutique (Gurudham/Bhelupur): Rs 3,000-15,000+ (heritage villas with modern amenities)."
+  },
+  "local_knowledge": {
+    "things_nobody_tells_you": [
+      "Varanasi is NOT like Haridwar or Rishikesh — it is exponentially more intense. If this is your first stop in India, you are throwing yourself in the deep end. The initial overwhelm passes — give it 24 hours before judging.",
+      "The old city lanes (galis) are a medieval labyrinth so narrow that sunlight rarely reaches the ground. Cows, motorcycles, pedestrians, hawkers, and funeral processions all share single-file spaces. This is everyday reality, not a special event.",
+      "Varanasi is essentially two different cities: the ghat-side old city (ancient, chaotic, spiritual, crumbling) and the Cantonment area (modern Indian city with malls, branded stores, wide roads). Many first-timers are shocked by this contrast.",
+      "Death is not hidden here. Bodies on bamboo stretchers pass through main lanes daily. Orange-clad bodies are carried to ghats. Elderly people come specifically to die. This takes emotional preparation — it is daily life, not morbid tourism.",
+      "Power cuts are regular and predictable. Load shedding happens, especially in summer. Hotels in old city have inconsistent power backup. Cantonment area is more reliable. Always carry a power bank.",
+      "The ghats are your compass: if lost in the old city lanes (and you will get lost), walk downhill toward the river. Once at the ghats, you can orient yourself easily. Google Maps is unreliable in the galis — ask shopkeepers for directions.",
+      "Cows own the streets. They block narrow lanes, cause traffic jams, and leave dung everywhere. Watch your step constantly — especially at night when streets are poorly lit. Stepping in cow dung is almost a rite of passage.",
+      "The marketed 'spiritual awakening' narrative sets unrealistic expectations. The reality involves navigating scams, haggling with boatmen, and stepping over cow dung. Spiritual moments DO happen — but they are quiet, unexpected, and personal. As one experienced traveller said: 'It's by going slow that you best understand Varanasi.'",
+      "Auto drivers work on commission (30-50%). Nearly every recommendation for a shop or hotel from an auto driver is financially motivated. Their recommendations are never unbiased.",
+      "Stray dogs are everywhere near ghats, especially around Manikarnika. Monkeys near temples snatch food and sunglasses. Goats in sweaters are a real sight in winter."
+    ],
+    "tourist_traps": [
+      {
+        "trap": "Fake Priests / Pandas at Ghats",
+        "reality": "A man dressed as priest puts tilak on your forehead or ties a 'sacred' thread without asking, then demands Rs 500-2,000 as 'donation.' If you refuse, they become aggressive or curse you.",
+        "how_to_avoid": "Firmly decline from the start. Do not allow anyone to touch you or perform rituals unless YOU initiate it. Say 'Nahi, bhaiyya' and keep walking."
+      },
+      {
+        "trap": "Overpriced Boat Rides",
+        "reality": "Boatman quotes Rs 100/person, then at the end demands Rs 1,000 claiming 'per person per hour.' Some cut rides short claiming 'dangerous current' and demand more.",
+        "how_to_avoid": "Before boarding, confirm OUT LOUD: total price (NOT per person), exact duration, exact route. Fair rates: shared sunrise boat Rs 100-200/person for 1 hour. Private: Rs 300-500/hour total."
+      },
+      {
+        "trap": "Silk Saree Shops Selling Fake Banarasi Silk",
+        "reality": "Friendly local or driver takes you to 'family silk factory' with 2-5x inflated prices. Silk may be machine-made power-loom copies. Tout earns 30-50% commission.",
+        "how_to_avoid": "Never follow anyone to a shop. Go to Chowk, Vishwanath Gali, or Thatheri Bazaar on your own. Check reverse side — genuine handloom has floating threads and slight irregularities. Real zari has soft glow, not flashy shine."
+      },
+      {
+        "trap": "Aarti 'Donation' Pressure",
+        "reality": "During Ganga Aarti, people approach for donations claiming it's for 'aarti fund.' Some legitimate but many pocket the money. After aarti, flower sellers aggressively push overpriced diyas.",
+        "how_to_avoid": "Donations to official aarti committees are fine but not mandatory. Politely decline if pushed hard. The aarti is a public ceremony and free to watch."
+      },
+      {
+        "trap": "VVIP Darshan Scam at Kashi Vishwanath",
+        "reality": "Scammers promise 'Sugam Darshan' (special entry) for a fee, then lead you to expensive flower shops. The 'VIP entry' doesn't exist — you're back in regular queue after being overcharged.",
+        "how_to_avoid": "Use ONLY official temple queue systems. Book Sugam Darshan at shrikashivishwanath.org (the ONLY authorized portal). Never trust anyone outside promising 'guaranteed VIP access.'"
+      }
+    ],
+    "hidden_gems": [
+      {
+        "name": "Nepali Temple (Kathwala Temple) at Lalita Ghat",
+        "why_hidden": "Called the 'Mini Khajuraho of Varanasi' for its intricate wood carvings. Built by King of Nepal in 19th century in traditional pagoda style with wood imported from Nepal. The ghat itself is less crowded and well-maintained. Most tourists walk right past it.",
+        "how_to_get_there": "Located between Manikarnika and Tripura Bhairavi ghats. Walk along the ghats from Dashashwamedh toward Manikarnika — look for the Nepali pagoda architecture."
+      },
+      {
+        "name": "Lolark Kund",
+        "why_hidden": "One of the oldest sacred sites in Varanasi, likely dating to Mahabharata era (current structure ~1000 AD). A dramatic stepped tank hidden in a residential maze near Tulsi Ghat. Three sides have very steep steps leading down to emerald blue water. Dedicated to Sun God Surya.",
+        "how_to_get_there": "Hidden in a residential maze near Tulsi Ghat. Ask locals for directions — 'Lolark Kund kahan hai?' Best found with a local guide or by asking shopkeepers."
+      },
+      {
+        "name": "Chet Singh Ghat & Fort",
+        "why_hidden": "Historic fort-ghat built by Maharaja Chet Singh in 18th century. Site of the 1781 battle between Chet Singh and the British East India Company. Stunning river views, less crowded than main ghats. Ideal for sunset photography.",
+        "how_to_get_there": "Walk along the ghats north from Dashashwamedh. Or take a boat and ask the boatman to stop at Chet Singh Ghat. Free entry, open 24/7."
+      },
+      {
+        "name": "Nandeshwar Ghat",
+        "why_hidden": "One of the cleanest and most peaceful ghats. More than 50 films shot here including Masaan, Half Girlfriend, Mukti Bhawan, and Super 30. Features a perfect haveli overlooking the Ganges, a small akhada, and temples under a banyan tree.",
+        "how_to_get_there": "North of Scindia Ghat, walk along the ghats from Dashashwamedh. Very few tourists venture this far north along the riverfront."
+      },
+      {
+        "name": "Sarai Mohana Silk Weaving Village",
+        "why_hidden": "Located 10-12 km from central Varanasi, this is the actual 'weavers' village' where most Banarasi silk is made. Watch live demonstrations, interact with national award-winning artisans. A saree takes 15 days to 6 months to complete. Buy directly from weavers at fair prices, cutting out middlemen.",
+        "how_to_get_there": "Take auto-rickshaw or cab from city centre (30-40 min, Rs 200-400). Best visited in morning when weavers are actively working."
+      },
+      {
+        "name": "Bharat Mata Mandir",
+        "why_hidden": "Unique temple dedicated not to a deity but to Mother India. Contains a large relief map of India made entirely of marble showing the country's topography. A patriotic and cultural experience that most tourists miss.",
+        "how_to_get_there": "Located on Mahatma Gandhi Kashi Vidyapeeth campus. Auto/e-rickshaw accessible from city centre."
+      },
+      {
+        "name": "Bhonsale Ghat",
+        "why_hidden": "Built by Maratha Bhonsale dynasty of Nagpur in early 18th century. Combines Maratha and Rajput architectural styles. Remains quiet and uncrowded. The stone building with artistic windows is perfect for photography.",
+        "how_to_get_there": "Between Scindia Ghat and Mir Ghat. Walk along the ghats from Dashashwamedh heading north."
+      }
+    ],
+    "local_scams": [
+      {
+        "scam": "Fake Sadhu / Priest Blessing Scam",
+        "how_it_works": "Man dressed as sadhu puts tilak on your forehead or ties thread WITHOUT consent, then demands Rs 500-2,000+ as 'donation.' If refused, becomes aggressive or curses you.",
+        "how_to_avoid": "Walk away firmly. Say 'No, thank you' repeatedly. Do not stop. If you want a blessing, approach a sadhu yourself and offer Rs 10-100 voluntarily."
+      },
+      {
+        "scam": "Cremation Ghat 'Donation' Scam",
+        "how_it_works": "At Manikarnika, someone claims to manage cremation workers, explains process in detail (300kg firewood per cremation), then asks you to 'donate' hundreds or thousands for 'poor families.' No money goes to poor families.",
+        "how_to_avoid": "Observe cremations only from respectful public distance. NEVER give money at burning ghats. Donate through registered charity offices away from ghats."
+      },
+      {
+        "scam": "Boat Ride Price Inflation",
+        "how_it_works": "Boatmen quote Rs 100/person for '1-hour ride.' After 20-30 min, claims current is too dangerous and demands more. OR at end claims price was 'per person per hour' and total is 5-10x what you understood.",
+        "how_to_avoid": "Negotiate BEFORE boarding. Confirm total price, duration, route, number of passengers out loud. Get clear agreement. If they cut ride short, pay only original agreed price."
+      },
+      {
+        "scam": "Silk Shop Tout / Commission Scam",
+        "how_it_works": "Friendly local or driver casually mentions 'family silk factory' or 'government shop,' walks you there. Prices 2-5x inflated. Tout gets 30-50% commission.",
+        "how_to_avoid": "Never follow anyone to a shop. Research reputable shops independently. Go to Chowk, Vishwanath Gali, or Thatheri Bazaar on your own."
+      },
+      {
+        "scam": "Shoe Locker Hostage at Kashi Vishwanath",
+        "how_it_works": "Shopkeepers 800m from temple shout that you MUST store shoes/phones in their 'free' lockers. Upon return, they block access and demand you buy overpriced prasad/flowers.",
+        "how_to_avoid": "Walk past ALL private shops. Go directly to official Kashi Vishwanath Temple entrance where FREE, secure Temple Trust lockers are available with official tokens."
+      },
+      {
+        "scam": "Hotel Booking Scam",
+        "how_it_works": "Fake hotel listings online ask for advance payment via GPay/UPI. You arrive to find hotel doesn't exist or is completely different from photos.",
+        "how_to_avoid": "Book through established platforms (MakeMyTrip, Goibibo, Booking.com). Call hotel directly before advance payment. Check recent reviews with photos."
+      }
+    ],
+    "photography_spots": [
+      {
+        "spot": "Sunrise boat ride on the Ganges (facing east from Assi Ghat)",
+        "best_time": "5:30-6:30 AM (October-March). Hire a manual (non-motor) boat from Assi Ghat.",
+        "tip": "Go beyond Manikarnika Ghat. Sun rises directly across the river, bathing ghats in golden light. Carry bird feed in winter — seagulls flock to boats creating dramatic cinematic frames. Wide-angle for panoramas, fast lens (f/2.8) for low light."
+      },
+      {
+        "spot": "Chet Singh Ghat at sunset",
+        "best_time": "5:00-6:00 PM (winter). Less crowded than Dashashwamedh.",
+        "tip": "The fort backdrop with sunset light is dramatic. A great quiet spot away from Dashashwamedh chaos. Combine with a boat ride for best angles."
+      },
+      {
+        "spot": "Lalita Ghat / Nepali Temple at sunrise",
+        "best_time": "5:30-6:30 AM (October-March).",
+        "tip": "The unique Nepali pagoda architecture with golden morning light is spectacular. Less crowded than Assi Ghat."
+      },
+      {
+        "spot": "Nandeshwar Ghat",
+        "best_time": "Anytime. Best in golden hour (sunrise/sunset).",
+        "tip": "One of the cleanest and most photogenic ghats. The haveli backdrop, small akhada, and temples under banyan tree create perfect frames. More than 50 Bollywood films shot here."
+      },
+      {
+        "spot": "Ganga Aarti at Dashashwamedh Ghat",
+        "best_time": "Arrive 1+ hour early for front-row spot. Winter: ~6:00 PM. Summer: ~6:45 PM.",
+        "tip": "Best shots in first 10 minutes when fire is freshest and sky still has colour. Use long exposure for fire movement. For best panoramic view, watch from a boat on the river."
+      },
+      {
+        "spot": "Narrow old city lanes (galis) after 10 AM",
+        "best_time": "10 AM-2 PM when sun rays create dramatic light and shadows in narrow lanes.",
+        "tip": "After 10 AM, light on ghats becomes harsh — switch to lane photography. Sun rays create dramatic effects in the medieval labyrinth. Look up for beautiful old architecture above eye level."
+      }
+    ],
+    "cultural_etiquette": [
+      "At cremation ghats (Manikarnika & Harishchandra): NO photography of cremations or grieving families. Dress in sober, dark/neutral colours. Maintain silence. Stand at respectful distance. NEVER approach pyres or interrupt mourning families. Do NOT eat or smoke in cremation areas.",
+      "ALWAYS use your RIGHT hand for giving, receiving, eating, and accepting prasad. The left hand is traditionally considered unclean. Using both hands together is a sign of extra respect.",
+      "Remove shoes before entering temples, mosques, and some homes. Wear easy slip-on shoes. Carry socks — marble/stone floors can be very hot in summer and very cold in winter.",
+      "Dress modestly — cover shoulders and knees. Varanasi is significantly more conservative than metros like Mumbai or Delhi. When passing cremation ghats, you're essentially attending someone's funeral — dress accordingly. Women should expect staring if not dressed modestly.",
+      "Respect funeral processions — step aside, maintain silence. Bodies on bamboo stretchers pass through main lanes daily — this is normal life in Varanasi, not a spectacle.",
+      "Interacting with sadhus: Genuine sadhus do NOT aggressively seek money. If a sadhu approaches YOU unsolicited and offers a blessing — likely a scam. If YOU want to approach a sadhu, do so respectfully. Small voluntary donation (Rs 10-100) is appropriate if you initiate contact."
+    ],
+    "dress_code": "Varanasi is significantly more conservative than Indian metros. For Kashi Vishwanath and religious sites: Women should wear saree, salwar kameez, or long kurti with leggings. Shoulders and knees must be covered. Men: dhoti-kurta or kurta-pyjama preferred. Full-length pants with shirt acceptable. Shorts, sleeveless tops, and ripped jeans are NOT allowed at temples. For cremation ghats: sober, dark/neutral colours. No bright colours, no revealing clothing. When in doubt, cover more. A light scarf that doubles as smoke/smell filter is genuinely useful.",
+    "language": {
+      "primary_language": "Hindi (Bhojpuri is the local dialect spoken at home). English is understood in tourist areas, hotels, and by most service providers.",
+      "useful_phrases": [
+        {
+          "phrase": "Namaste",
+          "meaning": "Hello / Greetings",
+          "pronunciation": "nuh-MUS-tay"
+        },
+        {
+          "phrase": "Yeh kitne ka hai?",
+          "meaning": "How much is this?",
+          "pronunciation": "Yeh KIT-nay ka hai?"
+        },
+        {
+          "phrase": "Bahut mahanga hai",
+          "meaning": "Too expensive",
+          "pronunciation": "buh-HUT muh-HUNG-gah hai"
+        },
+        {
+          "phrase": "Nahi, dhanyavaad",
+          "meaning": "No, thank you",
+          "pronunciation": "nuh-HEEN, DHUN-yuh-vaad"
+        },
+        {
+          "phrase": "Pani",
+          "meaning": "Water",
+          "pronunciation": "PAA-nee"
+        },
+        {
+          "phrase": "Madad!",
+          "meaning": "Help!",
+          "pronunciation": "Muh-DUD!"
+        },
+        {
+          "phrase": "Main shakahari hoon",
+          "meaning": "I am vegetarian",
+          "pronunciation": "Main SHAA-kaa-HAA-ree hoon"
+        },
+        {
+          "phrase": "Mirch kam dalen",
+          "meaning": "Less spicy, please",
+          "pronunciation": "MIRCH kum DAA-layn"
+        },
+        {
+          "phrase": "Bhaiyya",
+          "meaning": "Brother (for addressing male shopkeepers, drivers)",
+          "pronunciation": "BHAH-ya"
+        },
+        {
+          "phrase": "Maaf kijiye",
+          "meaning": "Excuse me / Sorry",
+          "pronunciation": "MAAF kee-jee-yay"
+        },
+        {
+          "phrase": "Sasta kar dijiye",
+          "meaning": "Make it cheaper",
+          "pronunciation": "SUS-ta kar DEE-jee-yay"
+        },
+        {
+          "phrase": "Pranaam (Bhojpuri)",
+          "meaning": "Hello in local dialect (impresses locals)",
+          "pronunciation": "Pruh-NAAM"
+        }
+      ]
+    }
+  },
+  "safety": {
+    "overall_safety_rating": "7.5/10 — Varanasi is generally safe for tourists. Violent crime against visitors is extremely rare. The city is deeply religious and community-oriented. However, petty scams, overcharging, and aggressive touting are daily realities. The old city's narrow lanes can be disorienting especially at night.",
+    "safe_for_solo_women": "YES, with precautions. Thousands of solo women visit safely every year. Stay in Assi Ghat area (most tourist-friendly, progressive, well-lit). Return to hotel by 10-11 PM. Dress modestly (kurta + leggings + dupatta). Avoid deserted lanes after 10 PM. Use women-only Pink Taxi for late-night travel. Wear a simple wedding band as optional deterrent. Be assertive but not aggressive — firm 'No, thank you' while walking away is most effective.",
+    "areas_to_avoid_at_night": [
+      "Narrow inner lanes between Manikarnika and Chowk — pitch dark, empty after 9-10 PM, easy to get lost",
+      "Isolated ghats north of Manikarnika — deserted, no lighting, no police presence",
+      "Dark alleys behind Vishwanath Gali — confusing maze, dim/absent street lights",
+      "Varanasi Junction railway station area — aggressive touts, pickpockets (especially at night)",
+      "Raj Ghat area (far northern ghats) — isolated after midnight"
+    ],
+    "natural_hazards": [
+      "Ganga flooding (July-August monsoon): Ganga can rise above danger level, submerging all 84 ghats. Low-lying areas flood. Road closures possible. Check water levels before planning monsoon visit.",
+      "Heat exhaustion (April-June): Temperatures reach 40-45°C. Dehydration risk high. Plan outdoor activities only early morning (before 9 AM) and late evening (after 5 PM). Carry electrolytes.",
+      "Air quality (year-round, worst Nov-Jan): AQI frequently crosses 200-300 (Poor to Hazardous). PM2.5 and PM10 exceed safe limits. Winter months see higher pollution due to crop burning, heating, and Dev Deepawali diyas. Carry N95 masks."
+    ],
+    "health_precautions": [
+      "Drink only sealed bottled water (Bisleri, Aquafina, Kinley). Do NOT drink tap water. Ganga water at ghats is NOT safe — severely contaminated with sewage and bacteria (E. coli, Campylobacter, Salmonella confirmed in studies).",
+      "Traveller's diarrhoea affects 20-50% of travellers. Carry ORS sachets and basic medication for stomach upset. Eat at busy stalls with high turnover.",
+      "Carry N95 masks for air quality, especially November-February when AQI can spike to 277+ (Poor to Hazardous). Breathing Varanasi air equivalent to smoking 1.4 cigarettes/day on average.",
+      "Avoid ice in drinks — may be made from tap water. Avoid dairy-based street food during monsoon (July-September) as it spoils quickly.",
+      "Respiratory irritation due to air quality and cremation smoke. People with asthma/respiratory conditions should take extra precautions. Smoke at Manikarnika can be heavy — view from a boat if sensitive."
+    ],
+    "emergency_contacts": {
+      "police": "100 or 112 (unified emergency number)",
+      "ambulance": "108 (free government ambulance)",
+      "fire": "101",
+      "nearest_hospital": {
+        "name": "Heritage Hospital (private, best for tourists) or Sir Sunderlal Hospital (BHU Government Hospital)",
+        "distance": "~6 km from Dashashwamedh Ghat (near BHU, Lanka area)",
+        "phone": "Heritage: 0542-236 8888 / 8948889488. BHU Hospital: 0542-236 7568. VERIFY: confirm current numbers before travel."
+      },
+      "tourist_helpline": "Tourist Police (Dashashwamedh Ghat): 0542-250 6250. National Tourist Helpline: 1363 or 1800-11-1363. Women's Helpline: 1091. UP Police Women's Helpline: 1090."
+    }
+  },
+  "packing": {
+    "essentials_specific_to_destination": [
+      "Comfortable walking shoes with closed toes (you will walk 5-10 km daily on uneven stone steps and narrow lanes)",
+      "Power bank (essential — getting lost in dark lanes with dead phone is genuinely stressful; power cuts are common)",
+      "Light scarf or cotton cloth (doubles as smoke filter at cremation ghats, dust cover in lanes, and head cover at temples)",
+      "N95 masks for air quality (AQI frequently 200-300; equivalent to smoking 1.4 cigarettes/day)",
+      "Cash in small denominations (Rs 10, 20, 50, 100 notes — most street food, boats, and autos are cash-only; UPI patchy in old city)",
+      "Hand sanitizer (street food culture + crowded lanes + limited washing facilities)",
+      "Backpack (essential — suitcases/rolling bags are genuinely a liability in narrow, stepped, uneven old city lanes)",
+      "Offline Google Maps download (mobile data patchy in narrow old city lanes near Kashi Vishwanath)"
+    ],
+    "clothing": {
+      "summer": [
+        "Light cotton kurtas and loose pants (breathable fabrics essential; temperatures reach 45°C)",
+        "Wide-brimmed hat or cap",
+        "Sunglasses (strong UV)",
+        "Sunscreen SPF 50+",
+        "Cotton scarf for dust and sun protection"
+      ],
+      "monsoon": [
+        "Raincoat or compact umbrella (heavy rain July-September; chronic waterlogging)",
+        "Waterproof bags for electronics (phones, power banks)",
+        "Quick-dry clothes",
+        "Waterproof footwear (sandals that dry quickly)",
+        "Light layers (humidity can make it feel warmer)"
+      ],
+      "winter": [
+        "Heavy woolens and warm jacket (mornings/evenings near-freezing, 8-12°C)",
+        "Thermal layers for early morning ghat visits and boat rides",
+        "Warm socks (stone floors in temples are very cold)",
+        "Light sweater for daytime (can warm up to 22-27°C)",
+        "Closed walking shoes with grip (ghat steps can be slippery with morning dew/fog)"
+      ]
+    },
+    "things_hard_to_find_locally": [
+      "N95 masks (surgical masks available but N95 harder to find; air quality is a real concern)",
+      "Good quality sunscreen (bring your preferred brand)",
+      "Specific medications (pharmacies exist but carry your prescriptions)",
+      "Western-style tampons/sanitary products (carry sufficient supply)"
+    ],
+    "things_easy_to_buy_locally": [
+      "Bottled water (available everywhere — Bisleri, Aquafina, Kinley)",
+      "Basic toiletries and hygiene products",
+      "SIM cards (Jio and Airtel stores widely available; carry passport/Aadhaar for verification)",
+      "Umbrellas and rain protection (monsoon season)",
+      "Woolens and shawls (winter season — sold at Godowlia and near ghats)",
+      "Religious items (prayer beads, rudraksha, small idols at Vishwanath Gali)"
+    ],
+    "medications_to_carry": [
+      "ORS sachets ( traveller's diarrhoea affects 20-50% of visitors)",
+      "Anti-diarrhoeal medication (Loperamide/Imodium)",
+      "Antacids (spicy/oily street food can trigger acid reflux)",
+      "Basic painkillers (Paracetamol/Ibuprofen)",
+      "Anti-allergy medication (dust, smoke, pollen from flowers at ghats)",
+      "Personal prescription medications (carry full supply)"
+    ]
+  },
+  "itinerary_framework": {
+    "one_day": "5:00 AM: Sunrise boat ride from Assi Ghat to Manikarnika (60-90 min, Rs 1,800-2,400 private rowboat) — watch ghats come alive. 6:30 AM: Disembark at Dashashwamedh, walk ghats observing morning rituals. 7:00-8:00 AM: Kashi Vishwanath darshan (early = shortest queue). 8:00-9:00 AM: Breakfast kachori sabzi at Ram Bhandar (Rs 25-35) + lassi. 9:00-10:30 AM: Walk through Vishwanath Gali for shopping. 11:00 AM-1:00 PM: Rest/retreat from heat at rooftop cafe. 1:00-2:00 PM: Lunch — Banarasi thali or litti chokha. 2:00-4:00 PM: Sarnath (auto 30 min, Rs 150-200) — Dhamek Stupa, Museum (Lion Capital), Ashoka Pillar (combo Rs 20). 4:30 PM: Return, freshen up. 5:30 PM: Reach Dashashwamedh Ghat for Ganga Aarti (arrive 60 min early for good spot). 6:00-7:00 PM: Ganga Aarti (absolute highlight). 8:00 PM: Dinner street food at Godowlia (tamatar chaat Rs 30-50, thandai Rs 60). 9:00 PM: Night walk along ghats or lassi at Blue Lassi Shop.",
+    "two_days": "DAY 1 (Spiritual Core): 5:00 AM sunrise boat ride from Assi Ghat. 7:00 AM Kashi Vishwanath darshan + Maa Annapurna Temple. 8:00 AM breakfast at Ram Bhandar. 9:00 AM Vishwanath Gali shopping. 11:00 AM rest at hotel. 4:00 PM Sankat Mochan Hanuman Temple or Durga Temple (BHU area). 5:30 PM Ganga Aarti at Dashashwamedh. 7:30 PM dinner street food at Godowlia (Deena Chaat tamatar chaat, Baba Thandai, paan). DAY 2 (Sarnath & Culture): 5:30 AM Subah-e-Banaras at Assi Ghat (morning aarti, classical music, yoga). 7:00 AM breakfast + malaiyo (winter). 8:30 AM auto to Sarnath (30 min, Rs 150-200). 9:00-11:30 AM Dhamek Stupa, Archaeological Museum, Mulagandha Kuti Vihar, Deer Park. 12:30 PM lunch at rooftop cafe. 3:00 PM market exploration: Vishwanath Gali (silk), Thatheri Bazaar (brass), UP Handloom (fixed prices). 5:30 PM sunset at quieter ghat (Munshi Ghat or Kedar Ghat). 6:30 PM Ganga Aarti (second viewing — notice details missed). 8:00 PM dinner + rabri jalebi at Ksheer Sagar.",
+    "three_days": "DAY 1 (Spiritual Varanasi): 5:00 AM sunrise boat ride from Assi to Manikarnika. 8:00 AM breakfast at Ram Bhandar. 8:30 AM Kashi Vishwanath darshan + Annapurna Temple + Vishwanath Gali. 11:00 AM rest. 2:00 PM old city lane exploration (Vishwanath Gali, Godowlia). 4:00 PM visit Manikarnika Ghat from respectful distance. 5:30 PM Ganga Aarti. 7:30 PM street food dinner at Godowlia. DAY 2 (Sarnath & Markets): 5:30 AM Assi Ghat morning walk. 8:30 AM Sarnath (Dhamek Stupa, Museum, Mulagandha Kuti Vihar, international temples). 12:30 PM lunch. 3:00 PM silk shopping at Vishwanath Gali + Thatheri Bazaar (brass). 5:30 PM sunset at quieter ghat. 6:30 PM Ganga Aarti (second viewing). DAY 3 (Hidden Corners & Temples): 5:00 AM second morning boat ride (notice details missed). 6:30 AM Tulsi Ghat area (Kushti Akhara wrestling). 8:00 AM temples: Sankat Mochan, Durga Temple, New Vishwanath Temple (BHU). 10:00 AM explore lesser-known ghats: Kedar Ghat, Nepali Temple, Chet Singh Ghat. 2:00 PM food walk (chena dahi vada, basket chaat, bread pakora, makhania lassi — budget Rs 200-400). 4:00 PM Bengali Tola / silk weaving workshops. 5:30 PM final sunset boat ride. 6:30 PM Ganga Aarti (third viewing — each time reveals something new). 8:00 PM farewell dinner + Banarasi paan.",
+    "four_days_plus": "Add these options: Day 4 Option A — Ramnagar Fort half-day (museum, vintage cars, royal costumes; entry Rs 50-80; try Ramnagar lassi). Day 4 Option B — Chunar Fort + Vindhyachal full-day trip (42-63 km, private cab Rs 2,500-4,000; 1000-year-old monolithic temples + important Shaktipeeth). Day 4 Option C — Deeper old city exploration: Chowk area (oldest commercial centre), Bengali Tola hidden akharas (wrestling grounds), Peeli Kothi weaver colony, Gulabi Minakari (pink enamel) artisans. Day 4 Option D — Prayagraj day trip (120 km, 2.5 hours each way) for Triveni Sangam holy dip. For 5-7 days: Add Ayodhya (200 km, overnight via Vande Bharat) for Ram Janmabhoomi, or Bodh Gaya (250 km, 5-6 hours) as part of Buddhist Circuit.",
+    "day_trip_from": [
+      "Prayagraj (Allahabad): 120 km, 2-2.5 hours. Triveni Sangam (holy dip at Ganga-Yamuna-Saraswati confluence), Hanuman Temple, Akshaya Vat, Anand Bhavan. Best day trip from Varanasi.",
+      "Chunar Fort + Vindhyachal: 42-63 km. Full-day circuit. Chunar Fort (1000-year-old monolithic temples, Warren Hastings' bungalow) + Vindhyachal (important Shaktipeeth, Vindhyavasini Devi Temple). Private cab Rs 2,500-4,000.",
+      "Ayodhya: 200 km. TIGHT day trip ONLY possible via Vande Bharat (2h 24m each way). Ram Janmabhoomi, Hanuman Garhi, Saryu River ghats. Otherwise overnight stay recommended."
+    ]
+  },
+  "nearby_destinations": [
+    {
+      "name": "Sarnath",
+      "distance": "10 km northeast",
+      "why_combine": "Buddha gave his first sermon here after enlightenment. Completely different atmosphere from chaotic Varanasi — serene, green, meditative. UNESCO-inscribed Buddhist site. Essential for any Varanasi visit. Dhamek Stupa, Archaeological Museum (Lion Capital of Ashoka), Deer Park, and international Buddhist temples.",
+      "how_to_get_there": "Auto-rickshaw: 30 min, Rs 150-200 one way (negotiate round trip). Cab: Rs 800-1,200 round trip with waiting. UPSRTC buses available. Ola/Uber available but can be unreliable."
+    },
+    {
+      "name": "Prayagraj (Allahabad)",
+      "distance": "120 km",
+      "why_combine": "Triveni Sangam (confluence of Ganga-Yamuna-Saraswati) is one of Hinduism's most sacred sites. Very popular combined with Varanasi pilgrimage. The 120 km distance makes it genuinely feasible as a same-day circuit.",
+      "how_to_get_there": "Cab (same-day return): Rs 4,500-5,000, 2-2.5 hours each way. Vande Bharat: ~1.5-2 hours, Rs 500-700 (Chair Car). Train (regular): 2.5-3 hours, Rs 150-200. UPSRTC Bus: 3-3.5 hours, Rs 200-280. Best route: NH19 (4-lane expressway)."
+    },
+    {
+      "name": "Ayodhya",
+      "distance": "200 km",
+      "why_combine": "Ram Janmabhoomi Temple is now fully developed and one of India's most significant pilgrimage sites. With Vande Bharat connection, Ayodhya is more accessible than ever. Also visit Hanuman Garhi and Saryu River ghats.",
+      "how_to_get_there": "Vande Bharat: 2h 24m, Rs 500-1,100 (ONLY realistic same-day option). Cab: 4-5 hours one way, Rs 3,300-5,000. Bus: 5-7 hours, Rs 300-400. Same-day by road is very exhausting — overnight stay recommended unless using Vande Bharat."
+    },
+    {
+      "name": "Chunar Fort + Vindhyachal",
+      "distance": "42 km (Chunar) / 63 km (Vindhyachal)",
+      "why_combine": "Historical fort + important Shaktipeeth temple in one circuit. Chunar Fort has 1000-1500 year old monolithic stone temples, rock-cut Vishnu images, and Warren Hastings' bungalow. Vindhyachal has Vindhyavasini Devi Temple (Goddess Durga) and Ashtabhuja Temple.",
+      "how_to_get_there": "Private cab (recommended): Day trip Rs 2,500-4,000 for Varanasi-Chunar-Vindhyachal-Varanasi circuit. UPSRTC buses available. Train to Vindhyachal railway station (BDL) — 1 km from temple. Total time: 8-10 hours."
+    },
+    {
+      "name": "Bodh Gaya",
+      "distance": "250 km",
+      "why_combine": "Mahabodhi Temple and the Bodhi Tree where Buddha attained enlightenment. Essential for Buddhist pilgrimage circuit. Combine with Sarnath, Rajgir, and Nalanda for a 5-7 day Buddhist Circuit tour.",
+      "how_to_get_there": "Road (cab): 5-6 hours via NH31/19. Train (to Gaya Jn): 4-5 hours. Bus: 6-7 hours. NOT feasible as a day trip from Varanasi — minimum 1 overnight stay required."
+    }
+  ],
+  "data_quality": {
+    "research_sources_used": [
+      "https://www.savaari.com/blog/delhi/delhi-to-varanasi/",
+      "https://www.ixigo.com/by-train-rail/new-delhi-to-varanasi-by-train",
+      "https://www.makemytrip.com/routeplanner/mumbai-varanasi.html",
+      "https://www.rome2rio.com/s/Chennai/Varanasi",
+      "https://chikucab.com/varanasi-airport-taxi.html",
+      "https://www.varanasiguru.com/varanasi-railway-stations-your-essential-guide/",
+      "https://chikucab.com/blogs/cheapest-taxi-near-me-in-varanasi/",
+      "https://www.rentrip.in/rent-bike/varanasi",
+      "https://rapido.bike/Varanasi/main-page",
+      "https://www.varanasiguru.com/varanasi-boat-ride-online-booking/",
+      "https://varanasiitinerary.com/varanasi-safety-tips",
+      "https://www.varanasiguru.com/top-10-tourist-scams-to-avoid-in-varanasi/",
+      "https://tradewingstravel.com/varanasi-tour-scam-alert-guide/",
+      "https://www.reddit.com/r/varanasi/comments/1qordyk/what_are_the_common_scams_to_avoid_in_varanasi_i/",
+      "https://mobilecoverage.co.in/en/uttar-pradesh/varanasi",
+      "https://insights.opensignal.com/reports/2025/06/india/mobile-network-experience",
+      "shrikashivishwanath.org (official temple booking portal)",
+      "Tale of 2 Backpackers travel blog",
+      "Foodaholix Varanasi food guide",
+      "Outlook Traveller Varanasi guides",
+      "Quora Indian traveller experiences",
+      "Reddit r/varanasi community discussions",
+      "Pinaak travel blog",
+      "UP Tourism official website",
+      "Incredible India official site",
+      "India Travel Bear blog",
+      "District.in local knowledge",
+      "Kashi Taxi transport guides",
+      "World Heritage Site descriptions"
+    ],
+    "confidence_level": "high",
+    "last_known_accurate_as_of": "2025-07-01",
+    "fields_needing_verification": [
+      "cab_cost_from_airport: Prepaid cab and Ola/Uber rates subject to seasonal surge and fuel price changes",
+      "auto_cab_cost: Auto and e-rickshaw fares vary with negotiation and fuel prices",
+      "local_sightseeing_full_day: Cab rates vary by operator and season",
+      "per_km_sedan: Ola/Uber base rates change periodically",
+      "per_km_suv: Innova Crysta rates vary by operator",
+      "airport_transfer: Night surcharge and rates subject to change",
+      "budget_per_day_backpacker: Hostel prices vary widely by platform (international vs Indian)",
+      "budget_per_day_mid_range: Hotel rates fluctuate significantly during festivals",
+      "budget_per_day_comfortable: Boutique hotel rates vary by season",
+      "budget_per_day_luxury: Premium hotel rates subject to dynamic pricing",
+      "ramnagar_fort_entry_fee: Entry fee varies by source (Rs 50-80 Indian)",
+      "accommodation_price_ranges: Prices surge 30-60% during Dev Deepawali and Mahashivratri",
+      "dev_deepawali_dates: 2025 date November 5, 2026 date November 24 — verify before planning",
+      "mahashivratri_dates: 2025 date February 26, 2026 date February 15 — verify before planning",
+      "ganga_aarti_vip_seating: Pricing varies by demand and operator (Rs 1,100-1,500 range)",
+      "boat_ride_prices: Highly variable and seasonal — negotiate firmly",
+      "malaiyo_availability: Strictly November-February, vendors sell out by 11 AM",
+      "vande_bharath_timing: Check IRCTC for current schedules — subject to change",
+      "sarnath_museum_closure: Friday closure should be confirmed before visiting",
+      "chunar_fort_timing: Limited recent traveller reports on exact entry timing",
+      "bhu_guest_house_booking: Process and availability needs verification",
+      "vegan_options: Specific vegan restaurants in Varanasi need verification",
+      "halal_availability: Specific Halal meat availability areas need verification",
+      "thandai_festival_prices: May vary during festivals",
+      "heritage_hospital_phone: Verify current contact numbers before travel"
+    ],
+    "notes_for_reviewer": "This JSON was compiled from 6 detailed research reports covering transport, attractions, food/accommodation, safety, local knowledge, and itineraries. Prices are indicative ranges sourced from multiple references (Indian travel blogs, cab operator websites, Reddit discussions, official transport data) and subject to seasonal variation. All information marked with VERIFY: prefix needs re-verification from official sources before being presented to end users. Festival dates change yearly based on Hindu lunar calendar — always verify current year dates. The data prioritizes Indian domestic traveller perspectives over foreign tourist experiences. Last comprehensive update: July 2025."
+  }
+}

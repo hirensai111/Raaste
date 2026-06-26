@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:raaste/config/routes.dart';
 
 class CompanionScreen extends StatefulWidget {
   final String tripId;
 
-  const CompanionScreen({
-    super.key,
-    required this.tripId,
-  });
+  const CompanionScreen({super.key, required this.tripId});
 
   @override
   State<CompanionScreen> createState() => _CompanionScreenState();
@@ -15,7 +14,8 @@ class CompanionScreen extends StatefulWidget {
 class _CompanionScreenState extends State<CompanionScreen> {
   final List<Map<String, dynamic>> _messages = [
     {
-      'text': 'Hi! I\'m your Raaste companion for this trip. Ask me anything — where to eat, how much to pay, what to skip.',
+      'text':
+          'Hi! I\'m your Raaste companion for this trip. Ask me anything — where to eat, how much to pay, what to skip.',
       'isUser': false,
     },
   ];
@@ -35,7 +35,8 @@ class _CompanionScreenState extends State<CompanionScreen> {
       if (mounted) {
         setState(() {
           _messages.add({
-            'text': 'I\'m still learning about this place. Soon I\'ll give you a real local answer!',
+            'text':
+                'I\'m still learning about this place. Soon I\'ll give you a real local answer!',
             'isUser': false,
           });
         });
@@ -46,7 +47,25 @@ class _CompanionScreenState extends State<CompanionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Trip Companion')),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+              return;
+            }
+            final tripId = widget.tripId.trim();
+            context.go(
+              tripId.isEmpty
+                  ? AppRoutes.trips
+                  : '${AppRoutes.itinerary}?tripId=${Uri.encodeComponent(tripId)}',
+            );
+          },
+          icon: const Icon(Icons.arrow_back_rounded),
+        ),
+        title: const Text('Trip Companion'),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -57,29 +76,30 @@ class _CompanionScreenState extends State<CompanionScreen> {
                 final message = _messages[index];
                 final isUser = message['isUser'] as bool;
                 return Align(
-                  alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment:
+                      isUser ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 12),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: isUser
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.surface,
+                      color:
+                          isUser
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(16),
-                      border: isUser
-                          ? null
-                          : Border.all(
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
+                      border:
+                          isUser
+                              ? null
+                              : Border.all(
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
                     ),
                     constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * 0.75,
                     ),
                     child: Text(
                       message['text'] as String,
-                      style: TextStyle(
-                        color: isUser ? Colors.white : null,
-                      ),
+                      style: TextStyle(color: isUser ? Colors.white : null),
                     ),
                   ),
                 );

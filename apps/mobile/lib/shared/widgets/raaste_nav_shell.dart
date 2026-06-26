@@ -42,10 +42,7 @@ class RaasteNavScaffold extends StatelessWidget {
 class RaasteBottomNav extends StatelessWidget {
   final RaasteNavTab currentTab;
 
-  const RaasteBottomNav({
-    super.key,
-    required this.currentTab,
-  });
+  const RaasteBottomNav({super.key, required this.currentTab});
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +85,8 @@ class RaasteBottomNav extends StatelessWidget {
                 currentTab: currentTab,
               ),
               _NavItem(
-                icon: Icons.favorite_border_rounded,
-                label: 'Saved',
+                icon: Icons.checklist_rounded,
+                label: 'Checklist',
                 tab: RaasteNavTab.saved,
                 currentTab: currentTab,
               ),
@@ -190,7 +187,5 @@ class _NavItem extends StatelessWidget {
 void showImplementingSoon(BuildContext context) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
-    ..showSnackBar(
-      const SnackBar(content: Text('Implementing soon')),
-    );
+    ..showSnackBar(const SnackBar(content: Text('Implementing soon')));
 }
