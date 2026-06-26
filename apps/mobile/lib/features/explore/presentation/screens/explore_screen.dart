@@ -20,29 +20,32 @@ class ExploreScreen extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverPadding(
-                  padding: EdgeInsets.fromLTRB(padding, 20, padding, bottomInset),
+                  padding: EdgeInsets.fromLTRB(
+                    padding,
+                    20,
+                    padding,
+                    bottomInset,
+                  ),
                   sliver: SliverList(
-                    delegate: SliverChildListDelegate.fixed(
-                      const [
-                        _ExploreHeader(),
-                        SizedBox(height: 16),
-                        _SearchBar(),
-                        SizedBox(height: 18),
-                        _CategoryStrip(),
-                        SizedBox(height: 22),
-                        _SectionHeader(title: 'Trending Destinations'),
-                        SizedBox(height: 14),
-                        _TrendingStrip(),
-                        SizedBox(height: 22),
-                        _SectionHeader(title: 'Popular in Your Interests'),
-                        SizedBox(height: 14),
-                        _InterestGrid(),
-                        SizedBox(height: 22),
-                        _PlainSectionHeader(title: 'Explore by Region'),
-                        SizedBox(height: 14),
-                        _RegionStrip(),
-                      ],
-                    ),
+                    delegate: const SliverChildListDelegate.fixed([
+                      _ExploreHeader(),
+                      SizedBox(height: 16),
+                      _SearchBar(),
+                      SizedBox(height: 18),
+                      _CategoryStrip(),
+                      SizedBox(height: 22),
+                      _SectionHeader(title: 'Trending Destinations'),
+                      SizedBox(height: 14),
+                      _TrendingStrip(),
+                      SizedBox(height: 22),
+                      _SectionHeader(title: 'Popular in Your Interests'),
+                      SizedBox(height: 14),
+                      _InterestGrid(),
+                      SizedBox(height: 22),
+                      _PlainSectionHeader(title: 'Explore by Region'),
+                      SizedBox(height: 14),
+                      _RegionStrip(),
+                    ]),
                   ),
                 ),
               ],
@@ -54,7 +57,7 @@ class ExploreScreen extends StatelessWidget {
   }
 }
 
-// ─── Header ──────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _ExploreHeader extends StatelessWidget {
   const _ExploreHeader();
@@ -127,7 +130,7 @@ class _RoundIconButton extends StatelessWidget {
   }
 }
 
-// ─── Search Bar ───────────────────────────────────────────────────────────────
+// â”€â”€â”€ Search Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _SearchBar extends StatelessWidget {
   const _SearchBar();
@@ -162,7 +165,11 @@ class _SearchBar extends StatelessWidget {
                   'Where do you want to go?',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Color(0xFF8A8782), fontSize: 15, height: 1),
+                  style: TextStyle(
+                    color: Color(0xFF8A8782),
+                    fontSize: 15,
+                    height: 1,
+                  ),
                 ),
               ),
               SizedBox(width: 10),
@@ -175,7 +182,7 @@ class _SearchBar extends StatelessWidget {
   }
 }
 
-// ─── Category Strip ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Category Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _CategoryStrip extends StatelessWidget {
   const _CategoryStrip();
@@ -187,10 +194,17 @@ class _CategoryStrip extends StatelessWidget {
       physics: BouncingScrollPhysics(),
       child: Row(
         children: [
-          _CategoryTile(icon: Icons.landscape_outlined, label: 'All', isSelected: true),
+          _CategoryTile(
+            icon: Icons.landscape_outlined,
+            label: 'All',
+            isSelected: true,
+          ),
           _CategoryTile(icon: Icons.terrain_outlined, label: 'Mountains'),
           _CategoryTile(icon: Icons.beach_access_outlined, label: 'Beaches'),
-          _CategoryTile(icon: Icons.account_balance_outlined, label: 'Heritage'),
+          _CategoryTile(
+            icon: Icons.account_balance_outlined,
+            label: 'Heritage',
+          ),
           _CategoryTile(icon: Icons.water_drop_outlined, label: 'Spiritual'),
           _CategoryTile(icon: Icons.terrain_outlined, label: 'Hill Stations'),
         ],
@@ -213,7 +227,8 @@ class _CategoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foreground = isSelected ? Colors.white : RaasteShellColors.ink;
-    final background = isSelected ? RaasteShellColors.ink : const Color(0xFFFFFCF7);
+    final background =
+        isSelected ? RaasteShellColors.ink : const Color(0xFFFFFCF7);
 
     return Padding(
       padding: const EdgeInsets.only(right: 10),
@@ -228,7 +243,10 @@ class _CategoryTile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
             decoration: BoxDecoration(
               border: Border.all(
-                color: isSelected ? RaasteShellColors.ink : RaasteShellColors.outline,
+                color:
+                    isSelected
+                        ? RaasteShellColors.ink
+                        : RaasteShellColors.outline,
               ),
               borderRadius: BorderRadius.circular(14),
             ),
@@ -259,7 +277,7 @@ class _CategoryTile extends StatelessWidget {
   }
 }
 
-// ─── Section Headers ──────────────────────────────────────────────────────────
+// â”€â”€â”€ Section Headers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _SectionHeader extends StatelessWidget {
   final String title;
@@ -279,7 +297,10 @@ class _SectionHeader extends StatelessWidget {
           child: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('View all', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+              Text(
+                'View all',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
               SizedBox(width: 4),
               Icon(Icons.arrow_forward_rounded, size: 16),
             ],
@@ -310,7 +331,7 @@ class _PlainSectionHeader extends StatelessWidget {
   }
 }
 
-// ─── Trending Strip ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Trending Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _TrendingStrip extends StatelessWidget {
   const _TrendingStrip();
@@ -438,11 +459,7 @@ class _TrendingDestinationCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Positioned(
-                      left: 14,
-                      top: 14,
-                      child: _OverlayLabel(label),
-                    ),
+                    Positioned(left: 14, top: 14, child: _OverlayLabel(label)),
                     const Positioned(
                       top: 14,
                       right: 14,
@@ -556,7 +573,7 @@ class _OverlayLabel extends StatelessWidget {
   }
 }
 
-// ─── Interest Grid ────────────────────────────────────────────────────────────
+// â”€â”€â”€ Interest Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _InterestGrid extends StatelessWidget {
   const _InterestGrid();
@@ -566,7 +583,7 @@ class _InterestGrid extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         const spacing = 10.0;
-        // Always 2 columns — 4-col at >=390 makes cards too small for text
+        // Always 2 columns â€” 4-col at >=390 makes cards too small for text
         final width = (constraints.maxWidth - spacing) / 2;
 
         return Wrap(
@@ -674,7 +691,7 @@ class _InterestCard extends StatelessWidget {
   }
 }
 
-// ─── Region Strip ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ Region Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _RegionStrip extends StatelessWidget {
   const _RegionStrip();
@@ -754,7 +771,12 @@ class _RegionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           child: Stack(
             children: [
-              Image.asset(image, height: height, width: width, fit: BoxFit.cover),
+              Image.asset(
+                image,
+                height: height,
+                width: width,
+                fit: BoxFit.cover,
+              ),
               const Positioned.fill(
                 child: DecoratedBox(
                   decoration: BoxDecoration(

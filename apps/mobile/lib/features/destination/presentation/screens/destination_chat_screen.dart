@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
 import 'package:raaste/config/routes.dart';
 import 'package:raaste/core/constants/app_constants.dart';
 import 'package:raaste/core/di/injection.dart';
@@ -11,9 +9,19 @@ import 'package:raaste/features/destination/data/services/overpass_service.dart'
 import 'package:raaste/features/destination/domain/models/destination_guide.dart';
 import 'package:raaste/features/destination/domain/models/osm_place.dart';
 import 'package:raaste/features/destination/domain/models/trip_intake.dart';
+import 'package:raaste/features/trip/data/repositories/saved_trip_repository.dart';
 import 'package:raaste/shared/widgets/raaste_nav_shell.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-enum _IntakeStep { dates, landingTime, departureTime, people, interests, dietary, generating }
+enum _IntakeStep {
+  dates,
+  landingTime,
+  departureTime,
+  people,
+  interests,
+  dietary,
+  generating,
+}
 
 class DestinationChatScreen extends StatefulWidget {
   final String destinationName;
@@ -22,6 +30,7 @@ class DestinationChatScreen extends StatefulWidget {
   final double? lat;
   final double? lon;
   final String? guideId;
+  final String? tripId;
 
   const DestinationChatScreen({
     super.key,
@@ -31,9 +40,12 @@ class DestinationChatScreen extends StatefulWidget {
     required this.lat,
     required this.lon,
     this.guideId,
+    this.tripId,
   });
 
-  bool get isEditMode => guideId != null && guideId!.trim().isNotEmpty;
+  bool get isEditMode =>
+      (guideId != null && guideId!.trim().isNotEmpty) ||
+      (tripId != null && tripId!.trim().isNotEmpty);
 
   @override
   State<DestinationChatScreen> createState() => _DestinationChatScreenState();
@@ -46,9 +58,11 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   final _guideStore = getIt<DestinationGuideStore>();
   final _openAi = getIt<OpenAiDestinationService>();
   final _overpass = getIt<OverpassService>();
+  final _savedTrips = getIt<SavedTripRepository>();
 
   _IntakeStep _step = _IntakeStep.dates;
   DestinationGuide? _editingGuide;
+  String? _editingTripId;
   bool _isLoading = false;
   String? _dates;
   String? _landingTime;
@@ -72,7 +86,19 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
 
   Future<void> _loadInitialState() async {
     if (widget.isEditMode) {
-      final guide = await _guideStore.getGuide(widget.guideId!);
+      DestinationGuide? guide;
+      final tripId = widget.tripId?.trim();
+      if (tripId != null && tripId.isNotEmpty) {
+        final trip = await _savedTrips.getTrip(tripId);
+        guide = trip?.guide;
+        _editingTripId = trip?.id;
+        if (guide != null) await _guideStore.saveGuide(guide);
+      }
+
+      if (guide == null && widget.guideId?.trim().isNotEmpty == true) {
+        guide = await _guideStore.getGuide(widget.guideId!.trim());
+      }
+
       if (!mounted) return;
       setState(() {
         _editingGuide = guide;
@@ -133,7 +159,9 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
       case _IntakeStep.landingTime:
         _landingTime = text;
         _step = _IntakeStep.departureTime;
-        _addAssistant('What time do you plan to depart or leave on the last day?');
+        _addAssistant(
+          'What time do you plan to depart or leave on the last day?',
+        );
         return;
       case _IntakeStep.departureTime:
         _departureTime = text;
@@ -168,7 +196,6 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
         return;
     }
   }
-
 
   void _continueWithSelectedInterests() {
     if (_selectedInterests.isEmpty) {
@@ -238,16 +265,11 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
     }
   }
 
-
   Future<OsmPlaceBundle> _fetchOverpassPlaces(TripIntake intake) async {
     final lat = intake.lat;
     final lon = intake.lon;
     if (lat == null || lon == null) {
-      return const OsmPlaceBundle(
-        attractions: [],
-        food: [],
-        radiusMeters: 0,
-      );
+      return const OsmPlaceBundle(attractions: [], food: [], radiusMeters: 0);
     }
 
     try {
@@ -256,13 +278,10 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
       if (mounted) {
         setState(() => _messages.add(_ChatMessage.assistant(e.message)));
       }
-      return const OsmPlaceBundle(
-        attractions: [],
-        food: [],
-        radiusMeters: 0,
-      );
+      return const OsmPlaceBundle(attractions: [], food: [], radiusMeters: 0);
     }
   }
+
   Future<void> _reviseGuide(String editRequest) async {
     final guide = _editingGuide;
     if (guide == null) return;
@@ -279,8 +298,21 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
         editRequest: editRequest,
       );
       final guideId = await _guideStore.saveGuide(updated);
+      final saved = updated.copyWith(id: guideId);
+      final tripId = _editingTripId ?? widget.tripId?.trim();
+      if (tripId != null && tripId.isNotEmpty) {
+        await _savedTrips.updateTripGuide(tripId: tripId, guide: saved);
+        if (mounted) context.go('${AppRoutes.destination}?tripId=$tripId');
+        return;
+      }
       if (mounted) context.go('${AppRoutes.destination}?id=$guideId');
     } on OpenAiGuideException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _messages.add(_ChatMessage.assistant(e.message));
+      });
+    } on SavedTripException catch (e) {
       if (!mounted) return;
       setState(() {
         _isLoading = false;
@@ -346,18 +378,19 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
           children: [
             _ChatHeader(
               title: widget.isEditMode ? 'Edit Guide' : widget.destinationName,
-              subtitle: widget.isEditMode
-                  ? 'Ask Raaste to refine the plan'
-                  : 'Raaste AI trip intake',
+              subtitle:
+                  widget.isEditMode
+                      ? 'Ask Raaste to refine the plan'
+                      : 'Raaste AI trip intake',
             ),
             Expanded(
               child: ListView.builder(
                 controller: _scrollController,
                 padding: const EdgeInsets.fromLTRB(18, 12, 18, 18),
                 itemCount: _messages.length,
-                itemBuilder: (context, index) => _MessageBubble(
-                  message: _messages[index],
-                ),
+                itemBuilder:
+                    (context, index) =>
+                        _MessageBubble(message: _messages[index]),
               ),
             ),
             if (_step == _IntakeStep.interests && !widget.isEditMode)
@@ -369,9 +402,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
             if (_step == _IntakeStep.dietary && !widget.isEditMode)
               _ChoiceChips(
                 values: AppConstants.dietaryPreferences,
-                selected: {
-                  if (_dietaryPreference != null) _dietaryPreference!,
-                },
+                selected: {if (_dietaryPreference != null) _dietaryPreference!},
                 onTap: _selectDietary,
               ),
             Padding(
@@ -381,7 +412,8 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
                   Expanded(
                     child: TextField(
                       controller: _controller,
-                      enabled: !_isLoading &&
+                      enabled:
+                          !_isLoading &&
                           (!widget.isEditMode || _editingGuide != null),
                       minLines: 1,
                       maxLines: 4,
@@ -412,16 +444,20 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
                     shape: const CircleBorder(),
                     child: IconButton(
                       onPressed: _isLoading ? null : _sendMessage,
-                      icon: _isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
+                      icon:
+                          _isLoading
+                              ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                              : const Icon(
+                                Icons.send_rounded,
                                 color: Colors.white,
                               ),
-                            )
-                          : const Icon(Icons.send_rounded, color: Colors.white),
                     ),
                   ),
                 ],
@@ -446,7 +482,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
         return 'Example: 2';
       case _IntakeStep.interests:
         return 'Tap chips, then press send';
-case _IntakeStep.dietary:
+      case _IntakeStep.dietary:
         return 'Example: Vegetarian, Jain, Halal';
       case _IntakeStep.generating:
         return 'Generating guide...';
@@ -529,21 +565,25 @@ class _ChoiceChips extends StatelessWidget {
         child: Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: values.map((value) {
-            final active = selected.contains(value);
-            return ChoiceChip(
-              selected: active,
-              label: Text(value),
-              selectedColor: const Color(0xFFE8D9C8),
-              backgroundColor: Colors.white,
-              labelStyle: TextStyle(
-                color: active ? RaasteShellColors.ink : RaasteShellColors.muted,
-                fontWeight: active ? FontWeight.w700 : FontWeight.w500,
-              ),
-              side: const BorderSide(color: RaasteShellColors.outline),
-              onSelected: (_) => onTap(value),
-            );
-          }).toList(),
+          children:
+              values.map((value) {
+                final active = selected.contains(value);
+                return ChoiceChip(
+                  selected: active,
+                  label: Text(value),
+                  selectedColor: const Color(0xFFE8D9C8),
+                  backgroundColor: Colors.white,
+                  labelStyle: TextStyle(
+                    color:
+                        active
+                            ? RaasteShellColors.ink
+                            : RaasteShellColors.muted,
+                    fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                  ),
+                  side: const BorderSide(color: RaasteShellColors.outline),
+                  onSelected: (_) => onTap(value),
+                );
+              }).toList(),
         ),
       ),
     );
@@ -574,9 +614,7 @@ class _MessageBubble extends StatelessWidget {
             bottomLeft: Radius.circular(isUser ? 18 : 4),
             bottomRight: Radius.circular(isUser ? 4 : 18),
           ),
-          border: isUser
-              ? null
-              : Border.all(color: RaasteShellColors.outline),
+          border: isUser ? null : Border.all(color: RaasteShellColors.outline),
           boxShadow: const [
             BoxShadow(
               color: RaasteShellColors.shadow,
@@ -610,9 +648,3 @@ class _ChatMessage {
   factory _ChatMessage.assistant(String text) =>
       _ChatMessage(text: text, isUser: false);
 }
-
-
-
-
-
-

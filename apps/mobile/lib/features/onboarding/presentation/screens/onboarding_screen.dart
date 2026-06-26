@@ -27,10 +27,7 @@ class OnboardingScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFF5EFE0),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final screenSize = Size(
-            constraints.maxWidth,
-            constraints.maxHeight,
-          );
+          final screenSize = Size(constraints.maxWidth, constraints.maxHeight);
 
           return Stack(
             fit: StackFit.expand,
@@ -85,8 +82,8 @@ class _ImageTapTarget extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: onTap,
-            splashColor: Colors.white.withOpacity(0.12),
-            highlightColor: Colors.white.withOpacity(0.06),
+            splashColor: Colors.white.withValues(alpha: 0.12),
+            highlightColor: Colors.white.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(rect.height / 2),
           ),
         ),
@@ -99,12 +96,14 @@ class _ImageTapTarget extends StatelessWidget {
         OnboardingScreen._imageWidth / OnboardingScreen._imageHeight;
     final screenAspect = screenSize.width / screenSize.height;
 
-    final fittedWidth = screenAspect > imageAspect
-        ? screenSize.width
-        : screenSize.height * imageAspect;
-    final fittedHeight = screenAspect > imageAspect
-        ? screenSize.width / imageAspect
-        : screenSize.height;
+    final fittedWidth =
+        screenAspect > imageAspect
+            ? screenSize.width
+            : screenSize.height * imageAspect;
+    final fittedHeight =
+        screenAspect > imageAspect
+            ? screenSize.width / imageAspect
+            : screenSize.height;
     final dx = (screenSize.width - fittedWidth) / 2;
     final dy = (screenSize.height - fittedHeight) / 2;
 

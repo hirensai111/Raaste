@@ -13,6 +13,7 @@ import 'package:raaste/features/onboarding/presentation/screens/profile_setup_sc
 import 'package:raaste/features/profile/presentation/screens/profile_screen.dart';
 import 'package:raaste/features/splash/presentation/screens/splash_screen.dart';
 import 'package:raaste/features/trip/presentation/screens/itinerary_screen.dart';
+import 'package:raaste/features/trip/presentation/screens/my_trips_screen.dart';
 import 'package:raaste/features/trip/presentation/screens/trip_planning_screen.dart';
 import 'package:raaste/shared/widgets/raaste_nav_shell.dart';
 
@@ -41,91 +42,83 @@ class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
   static GoRouter get router => GoRouter(
-        navigatorKey: _rootNavigatorKey,
-        initialLocation: AppRoutes.splash,
-        routes: [
-          GoRoute(
-            path: AppRoutes.splash,
-            builder: (_, __) => const SplashScreen(),
-          ),
-          GoRoute(
-            path: AppRoutes.onboarding,
-            builder: (_, __) => const OnboardingScreen(),
-          ),
-          GoRoute(
-            path: AppRoutes.profileSetup,
-            builder: (_, __) => const ProfileSetupScreen(),
-          ),
-          GoRoute(
-            path: AppRoutes.signIn,
-            builder: (_, __) => const SignInScreen(),
-          ),
-          GoRoute(
-            path: AppRoutes.home,
-            builder: (_, __) => const HomeScreen(),
-          ),
-          GoRoute(
-            path: AppRoutes.trips,
-            builder: (_, __) => const ImplementingSoonScreen(
-              title: 'Trips',
-              icon: Icons.work_outline_rounded,
-              tab: RaasteNavTab.trips,
-            ),
-          ),
-          GoRoute(
-            path: AppRoutes.explore,
-            builder: (_, __) => const ExploreScreen(),
-          ),
-          GoRoute(
-            path: AppRoutes.saved,
-            builder: (_, __) => const ImplementingSoonScreen(
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: AppRoutes.splash,
+    routes: [
+      GoRoute(path: AppRoutes.splash, builder: (_, __) => const SplashScreen()),
+      GoRoute(
+        path: AppRoutes.onboarding,
+        builder: (_, __) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.profileSetup,
+        builder: (_, __) => const ProfileSetupScreen(),
+      ),
+      GoRoute(path: AppRoutes.signIn, builder: (_, __) => const SignInScreen()),
+      GoRoute(path: AppRoutes.home, builder: (_, __) => const HomeScreen()),
+      GoRoute(path: AppRoutes.trips, builder: (_, __) => const MyTripsScreen()),
+      GoRoute(
+        path: AppRoutes.explore,
+        builder: (_, __) => const ExploreScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.saved,
+        builder:
+            (_, __) => const ImplementingSoonScreen(
               title: 'Saved',
               icon: Icons.favorite_border_rounded,
               tab: RaasteNavTab.saved,
             ),
-          ),
-          GoRoute(
-            path: AppRoutes.destination,
-            builder: (_, state) => DestinationDetailScreen(
+      ),
+      GoRoute(
+        path: AppRoutes.destination,
+        builder:
+            (_, state) => DestinationDetailScreen(
               destinationId: state.uri.queryParameters['id'] ?? '',
+              tripId: state.uri.queryParameters['tripId'],
             ),
-          ),
-          GoRoute(
-            path: AppRoutes.destinationChat,
-            builder: (_, state) => DestinationChatScreen(
+      ),
+      GoRoute(
+        path: AppRoutes.destinationChat,
+        builder:
+            (_, state) => DestinationChatScreen(
               destinationName: state.uri.queryParameters['destination'] ?? '',
-              sourceId: state.uri.queryParameters['sourceId'] ??
+              sourceId:
+                  state.uri.queryParameters['sourceId'] ??
                   state.uri.queryParameters['placeId'] ??
                   '',
               displayAddress: state.uri.queryParameters['displayAddress'] ?? '',
               lat: double.tryParse(state.uri.queryParameters['lat'] ?? ''),
               lon: double.tryParse(state.uri.queryParameters['lon'] ?? ''),
               guideId: state.uri.queryParameters['guideId'],
+              tripId: state.uri.queryParameters['tripId'],
             ),
-          ),
-          GoRoute(
-            path: AppRoutes.tripPlanning,
-            builder: (_, state) => TripPlanningScreen(
+      ),
+      GoRoute(
+        path: AppRoutes.tripPlanning,
+        builder:
+            (_, state) => TripPlanningScreen(
               destinationId: state.uri.queryParameters['destinationId'] ?? '',
             ),
-          ),
-          GoRoute(
-            path: AppRoutes.itinerary,
-            builder: (_, state) => ItineraryScreen(
+      ),
+      GoRoute(
+        path: AppRoutes.itinerary,
+        builder:
+            (_, state) => ItineraryScreen(
               tripId: state.uri.queryParameters['tripId'] ?? '',
             ),
-          ),
-          GoRoute(
-            path: AppRoutes.companion,
-            builder: (_, state) => CompanionScreen(
+      ),
+      GoRoute(
+        path: AppRoutes.companion,
+        builder:
+            (_, state) => CompanionScreen(
               tripId: state.uri.queryParameters['tripId'] ?? '',
             ),
-          ),
-          GoRoute(
-            path: AppRoutes.profile,
-            builder: (_, __) => const ProfileScreen(),
-          ),
-        ],
-      );
+      ),
+      GoRoute(
+        path: AppRoutes.profile,
+        builder: (_, __) => const ProfileScreen(),
+      ),
+    ],
+  );
 }
-
