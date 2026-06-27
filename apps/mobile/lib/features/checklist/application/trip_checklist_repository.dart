@@ -21,8 +21,15 @@ class TripChecklistRepository {
     final user = _client.auth.currentUser;
     if (user == null) return const [];
 
+    // Generate any due checklists first, but don't let generation failures
+    // block loading whatever checklists already exist.
     try {
       await ensureDueChecklists();
+    } catch (_) {
+      // Swallow generation errors; load proceeds below.
+    }
+
+    try {
       final rows = await _client
           .from('trip_checklists')
           .select()
@@ -58,22 +65,28 @@ class TripChecklistRepository {
     final today = _dateOnly(DateTime.now());
 
     for (final trip in trips) {
-      final range = _parseTripDateRange(_tripDateText(trip), today);
+      final raw = _tripDateText(trip);
+      final range = _parseTripDateRange(raw, today);
       if (range == null) continue;
 
       final dueItems = _dueChecklists(range, today);
       for (final due in dueItems) {
-        await _client.from('trip_checklists').upsert({
-          'trip_id': trip.id,
-          'user_id': user.id,
-          'checklist_type': due.type,
-          'checklist_date': _isoDate(due.date),
-          'day_number': due.dayNumber,
-          'destination_name': trip.destinationName,
-          'trip_dates': _tripDateText(trip),
-          'content': _fallbackContent(trip, range, due, today),
-          'generated_at': DateTime.now().toUtc().toIso8601String(),
-        }, onConflict: 'trip_id,checklist_type,checklist_date');
+        try {
+          await _client.from('trip_checklists').upsert({
+            'trip_id': trip.id,
+            'user_id': user.id,
+            'checklist_type': due.type,
+            'checklist_date': _isoDate(due.date),
+            'day_number': due.dayNumber,
+            'destination_name': trip.destinationName,
+            'trip_dates': raw,
+            'content': _fallbackContent(trip, range, due, today),
+            'generated_at': DateTime.now().toUtc().toIso8601String(),
+          }, onConflict: 'trip_id,checklist_type,checklist_date');
+        } catch (_) {
+          // Skip this checklist if the upsert fails; continue with others.
+          continue;
+        }
       }
     }
   }
@@ -167,7 +180,7 @@ Map<String, dynamic> _fallbackContent(
       'categories': [
         {
           'name': 'Book & Reserve',
-          'emoji': 'ticket',
+          'emoji': '🎟️',
           'items': [
             {
               'text': 'Confirm stay booking',
@@ -188,7 +201,7 @@ Map<String, dynamic> _fallbackContent(
         },
         {
           'name': 'Pack',
-          'emoji': 'bag',
+          'emoji': '🎒',
           'items': [
             {
               'text': 'Pack comfortable walking shoes',
@@ -209,7 +222,7 @@ Map<String, dynamic> _fallbackContent(
         },
         {
           'name': 'Download & Save',
-          'emoji': 'phone',
+          'emoji': '📱',
           'items': [
             {'text': 'Save offline map', 'priority': 'high', 'days_before': 7},
             {
@@ -221,7 +234,7 @@ Map<String, dynamic> _fallbackContent(
         },
         {
           'name': 'Know Before You Go',
-          'emoji': 'info',
+          'emoji': 'ℹ️',
           'items': [
             {
               'text': 'Verify prices before travel',
@@ -237,7 +250,7 @@ Map<String, dynamic> _fallbackContent(
         },
         {
           'name': 'Food & Dietary',
-          'emoji': 'food',
+          'emoji': '🍽️',
           'items': [
             {
               'text': 'Shortlist ${intake.dietaryPreference} food options',
@@ -248,7 +261,7 @@ Map<String, dynamic> _fallbackContent(
         },
         {
           'name': 'Money & Documents',
-          'emoji': 'card',
+          'emoji': '💳',
           'items': [
             {
               'text': 'Carry ID and small cash',
@@ -286,7 +299,7 @@ Map<String, dynamic> _fallbackContent(
       'sections': [
         {
           'name': 'Before You Leave',
-          'emoji': 'sunrise',
+          'emoji': '🌅',
           'time_context': 'Do before stepping out',
           'items': [
             {'text': 'Charge phone and power bank', 'type': 'prep'},
@@ -295,7 +308,7 @@ Map<String, dynamic> _fallbackContent(
         },
         {
           'name': 'Today\'s Plan',
-          'emoji': 'pin',
+          'emoji': '📍',
           'time_context': day?.title ?? 'Your saved itinerary',
           'items':
               stops
@@ -311,7 +324,7 @@ Map<String, dynamic> _fallbackContent(
         },
         {
           'name': 'Eat & Drink',
-          'emoji': 'food',
+          'emoji': '🍽️',
           'time_context': 'Keep meals flexible',
           'items': [
             {
@@ -323,7 +336,7 @@ Map<String, dynamic> _fallbackContent(
         },
         {
           'name': 'Good to Know Today',
-          'emoji': 'idea',
+          'emoji': '💡',
           'time_context': 'Practical reminders',
           'items': [
             {'text': 'Verify entry timings locally', 'type': 'tip'},
@@ -343,7 +356,7 @@ Map<String, dynamic> _fallbackContent(
     'sections': [
       {
         'name': 'Do Today',
-        'emoji': 'bolt',
+        'emoji': '⚡',
         'items': [
           {'text': 'Back up trip photos', 'priority': 'high'},
           {'text': 'Check refunds and deposits', 'priority': 'medium'},
@@ -351,7 +364,7 @@ Map<String, dynamic> _fallbackContent(
       },
       {
         'name': 'This Week',
-        'emoji': 'calendar',
+        'emoji': '📅',
         'items': [
           {'text': 'Review trip expenses', 'priority': 'medium'},
           {'text': 'Save favorite places', 'priority': 'low'},
@@ -359,14 +372,14 @@ Map<String, dynamic> _fallbackContent(
       },
       {
         'name': 'Share & Remember',
-        'emoji': 'camera',
+        'emoji': '📸',
         'items': [
           {'text': 'Organize best memories', 'priority': 'low'},
         ],
       },
       {
         'name': 'Help Future Travellers',
-        'emoji': 'help',
+        'emoji': '🙌',
         'items': [
           {'text': 'Flag outdated Raaste tips', 'priority': 'low'},
         ],
@@ -387,8 +400,15 @@ _TripDateRange? _parseTripDateRange(String raw, DateTime now) {
       .replaceAll('through', 'to')
       .replaceAll('â€“', '-')
       .replaceAll('â€”', '-')
+      // Separate a glued ordinal+word, e.g. "4thjuly" -> "4th july".
       .replaceAll(RegExp(r'(\d)(st|nd|rd|th)([a-z])'), r'$1$2 $3')
-      .replaceAll(RegExp(r'(\d)([a-z])'), r'$1 $2')
+      // Separate a digit glued to a non-ordinal word, e.g. "12august" ->
+      // "12 august". Do NOT split ordinal suffixes ("1st", "4th") because the
+      // date regexes below rely on them staying attached to the number.
+      .replaceAll(
+        RegExp(r'(\d)(?!st\b|nd\b|rd\b|th\b)([a-z])'),
+        r'$1 $2',
+      )
       .replaceAll(RegExp(r'\s+'), ' ');
 
   final fallbackYear = _extractYear(text) ?? now.year;

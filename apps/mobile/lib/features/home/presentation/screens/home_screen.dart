@@ -1246,8 +1246,15 @@ _TripDateRange? _parseTripDateRange(String raw, DateTime now) {
       .replaceAll('through', 'to')
       .replaceAll('â€“', '-')
       .replaceAll('â€”', '-')
+      // Separate a glued ordinal+word, e.g. "4thjuly" -> "4th july".
       .replaceAll(RegExp(r'(\d)(st|nd|rd|th)([a-z])'), r'$1$2 $3')
-      .replaceAll(RegExp(r'(\d)([a-z])'), r'$1 $2')
+      // Separate a digit glued to a non-ordinal word, e.g. "12august" ->
+      // "12 august". Do NOT split ordinal suffixes ("1st", "4th") because the
+      // date regexes below rely on them staying attached to the number.
+      .replaceAll(
+        RegExp(r'(\d)(?!st\b|nd\b|rd\b|th\b)([a-z])'),
+        r'$1 $2',
+      )
       .replaceAll(RegExp(r'\s+'), ' ');
 
   final fallbackYear = _extractYear(text) ?? now.year;
