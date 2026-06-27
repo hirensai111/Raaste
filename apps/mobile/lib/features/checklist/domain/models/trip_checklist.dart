@@ -47,6 +47,97 @@ class TripChecklist {
     }
   }
 
+  /// A short heading for the whole checklist, falling back to the destination.
+  String get title {
+    final raw = content['title'];
+    if (raw is String && raw.trim().isNotEmpty) return raw.trim();
+    return destinationName.isEmpty ? 'Trip checklist' : destinationName;
+  }
+
+  /// One-line intro/context for the checklist.
+  String get intro {
+    for (final key in [
+      'intro',
+      'morning_greeting',
+      'weather_heads_up',
+      'season_note',
+      'wrap_up_message',
+      'end_of_day_note',
+    ]) {
+      final value = content[key];
+      if (value is String && value.trim().isNotEmpty) return value.trim();
+    }
+    return '';
+  }
+
+  /// Normalized sections, tolerant of both the AI shape (`sections`) and the
+  /// legacy static shape (`categories`).
+  List<ChecklistSection> get sections {
+    final raw =
+        (content['sections'] as List<dynamic>?) ??
+        (content['categories'] as List<dynamic>?) ??
+        const [];
+
+    final result = <ChecklistSection>[];
+    for (var s = 0; s < raw.length; s++) {
+      final section = raw[s];
+      if (section is! Map) continue;
+      final rawItems = (section['items'] as List<dynamic>? ?? const []);
+      final items = <ChecklistItem>[];
+      for (var i = 0; i < rawItems.length; i++) {
+        final item = rawItems[i];
+        if (item is! Map) continue;
+        final text = (item['text'] as String? ?? '').trim();
+        if (text.isEmpty) continue;
+        items.add(
+          ChecklistItem(
+            sectionIndex: s,
+            itemIndex: i,
+            text: text,
+            detail: _itemDetail(item),
+            priority: (item['priority'] as String? ?? '').trim().toLowerCase(),
+            actionLabel: (item['action_label'] as String? ?? '').trim(),
+            done: item['done'] == true,
+          ),
+        );
+      }
+      result.add(
+        ChecklistSection(
+          name: section['name'] as String? ?? 'Checklist',
+          emoji: section['emoji'] as String? ?? '📋',
+          context: section['context'] as String? ??
+              section['time_context'] as String? ??
+              '',
+          items: items,
+        ),
+      );
+    }
+    return result;
+  }
+
+  int get totalItems =>
+      sections.fold(0, (sum, section) => sum + section.items.length);
+
+  int get completedItems => sections.fold(
+        0,
+        (sum, section) =>
+            sum + section.items.where((item) => item.done).length,
+      );
+
+  /// Combines extra context fields from legacy item shapes into one detail line.
+  static String _itemDetail(Map item) {
+    final explicit = (item['detail'] as String? ?? '').trim();
+    if (explicit.isNotEmpty) return explicit;
+
+    final parts = <String>[
+      if ((item['time'] as String?)?.trim().isNotEmpty == true)
+        (item['time'] as String).trim(),
+      if ((item['tip'] as String?)?.trim().isNotEmpty == true)
+        (item['tip'] as String).trim(),
+    ];
+    return parts.join(' · ');
+  }
+
   factory TripChecklist.fromSupabase(Map<String, dynamic> json) {
     final rawContent = json['content'];
     return TripChecklist(
@@ -68,4 +159,41 @@ class TripChecklist {
           DateTime.now(),
     );
   }
+}
+
+class ChecklistSection {
+  final String name;
+  final String emoji;
+  final String context;
+  final List<ChecklistItem> items;
+
+  const ChecklistSection({
+    required this.name,
+    required this.emoji,
+    required this.context,
+    required this.items,
+  });
+}
+
+class ChecklistItem {
+  /// Index of the owning section within the checklist content.
+  final int sectionIndex;
+
+  /// Index of this item within its section.
+  final int itemIndex;
+  final String text;
+  final String detail;
+  final String priority;
+  final String actionLabel;
+  final bool done;
+
+  const ChecklistItem({
+    required this.sectionIndex,
+    required this.itemIndex,
+    required this.text,
+    required this.detail,
+    required this.priority,
+    required this.actionLabel,
+    required this.done,
+  });
 }

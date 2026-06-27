@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:raaste/config/routes.dart';
+import 'package:raaste/core/di/injection.dart';
 import 'package:raaste/features/checklist/application/trip_checklist_repository.dart';
 import 'package:raaste/features/checklist/domain/models/trip_checklist.dart';
 import 'package:raaste/shared/widgets/raaste_nav_shell.dart';
@@ -14,7 +15,7 @@ class ChecklistScreen extends StatefulWidget {
 }
 
 class _ChecklistScreenState extends State<ChecklistScreen> {
-  final _repository = TripChecklistRepository();
+  final _repository = getIt<TripChecklistRepository>();
   late Future<List<TripChecklist>> _checklistsFuture;
 
   @override
@@ -35,76 +36,186 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
       currentTab: RaasteNavTab.saved,
       body: SafeArea(
         bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 104),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const _ChecklistHeader(),
-              const SizedBox(height: 18),
-              Expanded(
-                child:
-                    user == null
-                        ? const _SignedOutState()
-                        : FutureBuilder<List<TripChecklist>>(
-                          future: _checklistsFuture,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState !=
-                                ConnectionState.done) {
-                              return const Center(
-                                child: CircularProgressIndicator(
-                                  color: RaasteShellColors.clay,
-                                ),
-                              );
-                            }
+        child:
+            user == null
+                ? const Padding(
+                  padding: EdgeInsets.fromLTRB(20, 18, 20, 104),
+                  child: _SignedOutState(),
+                )
+                : FutureBuilder<List<TripChecklist>>(
+                  future: _checklistsFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return const _LoadingState();
+                    }
 
-                            if (snapshot.hasError) {
-                              return _StatePanel(
-                                icon: Icons.error_outline_rounded,
-                                title: 'Checklists could not load',
-                                body: snapshot.error.toString().replaceFirst(
-                                  'Exception: ',
-                                  '',
-                                ),
-                                actionLabel: 'Try Again',
-                                onAction: _refresh,
-                              );
-                            }
-
-                            final checklists = snapshot.data ?? const [];
-                            if (checklists.isEmpty) {
-                              return const _EmptyChecklistState();
-                            }
-
-                            return RefreshIndicator(
-                              color: RaasteShellColors.clay,
-                              onRefresh: () async => _refresh(),
-                              child: ListView.separated(
-                                physics: const AlwaysScrollableScrollPhysics(
-                                  parent: BouncingScrollPhysics(),
-                                ),
-                                itemCount: checklists.length,
-                                separatorBuilder:
-                                    (_, __) => const SizedBox(height: 14),
-                                itemBuilder:
-                                    (context, index) => _ChecklistCard(
-                                      checklist: checklists[index],
-                                    ),
-                              ),
-                            );
-                          },
+                    if (snapshot.hasError) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 18, 20, 104),
+                        child: _StatePanel(
+                          icon: Icons.error_outline_rounded,
+                          title: 'Checklists could not load',
+                          body: snapshot.error.toString().replaceFirst(
+                            'Exception: ',
+                            '',
+                          ),
+                          actionLabel: 'Try Again',
+                          onAction: _refresh,
                         ),
-              ),
-            ],
-          ),
+                      );
+                    }
+
+                    final checklists = snapshot.data ?? const [];
+                    final active = _pickActiveChecklist(checklists);
+
+                    if (active == null) {
+                      return const Padding(
+                        padding: EdgeInsets.fromLTRB(20, 18, 20, 104),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _ScreenHeader(),
+                            SizedBox(height: 18),
+                            Expanded(child: _EmptyChecklistState()),
+                          ],
+                        ),
+                      );
+                    }
+
+                    return _ActiveChecklistView(
+                      checklist: active,
+                      repository: _repository,
+                      onRefresh: _refresh,
+                    );
+                  },
+                ),
+      ),
+    );
+  }
+
+  /// With only one trip active at a time, pick the most relevant checklist:
+  /// today's in-trip list first, then pre-trip, then post-trip. The list is
+  /// already ordered by checklist_date desc, so the first match wins.
+  TripChecklist? _pickActiveChecklist(List<TripChecklist> all) {
+    if (all.isEmpty) return null;
+    for (final type in ['in_trip_daily', 'pre_trip', 'post_trip']) {
+      for (final checklist in all) {
+        if (checklist.checklistType == type) return checklist;
+      }
+    }
+    return all.first;
+  }
+}
+
+/// The full inline, checkable checklist for the active trip phase.
+class _ActiveChecklistView extends StatefulWidget {
+  final TripChecklist checklist;
+  final TripChecklistRepository repository;
+  final VoidCallback onRefresh;
+
+  const _ActiveChecklistView({
+    required this.checklist,
+    required this.repository,
+    required this.onRefresh,
+  });
+
+  @override
+  State<_ActiveChecklistView> createState() => _ActiveChecklistViewState();
+}
+
+class _ActiveChecklistViewState extends State<_ActiveChecklistView> {
+  late TripChecklist _checklist = widget.checklist;
+
+  // Tracks items currently being saved so we can disable double-taps.
+  final _savingKeys = <String>{};
+
+  @override
+  void didUpdateWidget(covariant _ActiveChecklistView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.checklist.id != widget.checklist.id) {
+      _checklist = widget.checklist;
+    }
+  }
+
+  Future<void> _toggle(ChecklistItem item) async {
+    final key = '${item.sectionIndex}:${item.itemIndex}';
+    if (_savingKeys.contains(key)) return;
+
+    final newValue = !item.done;
+    setState(() => _savingKeys.add(key));
+
+    try {
+      final updatedContent = await widget.repository.setItemDone(
+        checklistId: _checklist.id,
+        content: _checklist.content,
+        sectionIndex: item.sectionIndex,
+        itemIndex: item.itemIndex,
+        done: newValue,
+      );
+      if (!mounted) return;
+      setState(() {
+        _checklist = TripChecklist(
+          id: _checklist.id,
+          tripId: _checklist.tripId,
+          checklistType: _checklist.checklistType,
+          checklistDate: _checklist.checklistDate,
+          dayNumber: _checklist.dayNumber,
+          destinationName: _checklist.destinationName,
+          tripDates: _checklist.tripDates,
+          content: updatedContent,
+          generatedAt: _checklist.generatedAt,
+        );
+        _savingKeys.remove(key);
+      });
+    } on TripChecklistException catch (e) {
+      if (!mounted) return;
+      setState(() => _savingKeys.remove(key));
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(e.message)));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final checklist = _checklist;
+    final sections = checklist.sections;
+    final total = checklist.totalItems;
+    final completed = checklist.completedItems;
+
+    return RefreshIndicator(
+      color: RaasteShellColors.clay,
+      onRefresh: () async => widget.onRefresh(),
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
         ),
+        padding: const EdgeInsets.fromLTRB(20, 18, 20, 120),
+        children: [
+          const _ScreenHeader(),
+          const SizedBox(height: 18),
+          _ProgressCard(
+            checklist: checklist,
+            completed: completed,
+            total: total,
+          ),
+          const SizedBox(height: 18),
+          for (final section in sections) ...[
+            _SectionBlock(
+              section: section,
+              savingKeys: _savingKeys,
+              onToggle: _toggle,
+            ),
+            const SizedBox(height: 16),
+          ],
+        ],
       ),
     );
   }
 }
 
-class _ChecklistHeader extends StatelessWidget {
-  const _ChecklistHeader();
+class _ScreenHeader extends StatelessWidget {
+  const _ScreenHeader();
 
   @override
   Widget build(BuildContext context) {
@@ -149,222 +260,119 @@ class _ChecklistHeader extends StatelessWidget {
   }
 }
 
-class _ChecklistCard extends StatelessWidget {
+class _ProgressCard extends StatelessWidget {
   final TripChecklist checklist;
+  final int completed;
+  final int total;
 
-  const _ChecklistCard({required this.checklist});
+  const _ProgressCard({
+    required this.checklist,
+    required this.completed,
+    required this.total,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final sections = _sectionsFromContent(checklist.content);
+    final progress = total == 0 ? 0.0 : completed / total;
+    final intro = checklist.intro;
 
-    return Material(
-      color: const Color(0xFFFFFCF7),
-      borderRadius: BorderRadius.circular(22),
-      child: InkWell(
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFCF7),
         borderRadius: BorderRadius.circular(22),
-        onTap: () => _openDetail(context),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            border: Border.all(color: RaasteShellColors.outline),
-            borderRadius: BorderRadius.circular(22),
-            boxShadow: const [
-              BoxShadow(
-                color: RaasteShellColors.shadow,
-                blurRadius: 18,
-                offset: Offset(0, 8),
-              ),
-            ],
+        border: Border.all(color: RaasteShellColors.outline),
+        boxShadow: const [
+          BoxShadow(
+            color: RaasteShellColors.shadow,
+            blurRadius: 18,
+            offset: Offset(0, 8),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 52,
-                    width: 52,
-                    decoration: BoxDecoration(
-                      color: _colorFor(checklist.checklistType),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Icon(
-                      _iconFor(checklist.checklistType),
-                      color: Colors.white,
-                      size: 27,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          checklist.typeLabel,
-                          style: const TextStyle(
-                            color: RaasteShellColors.clay,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          checklist.destinationName.isEmpty
-                              ? 'Trip checklist'
-                              : '${checklist.destinationName} Checklist',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: RaasteShellColors.ink,
-                            fontFamily: 'serif',
-                            fontSize: 25,
-                            fontWeight: FontWeight.w700,
-                            height: 1.05,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          checklist.typeSubtitle,
-                          style: const TextStyle(
-                            color: RaasteShellColors.muted,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(
-                    Icons.chevron_right_rounded,
-                    color: RaasteShellColors.clay,
-                    size: 26,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 14),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  _MiniChip(
-                    icon: Icons.calendar_month_outlined,
-                    label: _formatDate(checklist.checklistDate),
-                  ),
-                  if (checklist.tripDates.trim().isNotEmpty)
-                    _MiniChip(
-                      icon: Icons.route_outlined,
-                      label: checklist.tripDates,
-                    ),
-                  _MiniChip(
-                    icon: Icons.checklist_rounded,
-                    label:
-                        '${sections.length} section${sections.length == 1 ? '' : 's'}',
-                  ),
-                ],
-              ),
-            ],
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            checklist.typeLabel,
+            style: const TextStyle(
+              color: RaasteShellColors.clay,
+              fontSize: 13,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.4,
+            ),
           ),
-        ),
-      ),
-    );
-  }
-
-  void _openDetail(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: RaasteShellColors.background,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-      ),
-      builder: (_) => _ChecklistDetailSheet(checklist: checklist),
-    );
-  }
-}
-
-class _ChecklistDetailSheet extends StatelessWidget {
-  final TripChecklist checklist;
-
-  const _ChecklistDetailSheet({required this.checklist});
-
-  @override
-  Widget build(BuildContext context) {
-    final sections = _sectionsFromContent(checklist.content);
-    final intro = _introText(checklist.content);
-
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.82,
-      minChildSize: 0.45,
-      maxChildSize: 0.94,
-      builder:
-          (context, scrollController) => ListView(
-            controller: scrollController,
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+          const SizedBox(height: 4),
+          Text(
+            checklist.title,
+            style: const TextStyle(
+              color: RaasteShellColors.ink,
+              fontFamily: 'serif',
+              fontSize: 28,
+              fontWeight: FontWeight.w700,
+              height: 1.05,
+            ),
+          ),
+          if (intro.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              intro,
+              style: const TextStyle(
+                color: RaasteShellColors.muted,
+                fontSize: 14,
+                height: 1.35,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+          const SizedBox(height: 16),
+          Row(
             children: [
-              Center(
-                child: Container(
-                  height: 4,
-                  width: 48,
-                  decoration: BoxDecoration(
-                    color: RaasteShellColors.outline,
-                    borderRadius: BorderRadius.circular(99),
-                  ),
+              Text(
+                '$completed of $total done',
+                style: const TextStyle(
+                  color: RaasteShellColors.ink,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 18),
+              const Spacer(),
               Text(
-                checklist.typeLabel,
+                '${(progress * 100).round()}%',
                 style: const TextStyle(
-                  color: RaasteShellColors.clay,
+                  color: RaasteShellColors.sage,
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
                 ),
               ),
-              const SizedBox(height: 5),
-              Text(
-                checklist.destinationName.isEmpty
-                    ? 'Trip checklist'
-                    : checklist.destinationName,
-                style: const TextStyle(
-                  color: RaasteShellColors.ink,
-                  fontFamily: 'serif',
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700,
-                  height: 1.05,
-                ),
-              ),
-              if (intro.isNotEmpty) ...[
-                const SizedBox(height: 10),
-                Text(
-                  intro,
-                  style: const TextStyle(
-                    color: RaasteShellColors.muted,
-                    fontSize: 14,
-                    height: 1.35,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-              const SizedBox(height: 18),
-              ...sections.map(
-                (section) => Padding(
-                  padding: const EdgeInsets.only(bottom: 14),
-                  child: _ChecklistSection(section: section),
-                ),
-              ),
             ],
           ),
+          const SizedBox(height: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(99),
+            child: LinearProgressIndicator(
+              minHeight: 7,
+              value: progress,
+              backgroundColor: const Color(0x14000000),
+              color: RaasteShellColors.sage,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _ChecklistSection extends StatelessWidget {
-  final _DisplaySection section;
+class _SectionBlock extends StatelessWidget {
+  final ChecklistSection section;
+  final Set<String> savingKeys;
+  final ValueChanged<ChecklistItem> onToggle;
 
-  const _ChecklistSection({required this.section});
+  const _SectionBlock({
+    required this.section,
+    required this.savingKeys,
+    required this.onToggle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -407,94 +415,208 @@ class _ChecklistSection extends StatelessWidget {
             ),
           ],
           const SizedBox(height: 12),
-          ...section.items.map((item) => _ChecklistItem(item: item)),
+          for (final item in section.items)
+            _ChecklistItemTile(
+              item: item,
+              saving: savingKeys.contains(
+                '${item.sectionIndex}:${item.itemIndex}',
+              ),
+              onToggle: () => onToggle(item),
+            ),
         ],
       ),
     );
   }
 }
 
-class _ChecklistItem extends StatelessWidget {
-  final _DisplayItem item;
+class _ChecklistItemTile extends StatelessWidget {
+  final ChecklistItem item;
+  final bool saving;
+  final VoidCallback onToggle;
 
-  const _ChecklistItem({required this.item});
+  const _ChecklistItemTile({
+    required this.item,
+    required this.saving,
+    required this.onToggle,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: saving ? null : onToggle,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _Checkbox(done: item.done, saving: saving),
+            const SizedBox(width: 11),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          item.text,
+                          style: TextStyle(
+                            color:
+                                item.done
+                                    ? RaasteShellColors.muted
+                                    : RaasteShellColors.ink,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            height: 1.25,
+                            decoration:
+                                item.done
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                      if (item.priority.isNotEmpty) ...[
+                        const SizedBox(width: 8),
+                        _PriorityBadge(priority: item.priority),
+                      ],
+                    ],
+                  ),
+                  if (item.detail.isNotEmpty) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      item.detail,
+                      style: const TextStyle(
+                        color: RaasteShellColors.muted,
+                        fontSize: 12,
+                        height: 1.3,
+                      ),
+                    ),
+                  ],
+                  if (item.actionLabel.isNotEmpty) ...[
+                    const SizedBox(height: 5),
+                    Text(
+                      item.actionLabel,
+                      style: const TextStyle(
+                        color: RaasteShellColors.clay,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Checkbox extends StatelessWidget {
+  final bool done;
+  final bool saving;
+
+  const _Checkbox({required this.done, required this.saving});
+
+  @override
+  Widget build(BuildContext context) {
+    if (saving) {
+      return const SizedBox(
+        height: 22,
+        width: 22,
+        child: Padding(
+          padding: EdgeInsets.all(2),
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: RaasteShellColors.sage,
+          ),
+        ),
+      );
+    }
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      height: 22,
+      width: 22,
+      decoration: BoxDecoration(
+        color: done ? RaasteShellColors.sage : Colors.transparent,
+        borderRadius: BorderRadius.circular(7),
+        border: Border.all(
+          color: done ? RaasteShellColors.sage : RaasteShellColors.outline,
+          width: 2,
+        ),
+      ),
+      child:
+          done
+              ? const Icon(Icons.check_rounded, color: Colors.white, size: 16)
+              : null,
+    );
+  }
+}
+
+class _PriorityBadge extends StatelessWidget {
+  final String priority;
+
+  const _PriorityBadge({required this.priority});
+
+  @override
+  Widget build(BuildContext context) {
+    final (color, bg) = switch (priority) {
+      'critical' => (const Color(0xFFC0392B), const Color(0xFFFBE3E0)),
+      'high' => (const Color(0xFFB9770E), const Color(0xFFFAEACF)),
+      'medium' => (const Color(0xFF5A53A8), const Color(0xFFE6E4F6)),
+      _ => (RaasteShellColors.muted, const Color(0xFFEDE7DD)),
+    };
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(7),
+      ),
+      child: Text(
+        priority.toUpperCase(),
+        style: TextStyle(
+          color: color,
+          fontSize: 10,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+}
+
+class _LoadingState extends StatelessWidget {
+  const _LoadingState();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.fromLTRB(20, 18, 20, 104),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.check_circle_outline_rounded,
-            color: RaasteShellColors.sage,
-            size: 20,
-          ),
-          const SizedBox(width: 9),
+          _ScreenHeader(),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.text,
-                  style: const TextStyle(
-                    color: RaasteShellColors.ink,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    height: 1.25,
-                  ),
-                ),
-                if (item.detail.isNotEmpty) ...[
-                  const SizedBox(height: 3),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(color: RaasteShellColors.clay),
+                  SizedBox(height: 16),
                   Text(
-                    item.detail,
-                    style: const TextStyle(
+                    'Building your checklist…',
+                    style: TextStyle(
                       color: RaasteShellColors.muted,
-                      fontSize: 12,
-                      height: 1.25,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _MiniChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const _MiniChip({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 280),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF3E8D8),
-        borderRadius: BorderRadius.circular(99),
-        border: Border.all(color: RaasteShellColors.outline),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 15, color: RaasteShellColors.ink),
-          const SizedBox(width: 6),
-          Flexible(
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: RaasteShellColors.ink,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
               ),
             ),
           ),
@@ -509,12 +631,22 @@ class _SignedOutState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _StatePanel(
-      icon: Icons.lock_outline_rounded,
-      title: 'Sign in for checklists',
-      body: 'Your trip prep and daily guides will appear here after sign in.',
-      actionLabel: 'Sign In',
-      onAction: () => context.go(AppRoutes.signIn),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _ScreenHeader(),
+        const SizedBox(height: 18),
+        Expanded(
+          child: _StatePanel(
+            icon: Icons.lock_outline_rounded,
+            title: 'Sign in for checklists',
+            body:
+                'Your trip prep and daily guides will appear here after sign in.',
+            actionLabel: 'Sign In',
+            onAction: () => context.go(AppRoutes.signIn),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -608,117 +740,4 @@ class _StatePanel extends StatelessWidget {
       ),
     );
   }
-}
-
-class _DisplaySection {
-  final String name;
-  final String emoji;
-  final String context;
-  final List<_DisplayItem> items;
-
-  const _DisplaySection({
-    required this.name,
-    required this.emoji,
-    required this.context,
-    required this.items,
-  });
-}
-
-class _DisplayItem {
-  final String text;
-  final String detail;
-
-  const _DisplayItem({required this.text, required this.detail});
-}
-
-List<_DisplaySection> _sectionsFromContent(Map<String, dynamic> content) {
-  final rawSections =
-      (content['categories'] as List<dynamic>?) ??
-      (content['sections'] as List<dynamic>?) ??
-      const [];
-  return rawSections.whereType<Map>().map((raw) {
-    final items =
-        (raw['items'] as List<dynamic>? ?? const [])
-            .whereType<Map>()
-            .map(_itemFromRaw)
-            .where((item) => item.text.trim().isNotEmpty)
-            .toList();
-    return _DisplaySection(
-      name: raw['name'] as String? ?? 'Checklist',
-      emoji: raw['emoji'] as String? ?? '-',
-      context: raw['time_context'] as String? ?? '',
-      items: items,
-    );
-  }).toList();
-}
-
-_DisplayItem _itemFromRaw(Map raw) {
-  final text = raw['text'] as String? ?? '';
-  final details =
-      <String>[
-        if ((raw['time'] as String?)?.trim().isNotEmpty == true) raw['time'],
-        if ((raw['priority'] as String?)?.trim().isNotEmpty == true)
-          '${raw['priority']} priority',
-        if ((raw['tip'] as String?)?.trim().isNotEmpty == true) raw['tip'],
-      ].whereType<String>().toList();
-
-  return _DisplayItem(text: text, detail: details.join(' | '));
-}
-
-String _introText(Map<String, dynamic> content) {
-  for (final key in [
-    'morning_greeting',
-    'weather_heads_up',
-    'season_note',
-    'wrap_up_message',
-    'end_of_day_note',
-  ]) {
-    final value = content[key];
-    if (value is String && value.trim().isNotEmpty) return value.trim();
-  }
-  return '';
-}
-
-IconData _iconFor(String type) {
-  switch (type) {
-    case 'pre_trip':
-      return Icons.luggage_rounded;
-    case 'in_trip_daily':
-      return Icons.today_rounded;
-    case 'post_trip':
-      return Icons.rate_review_outlined;
-    default:
-      return Icons.checklist_rounded;
-  }
-}
-
-Color _colorFor(String type) {
-  switch (type) {
-    case 'pre_trip':
-      return RaasteShellColors.sage;
-    case 'in_trip_daily':
-      return RaasteShellColors.clay;
-    case 'post_trip':
-      return const Color(0xFF6C668E);
-    default:
-      return RaasteShellColors.ink;
-  }
-}
-
-String _formatDate(DateTime value) {
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-  return '${value.day} ${months[value.month - 1]} ${value.year}';
 }

@@ -7,6 +7,8 @@ import 'package:raaste/core/services/storage_service.dart';
 import 'package:raaste/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:raaste/features/auth/domain/repositories/auth_repository.dart';
 import 'package:raaste/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:raaste/features/checklist/application/open_ai_checklist_service.dart';
+import 'package:raaste/features/checklist/application/trip_checklist_repository.dart';
 import 'package:raaste/features/destination/data/repositories/destination_guide_store.dart';
 import 'package:raaste/features/destination/data/services/destination_research_service.dart';
 import 'package:raaste/features/destination/data/services/destination_search_service.dart';
@@ -57,5 +59,15 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<PlaceImageService>(() => PlaceImageService());
   getIt.registerLazySingleton<SavedTripRepository>(
     () => SavedTripRepository(imageService: getIt<PlaceImageService>()),
+  );
+
+  // Checklists
+  getIt.registerLazySingleton<OpenAiChecklistService>(
+    () => OpenAiChecklistService(),
+  );
+  getIt.registerLazySingleton<TripChecklistRepository>(
+    () => TripChecklistRepository(
+      checklistService: getIt<OpenAiChecklistService>(),
+    ),
   );
 }

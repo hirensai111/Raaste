@@ -24,7 +24,10 @@ android {
         applicationId = "com.raaste.raaste"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // Raised from flutter.minSdkVersion (21) to 23. Transitive plugins
+        // pulled in via supabase_flutter require a higher floor:
+        // ua_client_hints needs 22 and passkeys_android needs 23.
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

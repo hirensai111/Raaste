@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:raaste/features/checklist/application/open_ai_checklist_service.dart';
 import 'package:raaste/features/checklist/domain/models/trip_checklist.dart';
 import 'package:raaste/features/trip/domain/models/saved_trip.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -13,9 +16,13 @@ class TripChecklistException implements Exception {
 
 class TripChecklistRepository {
   final SupabaseClient _client;
+  final OpenAiChecklistService? _checklistService;
 
-  TripChecklistRepository({SupabaseClient? client})
-    : _client = client ?? Supabase.instance.client;
+  TripChecklistRepository({
+    SupabaseClient? client,
+    OpenAiChecklistService? checklistService,
+  }) : _client = client ?? Supabase.instance.client,
+       _checklistService = checklistService;
 
   Future<List<TripChecklist>> listChecklists() async {
     final user = _client.auth.currentUser;
@@ -49,6 +56,54 @@ class TripChecklistRepository {
     }
   }
 
+  /// Persists the done/undone state of a single checklist item, identified by
+  /// its section and item index within the checklist [content].
+  ///
+  /// Returns the updated content map so the caller can keep local state in sync.
+  Future<Map<String, dynamic>> setItemDone({
+    required String checklistId,
+    required Map<String, dynamic> content,
+    required int sectionIndex,
+    required int itemIndex,
+    required bool done,
+  }) async {
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      throw const TripChecklistException('Sign in to update your checklist.');
+    }
+
+    // Deep-copy and mutate the targeted item's done flag.
+    final updated = jsonDecode(jsonEncode(content)) as Map<String, dynamic>;
+    final sections = updated['sections'];
+    if (sections is List &&
+        sectionIndex >= 0 &&
+        sectionIndex < sections.length) {
+      final section = sections[sectionIndex];
+      if (section is Map) {
+        final items = section['items'];
+        if (items is List && itemIndex >= 0 && itemIndex < items.length) {
+          final item = items[itemIndex];
+          if (item is Map) {
+            item['done'] = done;
+          }
+        }
+      }
+    }
+
+    try {
+      await _client
+          .from('trip_checklists')
+          .update({'content': updated})
+          .eq('id', checklistId)
+          .eq('user_id', user.id);
+      return updated;
+    } on PostgrestException catch (e) {
+      throw TripChecklistException(_friendlyDatabaseMessage(e));
+    } catch (_) {
+      throw const TripChecklistException('Could not save your change.');
+    }
+  }
+
   Future<void> ensureDueChecklists() async {
     final user = _client.auth.currentUser;
     if (user == null) return;
@@ -70,7 +125,19 @@ class TripChecklistRepository {
       if (range == null) continue;
 
       final dueItems = _dueChecklists(range, today);
+
+      // Look up which (type, date) checklists already exist for this trip so we
+      // only generate the genuinely-missing ones. This preserves the user's
+      // checked-off items and avoids re-spending OpenAI tokens on every refresh.
+      final existingKeys = await _existingChecklistKeys(trip.id, user.id);
+
       for (final due in dueItems) {
+        final key = '${due.type}|${_isoDate(due.date)}';
+        if (existingKeys.contains(key)) continue;
+
+        // Try AI generation first; fall back to built-in static content.
+        final content = await _generateContent(trip, range, due, today);
+
         try {
           await _client.from('trip_checklists').upsert({
             'trip_id': trip.id,
@@ -80,7 +147,7 @@ class TripChecklistRepository {
             'day_number': due.dayNumber,
             'destination_name': trip.destinationName,
             'trip_dates': raw,
-            'content': _fallbackContent(trip, range, due, today),
+            'content': content,
             'generated_at': DateTime.now().toUtc().toIso8601String(),
           }, onConflict: 'trip_id,checklist_type,checklist_date');
         } catch (_) {
@@ -88,7 +155,122 @@ class TripChecklistRepository {
           continue;
         }
       }
+
+      // Remove checklists that no longer belong to the trip's current phase,
+      // e.g. a pre-trip prep list once the trip has started, or an in-trip
+      // daily list from a previous day. This also clears rows written with an
+      // incorrect date by an earlier version of the date parser.
+      try {
+        await _pruneStaleChecklists(
+          tripId: trip.id,
+          userId: user.id,
+          dueItems: dueItems,
+        );
+      } catch (_) {
+        // Pruning is best-effort; never block on it.
+      }
     }
+  }
+
+  /// Returns the set of 'type|date' keys already stored for this trip.
+  Future<Set<String>> _existingChecklistKeys(
+    String tripId,
+    String userId,
+  ) async {
+    try {
+      final rows = await _client
+          .from('trip_checklists')
+          .select('checklist_type, checklist_date')
+          .eq('trip_id', tripId)
+          .eq('user_id', userId);
+      return rows
+          .whereType<Map<String, dynamic>>()
+          .map((row) {
+            final type = row['checklist_type'] as String? ?? '';
+            final date = row['checklist_date'] as String? ?? '';
+            final normalized =
+                DateTime.tryParse(date) == null
+                    ? date
+                    : _isoDate(DateTime.parse(date));
+            return '$type|$normalized';
+          })
+          .toSet();
+    } catch (_) {
+      return <String>{};
+    }
+  }
+
+  /// AI-generated checklist content with a static fallback on any failure.
+  Future<Map<String, dynamic>> _generateContent(
+    SavedTrip trip,
+    _TripDateRange range,
+    _DueChecklist due,
+    DateTime today,
+  ) async {
+    final service = _checklistService;
+    if (service != null) {
+      try {
+        final dayNumber = due.dayNumber ?? range.dayNumber(today);
+        final matchingDays = trip.guide.itineraryDays.where(
+          (item) => item.dayNumber == dayNumber,
+        );
+        final dayTitle =
+            matchingDays.isEmpty ? null : matchingDays.first.title;
+        return await service.generateChecklist(
+          trip: trip,
+          checklistType: due.type,
+          dayNumber: due.type == 'in_trip_daily' ? dayNumber : null,
+          dayTitle: due.type == 'in_trip_daily' ? dayTitle : null,
+          totalDays: range.totalDays,
+        );
+      } catch (_) {
+        // Fall through to static content below.
+      }
+    }
+    return _fallbackContent(trip, range, due, today);
+  }
+
+  /// Deletes any stored checklists for [tripId] that are not part of the
+  /// current [dueItems] set. A checklist is identified by its
+  /// (checklist_type, checklist_date) pair, matching the table's unique key.
+  Future<void> _pruneStaleChecklists({
+    required String tripId,
+    required String userId,
+    required List<_DueChecklist> dueItems,
+  }) async {
+    final keepKeys =
+        dueItems
+            .map((due) => '${due.type}|${_isoDate(due.date)}')
+            .toSet();
+
+    final rows = await _client
+        .from('trip_checklists')
+        .select('id, checklist_type, checklist_date')
+        .eq('trip_id', tripId)
+        .eq('user_id', userId);
+
+    final staleIds = <String>[];
+    for (final row in rows.whereType<Map<String, dynamic>>()) {
+      final type = row['checklist_type'] as String? ?? '';
+      final date = row['checklist_date'] as String? ?? '';
+      // Normalise the stored date (Postgres may return 'YYYY-MM-DD' or a full
+      // timestamp) before comparing against the due-set keys.
+      final normalizedDate =
+          DateTime.tryParse(date) == null
+              ? date
+              : _isoDate(DateTime.parse(date));
+      final key = '$type|$normalizedDate';
+      if (!keepKeys.contains(key)) {
+        final id = row['id'] as String?;
+        if (id != null) staleIds.add(id);
+      }
+    }
+
+    if (staleIds.isEmpty) return;
+    await _client
+        .from('trip_checklists')
+        .delete()
+        .inFilter('id', staleIds);
   }
 
   String _friendlyDatabaseMessage(PostgrestException e) {
