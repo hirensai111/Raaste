@@ -14,6 +14,7 @@ import 'package:raaste/features/destination/data/services/destination_research_s
 import 'package:raaste/features/destination/data/services/destination_search_service.dart';
 import 'package:raaste/features/destination/data/services/open_ai_destination_service.dart';
 import 'package:raaste/features/destination/data/services/overpass_service.dart';
+import 'package:raaste/features/food/data/repositories/food_repository.dart';
 import 'package:raaste/features/trip/data/repositories/saved_trip_repository.dart';
 import 'package:raaste/features/trip/data/services/place_image_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -59,6 +60,11 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<PlaceImageService>(() => PlaceImageService());
   getIt.registerLazySingleton<SavedTripRepository>(
     () => SavedTripRepository(imageService: getIt<PlaceImageService>()),
+  );
+
+  // Food discovery
+  getIt.registerLazySingleton<FoodRepository>(
+    () => FoodRepository(savedTrips: getIt<SavedTripRepository>()),
   );
 
   // Checklists

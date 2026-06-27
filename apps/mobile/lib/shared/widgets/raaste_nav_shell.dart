@@ -16,7 +16,7 @@ class RaasteShellColors {
   static const shadow = Color(0x1F4B3A28);
 }
 
-enum RaasteNavTab { home, trips, explore, saved, profile }
+enum RaasteNavTab { home, food, saved, trips, profile }
 
 class RaasteNavScaffold extends StatelessWidget {
   final Widget body;
@@ -73,21 +73,21 @@ class RaasteBottomNav extends StatelessWidget {
                 currentTab: currentTab,
               ),
               _NavItem(
-                icon: Icons.explore_outlined,
-                label: 'Explore',
-                tab: RaasteNavTab.explore,
-                currentTab: currentTab,
-              ),
-              _NavItem(
-                icon: Icons.work_outline_rounded,
-                label: 'My Trips',
-                tab: RaasteNavTab.trips,
+                icon: Icons.restaurant_menu_rounded,
+                label: 'Food',
+                tab: RaasteNavTab.food,
                 currentTab: currentTab,
               ),
               _NavItem(
                 icon: Icons.checklist_rounded,
                 label: 'Checklist',
                 tab: RaasteNavTab.saved,
+                currentTab: currentTab,
+              ),
+              _NavItem(
+                icon: Icons.work_outline_rounded,
+                label: 'My Trips',
+                tab: RaasteNavTab.trips,
                 currentTab: currentTab,
               ),
               _NavItem(
@@ -171,8 +171,8 @@ class _NavItem extends StatelessWidget {
       case RaasteNavTab.trips:
         context.go(AppRoutes.trips);
         return;
-      case RaasteNavTab.explore:
-        context.go(AppRoutes.explore);
+      case RaasteNavTab.food:
+        context.go(AppRoutes.food);
         return;
       case RaasteNavTab.saved:
         context.go(AppRoutes.saved);

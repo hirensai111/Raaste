@@ -6,7 +6,7 @@ import 'package:raaste/features/checklist/presentation/screens/checklist_screen.
 import 'package:raaste/features/companion/presentation/screens/companion_screen.dart';
 import 'package:raaste/features/destination/presentation/screens/destination_chat_screen.dart';
 import 'package:raaste/features/destination/presentation/screens/destination_detail_screen.dart';
-import 'package:raaste/features/explore/presentation/screens/explore_screen.dart';
+import 'package:raaste/features/food/presentation/screens/food_screen.dart';
 import 'package:raaste/features/home/presentation/screens/home_screen.dart';
 import 'package:raaste/features/home/presentation/screens/popular_attractions_screen.dart';
 import 'package:raaste/features/onboarding/presentation/screens/onboarding_screen.dart';
@@ -27,6 +27,7 @@ class AppRoutes {
   static const String home = '/home';
   static const String trips = '/trips';
   static const String explore = '/explore';
+  static const String food = '/food';
   static const String saved = '/saved';
   static const String destination = '/destination';
   static const String destinationChat = '/destination-chat';
@@ -62,10 +63,8 @@ class AppRouter {
         builder: (_, __) => const PopularAttractionsScreen(),
       ),
       GoRoute(path: AppRoutes.trips, builder: (_, __) => const MyTripsScreen()),
-      GoRoute(
-        path: AppRoutes.explore,
-        builder: (_, __) => const ExploreScreen(),
-      ),
+      GoRoute(path: AppRoutes.food, builder: (_, __) => const FoodScreen()),
+      GoRoute(path: AppRoutes.explore, builder: (_, __) => const FoodScreen()),
       GoRoute(
         path: AppRoutes.saved,
         builder: (_, __) => const ChecklistScreen(),

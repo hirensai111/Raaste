@@ -389,9 +389,9 @@ class _ItineraryDayCardState extends State<_ItineraryDayCard> {
               padding: const EdgeInsets.fromLTRB(18, 0, 18, 2),
               child: Column(
                 children:
-                    day.stops
-                        .map((stop) => _ItineraryStopRow(stop: stop))
-                        .toList(),
+                    _visibleStops(
+                      day.stops,
+                    ).map((stop) => _ItineraryStopRow(stop: stop)).toList(),
               ),
             ),
             crossFadeState:
@@ -406,6 +406,113 @@ class _ItineraryDayCardState extends State<_ItineraryDayCard> {
       ),
     );
   }
+}
+
+List<ItineraryStop> _visibleStops(List<ItineraryStop> stops) {
+  final regularStops = <ItineraryStop>[];
+  final mealChoices = <String, _MealChoice>{};
+
+  for (final stop in stops) {
+    final slot = _mealSlotForStop(stop);
+    if (slot == null) {
+      regularStops.add(stop);
+      continue;
+    }
+
+    final current = mealChoices[slot];
+    final isUserAdded = _isUserAddedRestaurant(stop);
+    if (current == null) {
+      mealChoices[slot] = _MealChoice(
+        stop: stop,
+        plannedTime: isUserAdded ? null : stop.time,
+        isUserAdded: isUserAdded,
+      );
+      continue;
+    }
+
+    mealChoices[slot] = _MealChoice(
+      stop: isUserAdded ? stop : current.stop,
+      plannedTime: current.plannedTime ?? (isUserAdded ? null : stop.time),
+      isUserAdded: current.isUserAdded || isUserAdded,
+    );
+  }
+
+  final visibleStops = <ItineraryStop>[
+    ...regularStops,
+    ...mealChoices.values.map((choice) => choice.visibleStop),
+  ]..sort((a, b) => _stopMinutes(a.time).compareTo(_stopMinutes(b.time)));
+
+  return visibleStops;
+}
+
+class _MealChoice {
+  final ItineraryStop stop;
+  final String? plannedTime;
+  final bool isUserAdded;
+
+  const _MealChoice({
+    required this.stop,
+    required this.plannedTime,
+    required this.isUserAdded,
+  });
+
+  ItineraryStop get visibleStop {
+    final time = plannedTime;
+    if (time == null || time == stop.time) return stop;
+    return ItineraryStop(
+      time: time,
+      title: stop.title,
+      description: stop.description,
+      type: stop.type,
+      sourceId: stop.sourceId,
+      lat: stop.lat,
+      lon: stop.lon,
+    );
+  }
+}
+
+String? _mealSlotForStop(ItineraryStop stop) {
+  final header = '${stop.type} ${stop.title}'.toLowerCase();
+  final isMeal =
+      header.contains('restaurant') ||
+      header.contains('food') ||
+      header.contains('meal') ||
+      header.contains('breakfast') ||
+      header.contains('lunch') ||
+      header.contains('snack') ||
+      header.contains('dinner');
+  if (!isMeal) return null;
+
+  if (header.contains('breakfast')) return 'breakfast';
+  if (header.contains('lunch')) return 'lunch';
+  if (header.contains('snack')) return 'snack';
+  if (header.contains('dinner')) return 'dinner';
+  final minutes = _stopMinutes(stop.time);
+  if (minutes >= 6 * 60 && minutes <= 11 * 60) return 'breakfast';
+  if (minutes >= 11 * 60 && minutes < 16 * 60) return 'lunch';
+  if (minutes >= 16 * 60 && minutes < 18 * 60) return 'snack';
+  if (minutes >= 18 * 60 && minutes <= 23 * 60) return 'dinner';
+  return null;
+}
+
+bool _isUserAddedRestaurant(ItineraryStop stop) {
+  final type = stop.type.toLowerCase();
+  final sourceId = stop.sourceId.toLowerCase();
+  return sourceId.startsWith('restaurant:') && type.startsWith('restaurant:');
+}
+
+int _stopMinutes(String value) {
+  final match = RegExp(
+    r'(\d{1,2}):(\d{2})\s*(AM|PM)?',
+    caseSensitive: false,
+  ).firstMatch(value);
+  if (match == null) return 24 * 60;
+  var hour = int.tryParse(match.group(1) ?? '') ?? 0;
+  final minute = int.tryParse(match.group(2) ?? '') ?? 0;
+  final suffix = (match.group(3) ?? '').toUpperCase();
+  if (suffix == 'PM' && hour < 12) hour += 12;
+  if (suffix == 'AM' && hour == 12) hour = 0;
+  return hour * 60 + minute;
 }
 
 class _ItineraryStopRow extends StatelessWidget {

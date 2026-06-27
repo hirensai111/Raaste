@@ -9,7 +9,7 @@ class ExploreScreen extends StatelessWidget {
     final bottomInset = MediaQuery.of(context).padding.bottom + 76 + 12 + 16;
 
     return RaasteNavScaffold(
-      currentTab: RaasteNavTab.explore,
+      currentTab: RaasteNavTab.food,
       body: SafeArea(
         bottom: false,
         child: LayoutBuilder(
@@ -72,7 +72,7 @@ class _ExploreHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Explore',
+                'Food',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -85,7 +85,7 @@ class _ExploreHeader extends StatelessWidget {
               ),
               SizedBox(height: 6),
               Text(
-                'Discover India with Raaste',
+                'Local food picks and dining ideas',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
