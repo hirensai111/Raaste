@@ -12,6 +12,7 @@ import 'package:raaste/features/checklist/application/trip_checklist_repository.
 import 'package:raaste/features/destination/data/repositories/destination_guide_store.dart';
 import 'package:raaste/features/destination/data/services/destination_research_service.dart';
 import 'package:raaste/features/destination/data/services/destination_search_service.dart';
+import 'package:raaste/features/destination/data/services/google_route_matrix_service.dart';
 import 'package:raaste/features/destination/data/services/open_ai_destination_service.dart';
 import 'package:raaste/features/food/data/repositories/food_repository.dart';
 import 'package:raaste/features/trip/data/repositories/saved_trip_repository.dart';
@@ -48,6 +49,9 @@ Future<void> configureDependencies() async {
     () => DestinationSearchService(
       researchService: getIt<DestinationResearchService>(),
     ),
+  );
+  getIt.registerLazySingleton<GoogleRouteMatrixService>(
+    () => GoogleRouteMatrixService(),
   );
   getIt.registerLazySingleton<OpenAiDestinationService>(
     () => OpenAiDestinationService(),

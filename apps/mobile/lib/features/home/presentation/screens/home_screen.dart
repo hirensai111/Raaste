@@ -1466,7 +1466,7 @@ class _PopularHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Popular place types',
+                'Popular destinations',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -1478,7 +1478,7 @@ class _PopularHeader extends StatelessWidget {
               ),
               SizedBox(height: 4),
               Text(
-                'Travel styles people are planning across India',
+                'Top places people are planning across India',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(

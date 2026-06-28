@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:raaste/features/destination/domain/models/destination_guide.dart';
 import 'package:raaste/features/destination/domain/models/destination_research.dart';
+import 'package:raaste/features/destination/domain/models/itinerary_timing_context.dart';
 import 'package:raaste/features/destination/domain/models/trip_intake.dart';
 
 class OpenAiGuideException implements Exception {
@@ -32,11 +33,17 @@ class OpenAiDestinationService {
 
   Future<DestinationGuide> generateGuideFromResearch(
     TripIntake intake,
-    DestinationResearch research,
-  ) async {
+    DestinationResearch research, {
+    required ItineraryTimingContext timingContext,
+  }) async {
     final expectedDays = _expectedDayCount(intake.dates);
     final result = await _requestGuide(
-      prompt: _researchPrompt(intake, research, expectedDays: expectedDays),
+      prompt: _researchPrompt(
+        intake,
+        research,
+        timingContext: timingContext,
+        expectedDays: expectedDays,
+      ),
       fallbackIntake: intake,
       existingId: '',
     );
@@ -51,6 +58,7 @@ class OpenAiDestinationService {
       prompt: _researchPrompt(
         intake,
         research,
+        timingContext: timingContext,
         expectedDays: expectedDays ?? 2,
         forceFullLength: true,
       ),
@@ -63,9 +71,14 @@ class OpenAiDestinationService {
   Future<DestinationGuide> reviseGuide({
     required DestinationGuide currentGuide,
     required String editRequest,
+    required ItineraryTimingContext timingContext,
   }) async {
     var result = await _requestGuide(
-      prompt: _revisionPrompt(currentGuide, editRequest),
+      prompt: _revisionPrompt(
+        currentGuide,
+        editRequest,
+        timingContext: timingContext,
+      ),
       fallbackIntake: currentGuide.intake,
       existingId: currentGuide.id,
     );
@@ -87,6 +100,7 @@ class OpenAiDestinationService {
         prompt: _revisionPrompt(
           currentGuide,
           editRequest,
+          timingContext: timingContext,
           forceFullLength: true,
           fallbackExpectedDays: expectedDays ?? 2,
         ),
@@ -192,6 +206,7 @@ class OpenAiDestinationService {
   String _researchPrompt(
     TripIntake intake,
     DestinationResearch research, {
+    required ItineraryTimingContext timingContext,
     int? expectedDays,
     bool forceFullLength = false,
   }) {
@@ -205,6 +220,9 @@ ${jsonEncode(intake.toJson())}
 
 Curated Raaste research JSON:
 ${jsonEncode(research.toPromptJson())}
+
+Computed Google route timing context:
+${jsonEncode(timingContext.toJson())}
 
 Hard rules - never break these:
 1. Research first, always.
@@ -221,20 +239,23 @@ Hard rules - never break these:
   - Vegan: only dietary_tags.vegan_options == true. Add a note to confirm no ghee, butter, milk, curd, or cream.
   - Eggetarian: prefer veg_only places or places where the research clearly supports egg-based food without meat.
   - Non-Vegetarian or no specific preference: all research restaurants are eligible, but still choose sensibly by area, timing, and user interests.
-- If no restaurant in the research matches the dietary filter for a meal slot, create a restaurant stop titled "Ask your hotel for dietary-appropriate options nearby" and explain that Raaste's database for this area is growing. Do not invent a restaurant.
+- Prefer a real dietary-compliant restaurant from restaurantResearch even if it requires retiming or moving the meal to a nearby/next area.
+- Do not create restaurant stops titled "Ask your hotel..." or similar placeholders.
+- Only if there is no dietary-compliant restaurant anywhere in restaurantResearch, create a generic non-restaurant stop titled "Meal break near your stay" with type "rest" and explain that the user should choose a verified dietary-safe option nearby. Do not pretend it is a restaurant.
 
-3. Source every recommendation.
-- Every attraction, restaurant, food stop, local tip, and practical warning from research must include a sourceId.
+3. Source every recommendation, but never show source IDs to users.
+- Every attraction, restaurant, food stop, local tip, and practical warning from research must include a sourceId field.
 - Use source IDs in this style: research:${research.sourceId}:attraction-name, research:${research.sourceId}:food:restaurant-name, research:${research.sourceId}:tip:tip-topic.
-- Use an empty sourceId only for generic travel notes such as check-in, rest, hydration, or airport/station buffers.
+- Use an empty sourceId only for generic travel notes such as check-in, rest, hydration, meal breaks, or airport/station buffers.
+- Do not write "sourceId", "Source IDs", "research:...", JSON keys, or raw source references inside destinationName, overview, day title, subtitle, stop title, stop description, or disclaimers. The sourceId property is the only place source IDs belong.
 
 4. Exact day count.
 ${_dayCountInstruction(intake.dates, expectedDays, forceFullLength)}
 - Generate exactly that many itineraryDays. Do not add, skip, or merge days.
 
-5. Respect arrival and departure.
-- Day 1 arrival/landing time: ${intake.landingTime}. Do not schedule attractions before the user can realistically arrive, transfer, check in, and freshen up.
-- Final day departure time: ${intake.departureTime}. Leave enough buffer for checkout, luggage, travel to airport/station/bus stand, traffic, parking, and security/boarding where relevant.
+5. Respect arrival, stay, and departure.
+- Day 1 arrival/landing time: ${intake.landingTime}. Stay/hotel/base: ${intake.stayNameOrAddress}. Do not schedule attractions before the user can realistically arrive, transfer to the stay, check in, freshen up, and then travel to the first stop.
+- Final day departure time: ${intake.departureTime}. Leave enough buffer for checkout, luggage, travel from stay to airport/station/bus stand, traffic, parking, and security/boarding where relevant.
 - Never schedule a full-day attraction on departure day unless the departure is clearly in the evening.
 
 6. Pace preference.
@@ -244,24 +265,31 @@ ${_dayCountInstruction(intake.dates, expectedDays, forceFullLength)}
 - Packed means 3-4 major attractions per day with efficient routing and fewer gaps.
 - If the user names specific days as leisure or packed, reflect that day-by-day.
 
-7. Geographic and timing logic.
+7. Google route timing is a hard constraint.
+- Use the computed Google route timing context above as minimum movement time between stay, arrival/departure hubs, attractions, and restaurants.
+- You may add extra buffer for crowds, luggage, check-in, weather, traffic uncertainty, parking, walking, tickets, and security, but you must not schedule less movement time than Google returned.
+- For flight/aeroplane travel, explicitly account for airport-to-stay and stay-to-airport road transfers plus airport security/boarding buffer.
+- If the user arrives by train or bus, explicitly account for station/bus-stand to stay and final stay-to-station/bus-stand transfer.
+- If a route entry says stay to a place takes 45 minutes, the first stop cannot begin 10 minutes after hotel departure.
+
+8. Geographic and timing logic.
 - Group attractions and restaurants by area. Avoid cross-city hopping unless the research supports the route and the timing works.
-- Account for travel time between areas using local_transport and how_to_reach research.
+- Account for travel time between areas using local_transport, how_to_reach research, and the Google route timing context.
 - For travel mode "car" or "bike", mention parking realities and congestion warnings from research.
 - For train, bus, flight, or public transport, include station/airport/bus transfer buffers and local movement advice from research.
 - If an attraction runs until 2:15 PM, do not place lunch at 1:00 PM somewhere else. Retiming must be coherent.
 
-8. Closures, crowds, and traps.
+9. Closures, crowds, and traps.
 - Check the research for day-specific closures, best/worst visit times, crowd realities, safety notes, tourist traps, weather, and local restrictions.
 - Put these warnings inside the stop description where they matter.
 - If a restaurant or attraction is touristy but still worth it, say so honestly. If the research flags it as a trap, warn the user clearly.
 
-9. Raaste voice.
+10. Raaste voice.
 - Write like a practical friend who has done the trip: specific, direct, and useful.
 - Mention actual dishes, what to order, how much to roughly expect only when the research provides it, what to wear, what to carry, cash/UPI realities, and local etiquette.
 - Avoid generic filler such as "enjoy the beautiful surroundings". Every sentence should help the traveller make a better decision.
 
-10. Itinerary structure for this app.
+11. Itinerary structure for this app.
 - Return destinationName, intake, overview, itineraryDays, and disclaimers exactly matching the schema.
 - Each itinerary day must have dayNumber, title, subtitle, and stops.
 - Include morning, lunch, afternoon, evening, and dinner where the trip length and timing allow.
@@ -270,9 +298,11 @@ ${_dayCountInstruction(intake.dates, expectedDays, forceFullLength)}
   - title should be like "Lunch at Hotel Shadab".
   - description must include what to order, why this place fits, dietary compliance, practical timing/price notes from research, and "Prices and timings may vary; verify before travel."
 - Attraction/activity stops should use type attraction, viewpoint, temple, museum, shopping, rest, travel, checkin, or a similarly clear lowercase type.
+- Do not repeat the same specific attraction, restaurant, or food stop across multiple days unless it is the stay/base, arrival hub, departure hub, or a required transfer.
+- If a place was already used earlier, choose a different curated place or make the later stop a rest/transfer note instead.
 - Keep every stop description detailed but readable on mobile.
 
-11. Overview and disclaimers.
+12. Overview and disclaimers.
 - overview.summary should include the destination character and what kind of traveller it fits.
 - overview.bestTimeToVisit must come from when_to_visit research.
 - overview.howToGetThere must reflect the user's travelMode and the how_to_reach/local_transport research.
@@ -285,6 +315,7 @@ Return only JSON matching the schema.
   String _revisionPrompt(
     DestinationGuide guide,
     String editRequest, {
+    required ItineraryTimingContext timingContext,
     bool forceFullLength = false,
     int? fallbackExpectedDays,
   }) {
@@ -307,14 +338,20 @@ Edit request: $editRequest
 Existing itinerary:
 ${jsonEncode(guide.toJson())}
 
+Computed Google route timing context for the revised/current stay and travel mode:
+${jsonEncode(timingContext.toJson())}
+
 Requirements:
 - Keep the same destination unless the user explicitly asks to change it.
-- The intake is editable. If the user asks to change dates, arrival/landing time, departure time, travel mode, traveller count, pace preference, interests, or dietary preference, update the matching intake field in the JSON response.
+- The intake is editable. If the user asks to change dates, arrival/landing time, departure time, stay/hotel/base, travel mode, traveller count, pace preference, interests, or dietary preference, update the matching intake field in the JSON response.
 - Preserve useful stops unless the user asks to change them, but rebuild timing and day structure around any updated intake.
 $lengthInstruction
 - Respect the revised arrival/landing time on Day 1 and revised departure time on the final day.
-- Respect intake.travelMode when revising route order, transfer buffers, parking/drop points, station/airport advice, and local movement.
-- Return an intake object with all fields filled: destination, sourceId, displayAddress, lat, lon, dates, landingTime, departureTime, peopleCount, travelMode, pacePreference, interests, and dietaryPreference.
+- Respect intake.travelMode and intake.stayNameOrAddress when revising route order, transfer buffers, parking/drop points, station/airport advice, and local movement.
+- Use the computed Google route timing context as hard minimum travel time. Add buffer when needed, but do not create overlapping or impossible stop times.
+- Do not write "sourceId", "Source IDs", "research:...", JSON keys, or raw source references inside visible text fields. The sourceId property is the only place source IDs belong.
+- Do not repeat the same specific attraction, restaurant, or food stop across multiple days unless it is the stay/base, arrival hub, departure hub, or a required transfer.
+- Return an intake object with all fields filled: destination, sourceId, displayAddress, lat, lon, dates, landingTime, departureTime, stayNameOrAddress, peopleCount, travelMode, pacePreference, interests, and dietaryPreference.
 - Maintain the same disclaimer behavior: prices, timings, availability, and travel conditions may vary and should be verified before travel.
 Return only JSON matching the schema.
 ''';
@@ -407,6 +444,7 @@ Return only JSON matching the schema.
           'dates',
           'landingTime',
           'departureTime',
+          'stayNameOrAddress',
           'peopleCount',
           'travelMode',
           'pacePreference',
@@ -426,6 +464,7 @@ Return only JSON matching the schema.
           'dates': {'type': 'string'},
           'landingTime': {'type': 'string'},
           'departureTime': {'type': 'string'},
+          'stayNameOrAddress': {'type': 'string'},
           'peopleCount': {'type': 'integer'},
           'travelMode': {'type': 'string'},
           'pacePreference': {'type': 'string'},

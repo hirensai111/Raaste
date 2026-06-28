@@ -40,33 +40,42 @@ class DestinationGuide {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'destinationName': destinationName,
-        'intake': intake.toJson(),
-        'overview': overview.toJson(),
-        'itineraryDays': itineraryDays.map((item) => item.toJson()).toList(),
-        'disclaimers': disclaimers,
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'destinationName': destinationName,
+    'intake': intake.toJson(),
+    'overview': overview.toJson(),
+    'itineraryDays': itineraryDays.map((item) => item.toJson()).toList(),
+    'disclaimers': disclaimers,
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 
   factory DestinationGuide.fromJson(Map<String, dynamic> json) {
+    final days =
+        (json['itineraryDays'] as List<dynamic>? ?? const [])
+            .whereType<Map<String, dynamic>>()
+            .map(ItineraryDay.fromJson)
+            .toList();
+
     return DestinationGuide(
       id: json['id'] as String? ?? '',
-      destinationName: json['destinationName'] as String? ?? '',
+      destinationName: _cleanVisibleText(
+        json['destinationName'] as String? ?? '',
+      ),
       intake: TripIntake.fromJson(
         json['intake'] as Map<String, dynamic>? ?? const {},
       ),
       overview: GuideOverview.fromJson(
         json['overview'] as Map<String, dynamic>? ?? const {},
       ),
-      itineraryDays: (json['itineraryDays'] as List<dynamic>? ?? const [])
-          .whereType<Map<String, dynamic>>()
-          .map(ItineraryDay.fromJson)
-          .toList(),
-      disclaimers: (json['disclaimers'] as List<dynamic>? ?? const [])
-          .whereType<String>()
-          .toList(),
-      updatedAt: DateTime.tryParse(json['updatedAt'] as String? ?? '') ??
+      itineraryDays: _sanitizeItineraryDays(days),
+      disclaimers:
+          (json['disclaimers'] as List<dynamic>? ?? const [])
+              .whereType<String>()
+              .map(_cleanVisibleText)
+              .where((text) => text.isNotEmpty)
+              .toList(),
+      updatedAt:
+          DateTime.tryParse(json['updatedAt'] as String? ?? '') ??
           DateTime.now(),
     );
   }
@@ -84,16 +93,18 @@ class GuideOverview {
   });
 
   Map<String, dynamic> toJson() => {
-        'summary': summary,
-        'bestTimeToVisit': bestTimeToVisit,
-        'howToGetThere': howToGetThere,
-      };
+    'summary': summary,
+    'bestTimeToVisit': bestTimeToVisit,
+    'howToGetThere': howToGetThere,
+  };
 
   factory GuideOverview.fromJson(Map<String, dynamic> json) => GuideOverview(
-        summary: json['summary'] as String? ?? '',
-        bestTimeToVisit: json['bestTimeToVisit'] as String? ?? '',
-        howToGetThere: json['howToGetThere'] as String? ?? '',
-      );
+    summary: _cleanVisibleText(json['summary'] as String? ?? ''),
+    bestTimeToVisit: _cleanVisibleText(
+      json['bestTimeToVisit'] as String? ?? '',
+    ),
+    howToGetThere: _cleanVisibleText(json['howToGetThere'] as String? ?? ''),
+  );
 }
 
 class ItineraryDay {
@@ -110,21 +121,22 @@ class ItineraryDay {
   });
 
   Map<String, dynamic> toJson() => {
-        'dayNumber': dayNumber,
-        'title': title,
-        'subtitle': subtitle,
-        'stops': stops.map((stop) => stop.toJson()).toList(),
-      };
+    'dayNumber': dayNumber,
+    'title': title,
+    'subtitle': subtitle,
+    'stops': stops.map((stop) => stop.toJson()).toList(),
+  };
 
   factory ItineraryDay.fromJson(Map<String, dynamic> json) => ItineraryDay(
-        dayNumber: (json['dayNumber'] as num?)?.toInt() ?? 1,
-        title: json['title'] as String? ?? '',
-        subtitle: json['subtitle'] as String? ?? '',
-        stops: (json['stops'] as List<dynamic>? ?? const [])
+    dayNumber: (json['dayNumber'] as num?)?.toInt() ?? 1,
+    title: _cleanVisibleText(json['title'] as String? ?? ''),
+    subtitle: _cleanVisibleText(json['subtitle'] as String? ?? ''),
+    stops:
+        (json['stops'] as List<dynamic>? ?? const [])
             .whereType<Map<String, dynamic>>()
             .map(ItineraryStop.fromJson)
             .toList(),
-      );
+  );
 }
 
 class ItineraryStop {
@@ -147,22 +159,128 @@ class ItineraryStop {
   });
 
   Map<String, dynamic> toJson() => {
-        'time': time,
-        'title': title,
-        'description': description,
-        'type': type,
-        'sourceId': sourceId,
-        'lat': lat,
-        'lon': lon,
-      };
+    'time': time,
+    'title': title,
+    'description': description,
+    'type': type,
+    'sourceId': sourceId,
+    'lat': lat,
+    'lon': lon,
+  };
 
   factory ItineraryStop.fromJson(Map<String, dynamic> json) => ItineraryStop(
-        time: json['time'] as String? ?? '',
-        title: json['title'] as String? ?? '',
-        description: json['description'] as String? ?? '',
-        type: json['type'] as String? ?? 'activity',
-        sourceId: json['sourceId'] as String? ?? '',
-        lat: (json['lat'] as num?)?.toDouble(),
-        lon: (json['lon'] as num?)?.toDouble(),
-      );
+    time: json['time'] as String? ?? '',
+    title: _cleanVisibleText(json['title'] as String? ?? ''),
+    description: _cleanVisibleText(json['description'] as String? ?? ''),
+    type: json['type'] as String? ?? 'activity',
+    sourceId: json['sourceId'] as String? ?? '',
+    lat: (json['lat'] as num?)?.toDouble(),
+    lon: (json['lon'] as num?)?.toDouble(),
+  );
+}
+
+List<ItineraryDay> _sanitizeItineraryDays(List<ItineraryDay> days) {
+  final seen = <String>{};
+  final cleanedDays = <ItineraryDay>[];
+
+  for (final day in days) {
+    final cleanedStops = <ItineraryStop>[];
+    for (final stop in day.stops) {
+      if (_isPlaceholderMealStop(stop)) continue;
+
+      final key = _dedupeKeyForStop(stop);
+      if (key != null && seen.contains(key)) continue;
+      if (key != null) seen.add(key);
+      cleanedStops.add(stop);
+    }
+
+    cleanedDays.add(
+      ItineraryDay(
+        dayNumber: day.dayNumber,
+        title: day.title,
+        subtitle: day.subtitle,
+        stops: cleanedStops,
+      ),
+    );
+  }
+
+  return cleanedDays;
+}
+
+bool _isPlaceholderMealStop(ItineraryStop stop) {
+  final text = '${stop.title} ${stop.description}'.toLowerCase();
+  return text.contains('ask your hotel for dietary-appropriate options') ||
+      text.contains('ask your hotel for dietary appropriate options') ||
+      text.contains('no matching restaurant') ||
+      text.contains('database for this area is growing') ||
+      text.contains('doesn\'t provide a reliable') ||
+      text.contains('does not provide a reliable');
+}
+
+String? _dedupeKeyForStop(ItineraryStop stop) {
+  final type = stop.type.toLowerCase();
+  final title = stop.title.toLowerCase();
+  final generic =
+      type.contains('travel') ||
+      type.contains('transfer') ||
+      type.contains('checkin') ||
+      type.contains('check-in') ||
+      type.contains('checkout') ||
+      type.contains('rest') ||
+      type.contains('buffer') ||
+      title.contains('arrive') ||
+      title.contains('check-in') ||
+      title.contains('check in') ||
+      title.contains('transfer') ||
+      title.contains('luggage') ||
+      title.contains('rest');
+  if (generic) return null;
+
+  final source = stop.sourceId.trim().toLowerCase();
+  if (source.isNotEmpty && source.startsWith('research:')) {
+    return 'source:$source';
+  }
+
+  final normalizedTitle = _normalizeStopTitle(stop.title);
+  if (normalizedTitle.length < 4) return null;
+  return 'title:$normalizedTitle';
+}
+
+String _normalizeStopTitle(String value) {
+  return value
+      .toLowerCase()
+      .replaceFirst(RegExp(r'^(breakfast|lunch|dinner|snack)\s+at\s+'), '')
+      .replaceAll(RegExp(r'[^a-z0-9]+'), ' ')
+      .trim();
+}
+
+String _cleanVisibleText(String value) {
+  var text = value.trim();
+  if (text.isEmpty) return text;
+
+  text = text.replaceAll(
+    RegExp(
+      r'\s*(?:Source IDs?|source IDs?|sourceIds?)\s*:\s*.*$',
+      caseSensitive: false,
+    ),
+    '',
+  );
+  text = text.replaceAll(
+    RegExp(r'\s*\(?\s*sourceId\s*:\s*.*$', caseSensitive: false),
+    '',
+  );
+  text = text.replaceAll(
+    RegExp(
+      r'\s*research:[a-z0-9_:\-]+(?:\s*,\s*research:[a-z0-9_:\-]+)*\.?',
+      caseSensitive: false,
+    ),
+    '',
+  );
+  text = text.replaceAll(RegExp(r'\s+'), ' ').trim();
+  text = text.replaceAllMapped(
+    RegExp(r'\s+([,.;:])'),
+    (match) => match.group(1)!,
+  );
+  text = text.replaceAll(RegExp(r'\(\s*\)'), '').trim();
+  return text;
 }

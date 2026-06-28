@@ -5,6 +5,7 @@ import 'package:raaste/core/constants/app_constants.dart';
 import 'package:raaste/core/di/injection.dart';
 import 'package:raaste/features/destination/data/repositories/destination_guide_store.dart';
 import 'package:raaste/features/destination/data/services/destination_research_service.dart';
+import 'package:raaste/features/destination/data/services/google_route_matrix_service.dart';
 import 'package:raaste/features/destination/data/services/open_ai_destination_service.dart';
 import 'package:raaste/features/destination/domain/models/destination_guide.dart';
 import 'package:raaste/features/destination/domain/models/trip_intake.dart';
@@ -17,6 +18,7 @@ enum _IntakeStep {
   landingTime,
   departureTime,
   travelMode,
+  stay,
   people,
   pace,
   interests,
@@ -24,7 +26,7 @@ enum _IntakeStep {
   generating,
 }
 
-enum _EditFollowUpStep { none, landingTime, endDate, departureTime }
+enum _EditFollowUpStep { none, landingTime, endDate, departureTime, stay }
 
 class DestinationChatScreen extends StatefulWidget {
   final String destinationName;
@@ -61,6 +63,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   final _guideStore = getIt<DestinationGuideStore>();
   final _openAi = getIt<OpenAiDestinationService>();
   final _research = getIt<DestinationResearchService>();
+  final _routeTiming = getIt<GoogleRouteMatrixService>();
   final _savedTrips = getIt<SavedTripRepository>();
 
   _IntakeStep _step = _IntakeStep.dates;
@@ -73,6 +76,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   String? _landingTime;
   String? _departureTime;
   String? _travelMode;
+  String? _stayNameOrAddress;
   int? _peopleCount;
   String? _pacePreference;
   final Set<String> _selectedInterests = {};
@@ -82,6 +86,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   String? _pendingEditLandingTime;
   String? _pendingEditEndDateAnswer;
   String? _pendingEditDepartureTime;
+  String? _pendingEditStayNameOrAddress;
   bool _pendingEditStartedWithStartDate = false;
 
   @override
@@ -185,6 +190,13 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
         return;
       case _IntakeStep.travelMode:
         _travelMode = text;
+        _step = _IntakeStep.stay;
+        _addAssistant(
+          'Where are you staying? Hotel name, area, or address is fine.',
+        );
+        return;
+      case _IntakeStep.stay:
+        _stayNameOrAddress = text;
         _step = _IntakeStep.people;
         _addAssistant('How many people are travelling?');
         return;
@@ -261,6 +273,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
       dates: _dates ?? '',
       landingTime: _landingTime ?? '',
       departureTime: _departureTime ?? '',
+      stayNameOrAddress: _stayNameOrAddress ?? '',
       peopleCount: _peopleCount ?? 1,
       travelMode: _travelMode ?? 'Not specified',
       pacePreference: _pacePreference ?? 'Balanced',
@@ -298,9 +311,35 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
         _scrollToEnd();
       }
 
-      final guide = await _openAi.generateGuideFromResearch(intake, research);
+      if (mounted) {
+        setState(
+          () => _messages.add(
+            _ChatMessage.assistant(
+              'Checking Google route times from your stay so the schedule is realistic.',
+            ),
+          ),
+        );
+        _scrollToEnd();
+      }
+
+      final timingContext = await _routeTiming.buildTimingContext(
+        intake,
+        research,
+      );
+      final guide = await _openAi.generateGuideFromResearch(
+        intake,
+        research,
+        timingContext: timingContext,
+      );
       final guideId = await _guideStore.saveGuide(guide);
       if (mounted) context.go('${AppRoutes.destination}?id=$guideId');
+    } on RouteTimingException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _step = _IntakeStep.stay;
+        _messages.add(_ChatMessage.assistant(e.message));
+      });
     } on OpenAiGuideException catch (e) {
       if (!mounted) return;
       setState(() {
@@ -314,6 +353,16 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   Future<void> _handleEditText(String text) async {
     switch (_editFollowUpStep) {
       case _EditFollowUpStep.none:
+        if (_shouldAskStayEditFollowUp(text) ||
+            (_editingGuide?.intake.stayNameOrAddress.trim().isEmpty == true &&
+                _editNeedsRouteTiming(text))) {
+          _pendingEditRequest = text;
+          _editFollowUpStep = _EditFollowUpStep.stay;
+          _addAssistant(
+            'What hotel, area, or address should I use as your stay base for retiming?',
+          );
+          return;
+        }
         if (_shouldAskDateEditFollowUps(text)) {
           _pendingEditRequest = text;
           _pendingEditStartedWithStartDate = !_isEndDateOnlyEdit(text);
@@ -363,7 +412,40 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
         _clearPendingDateEdit();
         await _reviseGuide(request);
         return;
+      case _EditFollowUpStep.stay:
+        _pendingEditStayNameOrAddress = text;
+        final request = _buildStayEditRequest();
+        _clearPendingStayEdit();
+        await _reviseGuide(request);
+        return;
     }
+  }
+
+  bool _shouldAskStayEditFollowUp(String text) {
+    final lower = text.toLowerCase();
+    return lower.contains('hotel') ||
+        lower.contains('stay') ||
+        lower.contains('staying') ||
+        lower.contains('accommodation') ||
+        lower.contains('base') ||
+        lower.contains('check in') ||
+        lower.contains('check-in');
+  }
+
+  bool _editNeedsRouteTiming(String text) {
+    final lower = text.toLowerCase();
+    return _shouldAskDateEditFollowUps(text) ||
+        _shouldAskStayEditFollowUp(text) ||
+        lower.contains('arrival') ||
+        lower.contains('landing') ||
+        lower.contains('departure') ||
+        lower.contains('flight') ||
+        lower.contains('aeroplane') ||
+        lower.contains('airplane') ||
+        lower.contains('train') ||
+        lower.contains('bus') ||
+        lower.contains('car') ||
+        lower.contains('drive');
   }
 
   bool _shouldAskDateEditFollowUps(String text) {
@@ -448,11 +530,33 @@ Apply these changes to the trip intake. Update intake.dates to the full revised 
 ''';
   }
 
+  String _buildStayEditRequest() {
+    final original = _pendingEditRequest?.trim() ?? '';
+    final stay = _pendingEditStayNameOrAddress?.trim() ?? '';
+
+    return '''
+Original user edit request:
+$original
+
+Follow-up answers:
+- Set intake.stayNameOrAddress to: $stay.
+
+Apply these changes to the trip intake. Regenerate route-aware itinerary timings around the revised stay/base, arrival/departure transfers, and daily movement.
+''';
+  }
+
+  void _clearPendingStayEdit() {
+    _pendingEditRequest = null;
+    _pendingEditStayNameOrAddress = null;
+    _editFollowUpStep = _EditFollowUpStep.none;
+  }
+
   void _clearPendingDateEdit() {
     _pendingEditRequest = null;
     _pendingEditLandingTime = null;
     _pendingEditEndDateAnswer = null;
     _pendingEditDepartureTime = null;
+    _pendingEditStayNameOrAddress = null;
     _pendingEditStartedWithStartDate = false;
     _editFollowUpStep = _EditFollowUpStep.none;
   }
@@ -468,6 +572,74 @@ Apply these changes to the trip intake. Update intake.dates to the full revised 
         lower.contains('no change');
   }
 
+  TripIntake _intakeForRouteTimingEdit(TripIntake current, String editRequest) {
+    final stay =
+        _extractPromptValue(editRequest, 'stayNameOrAddress') ??
+        _extractStayFromPlainText(editRequest) ??
+        current.stayNameOrAddress;
+    final landing =
+        _extractPromptValue(editRequest, 'landingTime') ?? current.landingTime;
+    final departure =
+        _extractPromptValue(editRequest, 'departureTime') ??
+        current.departureTime;
+    final travelMode = _extractTravelMode(editRequest) ?? current.travelMode;
+
+    return current.copyWith(
+      stayNameOrAddress: stay,
+      landingTime: landing,
+      departureTime: departure,
+      travelMode: travelMode,
+    );
+  }
+
+  String? _extractPromptValue(String text, String fieldName) {
+    final pattern = RegExp(
+      'intake\\.$fieldName\\s+to:\\s*([^\\.\\n]+)',
+      caseSensitive: false,
+    );
+    final match = pattern.firstMatch(text);
+    final value = match?.group(1)?.trim();
+    return value == null || value.isEmpty ? null : value;
+  }
+
+  String? _extractStayFromPlainText(String text) {
+    final patterns = [
+      RegExp(
+        r'(?:hotel|stay|staying|accommodation|base)\s+(?:to|at|in|is|as)\s+([^\.\n]+)',
+        caseSensitive: false,
+      ),
+      RegExp(
+        r'(?:change|move|switch)\s+(?:to|into)\s+([^\.\n]+)',
+        caseSensitive: false,
+      ),
+    ];
+
+    for (final pattern in patterns) {
+      final match = pattern.firstMatch(text);
+      final value = match?.group(1)?.trim();
+      if (value != null && value.isNotEmpty) return value;
+    }
+    return null;
+  }
+
+  String? _extractTravelMode(String text) {
+    final lower = text.toLowerCase();
+    if (lower.contains('flight') ||
+        lower.contains('aeroplane') ||
+        lower.contains('airplane') ||
+        lower.contains('plane')) {
+      return 'Aeroplane';
+    }
+    if (lower.contains('train') || lower.contains('rail')) return 'Train';
+    if (lower.contains('bus') || lower.contains('coach')) return 'Bus';
+    if (lower.contains('car') ||
+        lower.contains('drive') ||
+        lower.contains('cab')) {
+      return 'Car';
+    }
+    return null;
+  }
+
   Future<void> _reviseGuide(String editRequest) async {
     final guide = _editingGuide;
     if (guide == null) return;
@@ -479,9 +651,21 @@ Apply these changes to the trip intake. Update intake.dates to the full revised 
     _scrollToEnd();
 
     try {
+      final timingIntake = _intakeForRouteTimingEdit(guide.intake, editRequest);
+      final research = await _research.loadForIntake(timingIntake);
+      if (research == null) {
+        throw const OpenAiGuideException(
+          'Raaste can only retime trips for Hyderabad, Lonavala, and Varanasi right now.',
+        );
+      }
+      final timingContext = await _routeTiming.buildTimingContext(
+        timingIntake,
+        research,
+      );
       final updated = await _openAi.reviseGuide(
         currentGuide: guide,
         editRequest: editRequest,
+        timingContext: timingContext,
       );
       final guideId = await _guideStore.saveGuide(updated);
       final saved = updated.copyWith(id: guideId);
@@ -492,6 +676,12 @@ Apply these changes to the trip intake. Update intake.dates to the full revised 
         return;
       }
       if (mounted) context.go('${AppRoutes.destination}?id=$guideId');
+    } on RouteTimingException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _messages.add(_ChatMessage.assistant(e.message));
+      });
     } on OpenAiGuideException catch (e) {
       if (!mounted) return;
       setState(() {
@@ -522,10 +712,12 @@ Apply these changes to the trip intake. Update intake.dates to the full revised 
     if (_isLoading) return;
     setState(() {
       _travelMode = value;
-      _step = _IntakeStep.people;
+      _step = _IntakeStep.stay;
       _messages.add(_ChatMessage.user(value));
     });
-    _addAssistant('How many people are travelling?');
+    _addAssistant(
+      'Where are you staying? Hotel name, area, or address is fine.',
+    );
   }
 
   void _selectPace(String value) {
@@ -725,6 +917,8 @@ Apply these changes to the trip intake. Update intake.dates to the full revised 
           return 'Example: Same, or 30 August';
         case _EditFollowUpStep.departureTime:
           return 'Example: 6:00 PM';
+        case _EditFollowUpStep.stay:
+          return 'Example: Taj Deccan, Banjara Hills';
         case _EditFollowUpStep.none:
           return 'Ask for a change...';
       }
@@ -739,6 +933,8 @@ Apply these changes to the trip intake. Update intake.dates to the full revised 
         return 'Example: 6:00 PM';
       case _IntakeStep.travelMode:
         return 'Example: Train, car, bus, or flight';
+      case _IntakeStep.stay:
+        return 'Example: Taj Deccan, Banjara Hills';
       case _IntakeStep.people:
         return 'Example: 2';
       case _IntakeStep.pace:

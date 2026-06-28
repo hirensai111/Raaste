@@ -35,7 +35,7 @@ class PopularAttractionsScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Top 10 Place Types',
+                              'Top 10 Destinations',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -48,7 +48,7 @@ class PopularAttractionsScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              'Pick a travel style and start an AI itinerary',
+                              'Pick a destination and start an AI itinerary',
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -227,7 +227,7 @@ class _TopAttractionCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              'Plan this type',
+                              'Create itinerary',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
