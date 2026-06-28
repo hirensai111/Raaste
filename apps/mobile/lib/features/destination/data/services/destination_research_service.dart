@@ -130,8 +130,12 @@ class DestinationResearchService {
     return {
       'destination': decoded['destination'],
       'food_overview': decoded['food_overview'],
+      'street_food_guide': decoded['street_food_guide'],
       'dietary_specific_guides': decoded['dietary_specific_guides'],
       'meal_planning_guide': decoded['meal_planning_guide'],
+      'budget_meal_planning': decoded['budget_meal_planning'],
+      'what_to_bring_home': decoded['what_to_bring_home'],
+      'data_quality': decoded['data_quality'],
       'restaurants': _compactRestaurants(decoded['restaurants']),
     };
   }
@@ -176,10 +180,21 @@ class DestinationResearchService {
           'seating': practical['seating'],
           'ac_available': practical['ac_available'],
         },
+        'rating_signals': _compactRatingSignals(json['rating_signals']),
         'raaste_recommendation_reason': json['raaste_recommendation_reason'],
         'best_for': json['best_for'],
       };
     }).toList();
+  }
+
+  Map<String, dynamic> _compactRatingSignals(Object? value) {
+    final rating = _map(value);
+    return {
+      'zomato_rating': rating['zomato_rating'],
+      'google_rating': rating['google_rating'],
+      'review_count_approximate': rating['review_count_approximate'],
+      'mentioned_in_sources': rating['mentioned_in_sources'],
+    };
   }
 
   List<Map<String, dynamic>> _compactSignatureDishes(Object? value) {

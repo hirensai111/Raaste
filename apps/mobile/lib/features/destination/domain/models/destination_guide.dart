@@ -1,3 +1,4 @@
+import 'package:raaste/features/destination/domain/models/itinerary_timing_context.dart';
 import 'package:raaste/features/destination/domain/models/trip_intake.dart';
 
 class DestinationGuide {
@@ -8,6 +9,7 @@ class DestinationGuide {
   final List<ItineraryDay> itineraryDays;
   final List<String> disclaimers;
   final DateTime updatedAt;
+  final ItineraryTimingContext? timingContext;
 
   const DestinationGuide({
     required this.id,
@@ -17,6 +19,7 @@ class DestinationGuide {
     required this.itineraryDays,
     required this.disclaimers,
     required this.updatedAt,
+    this.timingContext,
   });
 
   DestinationGuide copyWith({
@@ -27,6 +30,7 @@ class DestinationGuide {
     List<ItineraryDay>? itineraryDays,
     List<String>? disclaimers,
     DateTime? updatedAt,
+    ItineraryTimingContext? timingContext,
   }) {
     return DestinationGuide(
       id: id ?? this.id,
@@ -36,6 +40,7 @@ class DestinationGuide {
       itineraryDays: itineraryDays ?? this.itineraryDays,
       disclaimers: disclaimers ?? this.disclaimers,
       updatedAt: updatedAt ?? this.updatedAt,
+      timingContext: timingContext ?? this.timingContext,
     );
   }
 
@@ -47,6 +52,7 @@ class DestinationGuide {
     'itineraryDays': itineraryDays.map((item) => item.toJson()).toList(),
     'disclaimers': disclaimers,
     'updatedAt': updatedAt.toIso8601String(),
+    if (timingContext != null) 'timingContext': timingContext!.toJson(),
   };
 
   factory DestinationGuide.fromJson(Map<String, dynamic> json) {
@@ -77,6 +83,12 @@ class DestinationGuide {
       updatedAt:
           DateTime.tryParse(json['updatedAt'] as String? ?? '') ??
           DateTime.now(),
+      timingContext:
+          json['timingContext'] is Map<String, dynamic>
+              ? ItineraryTimingContext.fromJson(
+                json['timingContext'] as Map<String, dynamic>,
+              )
+              : null,
     );
   }
 }
@@ -199,12 +211,55 @@ List<ItineraryDay> _sanitizeItineraryDays(List<ItineraryDay> days) {
         dayNumber: day.dayNumber,
         title: day.title,
         subtitle: day.subtitle,
-        stops: cleanedStops,
+        stops: _sortStopsChronologically(cleanedStops),
       ),
     );
   }
 
   return cleanedDays;
+}
+
+List<ItineraryStop> _sortStopsChronologically(List<ItineraryStop> stops) {
+  final indexed = stops.asMap().entries.toList();
+  indexed.sort((a, b) {
+    final aTime = _startMinuteOfDay(a.value.time);
+    final bTime = _startMinuteOfDay(b.value.time);
+    if (aTime == null && bTime == null) return a.key.compareTo(b.key);
+    if (aTime == null) return 1;
+    if (bTime == null) return -1;
+    final comparison = aTime.compareTo(bTime);
+    return comparison == 0 ? a.key.compareTo(b.key) : comparison;
+  });
+  return indexed.map((entry) => entry.value).toList();
+}
+
+int? _startMinuteOfDay(String value) {
+  final text = value.toUpperCase().replaceAll('.', '').trim();
+  if (text.isEmpty) return null;
+
+  final matches =
+      RegExp(r'(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?').allMatches(text).toList();
+  if (matches.isEmpty) return null;
+
+  final first = matches.first;
+  final hour = int.tryParse(first.group(1) ?? '');
+  final minute = int.tryParse(first.group(2) ?? '0') ?? 0;
+  if (hour == null || hour < 1 || hour > 12 || minute < 0 || minute > 59) {
+    return null;
+  }
+
+  var marker = first.group(3);
+  if (marker == null) {
+    for (final match in matches.skip(1)) {
+      marker = match.group(3);
+      if (marker != null) break;
+    }
+  }
+  if (marker == null) return null;
+
+  var normalizedHour = hour % 12;
+  if (marker == 'PM') normalizedHour += 12;
+  return normalizedHour * 60 + minute;
 }
 
 bool _isPlaceholderMealStop(ItineraryStop stop) {

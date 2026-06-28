@@ -1,5 +1,9 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:go_router/go_router.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'package:raaste/config/routes.dart';
 import 'package:raaste/core/di/injection.dart';
@@ -120,6 +124,8 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                       _DisclaimerBanner(disclaimers: guide.disclaimers),
                       const SizedBox(height: 18),
                       _OverviewSection(overview: guide.overview),
+                      const SizedBox(height: 18),
+                      _TripMapSection(guide: guide),
                       const SizedBox(height: 18),
                       ...guide.itineraryDays.map(
                         (day) => Padding(
@@ -274,6 +280,766 @@ class _OverviewSection extends StatelessWidget {
       ),
     );
   }
+}
+
+class _TripMapSection extends StatefulWidget {
+  final DestinationGuide guide;
+
+  const _TripMapSection({required this.guide});
+
+  @override
+  State<_TripMapSection> createState() => _TripMapSectionState();
+}
+
+class _TripMapSectionState extends State<_TripMapSection> {
+  int? _selectedDayNumber;
+
+  List<ItineraryDay> get _daysWithPins =>
+      widget.guide.itineraryDays
+          .where((day) => _mapPinsForDay(day).isNotEmpty)
+          .toList();
+
+  @override
+  void initState() {
+    super.initState();
+    final days = _daysWithPins;
+    if (days.isNotEmpty) _selectedDayNumber = days.first.dayNumber;
+  }
+
+  @override
+  void didUpdateWidget(covariant _TripMapSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final days = _daysWithPins;
+    if (days.isEmpty) {
+      _selectedDayNumber = null;
+      return;
+    }
+    final selectedExists = days.any(
+      (day) => day.dayNumber == _selectedDayNumber,
+    );
+    if (!selectedExists) _selectedDayNumber = days.first.dayNumber;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final days = _daysWithPins;
+    if (days.isEmpty) {
+      return const _GuideSection(
+        title: 'Trip map',
+        icon: Icons.map_outlined,
+        child: _BodyText(
+          'Map pins will appear here once the itinerary includes mapped stops.',
+        ),
+      );
+    }
+
+    final selectedDay = days.firstWhere(
+      (day) => day.dayNumber == _selectedDayNumber,
+      orElse: () => days.first,
+    );
+    final pins = _mapPinsForDay(selectedDay);
+    final summary = _travelSummaryForGuide(widget.guide);
+
+    return _GuideSection(
+      title: 'Trip map',
+      icon: Icons.map_outlined,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _DayMapDropdown(
+            days: days,
+            selectedDay: selectedDay,
+            onChanged: (dayNumber) {
+              setState(() => _selectedDayNumber = dayNumber);
+            },
+          ),
+          const SizedBox(height: 12),
+          _InteractiveTripMap(day: selectedDay, pins: pins),
+          const SizedBox(height: 14),
+          _TravelTimeSummary(summary: summary),
+        ],
+      ),
+    );
+  }
+}
+
+class _DayMapDropdown extends StatelessWidget {
+  final List<ItineraryDay> days;
+  final ItineraryDay selectedDay;
+  final ValueChanged<int> onChanged;
+
+  const _DayMapDropdown({
+    required this.days,
+    required this.selectedDay,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 8, 10, 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5EBDD),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: RaasteShellColors.outline),
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: 36,
+            width: 36,
+            decoration: const BoxDecoration(
+              color: RaasteShellColors.ink,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.calendar_today_rounded,
+              color: Colors.white,
+              size: 17,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<int>(
+                    value: selectedDay.dayNumber,
+                    isExpanded: true,
+                    borderRadius: BorderRadius.circular(14),
+                    dropdownColor: const Color(0xFFFFFCF7),
+                    icon: const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: RaasteShellColors.ink,
+                    ),
+                    selectedItemBuilder:
+                        (context) =>
+                            days
+                                .map(
+                                  (day) => Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Day ${day.dayNumber}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: RaasteShellColors.ink,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                    items:
+                        days
+                            .map(
+                              (day) => DropdownMenuItem<int>(
+                                value: day.dayNumber,
+                                child: Text(
+                                  'Day ${day.dayNumber} - ${day.title}',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: RaasteShellColors.ink,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                    onChanged: (value) {
+                      if (value != null) onChanged(value);
+                    },
+                  ),
+                ),
+                Text(
+                  selectedDay.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: RaasteShellColors.muted,
+                    fontSize: 12,
+                    height: 1.25,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFFCF7),
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(color: RaasteShellColors.outline),
+            ),
+            child: Text(
+              '${_mapPinsForDay(selectedDay).length} stops',
+              style: const TextStyle(
+                color: RaasteShellColors.ink,
+                fontSize: 11,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InteractiveTripMap extends StatefulWidget {
+  final ItineraryDay day;
+  final List<_MapPin> pins;
+
+  const _InteractiveTripMap({required this.day, required this.pins});
+
+  @override
+  State<_InteractiveTripMap> createState() => _InteractiveTripMapState();
+}
+
+class _InteractiveTripMapState extends State<_InteractiveTripMap> {
+  late final MapController _controller;
+  bool _mapReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = MapController();
+  }
+
+  @override
+  void didUpdateWidget(covariant _InteractiveTripMap oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.day.dayNumber != widget.day.dayNumber ||
+        oldWidget.pins.length != widget.pins.length) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _fitToDay());
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final points = widget.pins.map((pin) => pin.point).toList();
+    final center = _centerForPins(widget.pins);
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        height: 330,
+        color: const Color(0xFFE9EFE2),
+        child: Stack(
+          children: [
+            FlutterMap(
+              mapController: _controller,
+              options: MapOptions(
+                initialCenter: center,
+                initialZoom: widget.pins.length == 1 ? 15 : 13,
+                initialCameraFit:
+                    points.length > 1
+                        ? CameraFit.coordinates(
+                          coordinates: points,
+                          padding: const EdgeInsets.fromLTRB(42, 72, 42, 72),
+                          maxZoom: 15.5,
+                        )
+                        : null,
+                minZoom: 4,
+                maxZoom: 18,
+                backgroundColor: const Color(0xFFE9EFE2),
+                interactionOptions: const InteractionOptions(
+                  flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+                ),
+                onMapReady: () {
+                  _mapReady = true;
+                  _fitToDay();
+                },
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.raaste.raaste',
+                  maxNativeZoom: 19,
+                ),
+                if (points.length > 1)
+                  PolylineLayer(
+                    polylines: [
+                      Polyline(
+                        points: points,
+                        strokeWidth: 4,
+                        color: RaasteShellColors.clay.withValues(alpha: .78),
+                        borderStrokeWidth: 2,
+                        borderColor: Colors.white.withValues(alpha: .9),
+                      ),
+                    ],
+                  ),
+                MarkerLayer(
+                  markers:
+                      widget.pins
+                          .map(
+                            (pin) => Marker(
+                              point: pin.point,
+                              width: 210,
+                              height: 86,
+                              alignment: Alignment.bottomCenter,
+                              child: _MapMarkerLabel(pin: pin),
+                            ),
+                          )
+                          .toList(),
+                ),
+                const SimpleAttributionWidget(
+                  source: Text(
+                    'OpenStreetMap contributors',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                  backgroundColor: Color(0xDDFFFCF7),
+                ),
+              ],
+            ),
+            Positioned(
+              right: 10,
+              top: 10,
+              child: _MapZoomControls(
+                onZoomIn: () => _zoomBy(1),
+                onZoomOut: () => _zoomBy(-1),
+                onFit: _fitToDay,
+              ),
+            ),
+            Positioned(
+              left: 10,
+              top: 10,
+              child: _MapDayBadge(dayNumber: widget.day.dayNumber),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _fitToDay() {
+    if (!_mapReady || widget.pins.isEmpty) return;
+    final points = widget.pins.map((pin) => pin.point).toList();
+    if (points.length == 1) {
+      _controller.move(points.first, 15);
+      return;
+    }
+    _controller.fitCamera(
+      CameraFit.coordinates(
+        coordinates: points,
+        padding: const EdgeInsets.fromLTRB(42, 72, 42, 72),
+        maxZoom: 15.5,
+      ),
+    );
+  }
+
+  void _zoomBy(double delta) {
+    if (!_mapReady) return;
+    final camera = _controller.camera;
+    final nextZoom = (camera.zoom + delta).clamp(4.0, 18.0).toDouble();
+    _controller.move(camera.center, nextZoom);
+  }
+}
+
+class _MapMarkerLabel extends StatelessWidget {
+  final _MapPin pin;
+
+  const _MapMarkerLabel({required this.pin});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          constraints: const BoxConstraints(maxWidth: 180),
+          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFFCF7),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: RaasteShellColors.outline),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x22000000),
+                blurRadius: 8,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 24,
+                width: 24,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: RaasteShellColors.ink,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  pin.stopNumber.toString(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 7),
+              Flexible(
+                child: Text(
+                  pin.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: RaasteShellColors.ink,
+                    fontSize: 11,
+                    height: 1.05,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Icon(
+          Icons.location_pin,
+          color: RaasteShellColors.clay,
+          size: 34,
+          shadows: [
+            Shadow(
+              color: Color(0x55000000),
+              blurRadius: 5,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _MapZoomControls extends StatelessWidget {
+  final VoidCallback onZoomIn;
+  final VoidCallback onZoomOut;
+  final VoidCallback onFit;
+
+  const _MapZoomControls({
+    required this.onZoomIn,
+    required this.onZoomOut,
+    required this.onFit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: const Color(0xEEFFFCF7),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: RaasteShellColors.outline),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x18000000),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _MapIconButton(icon: Icons.add_rounded, onTap: onZoomIn),
+          const Divider(height: 1, color: RaasteShellColors.outline),
+          _MapIconButton(icon: Icons.remove_rounded, onTap: onZoomOut),
+          const Divider(height: 1, color: RaasteShellColors.outline),
+          _MapIconButton(icon: Icons.center_focus_strong_rounded, onTap: onFit),
+        ],
+      ),
+    );
+  }
+}
+
+class _MapIconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _MapIconButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: SizedBox(
+          height: 38,
+          width: 38,
+          child: Icon(icon, color: RaasteShellColors.ink, size: 20),
+        ),
+      ),
+    );
+  }
+}
+
+class _MapDayBadge extends StatelessWidget {
+  final int dayNumber;
+
+  const _MapDayBadge({required this.dayNumber});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xEEFFFCF7),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: RaasteShellColors.outline),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(
+            Icons.map_rounded,
+            color: RaasteShellColors.clay,
+            size: 16,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            'Day $dayNumber',
+            style: const TextStyle(
+              color: RaasteShellColors.ink,
+              fontSize: 12,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TravelTimeSummary extends StatelessWidget {
+  final _TravelSummary summary;
+
+  const _TravelTimeSummary({required this.summary});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5EBDD),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: RaasteShellColors.outline),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 38,
+            width: 38,
+            decoration: const BoxDecoration(
+              color: RaasteShellColors.ink,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.route_rounded,
+              color: Colors.white,
+              size: 21,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  summary.primaryText,
+                  style: const TextStyle(
+                    color: RaasteShellColors.ink,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w900,
+                    height: 1.25,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  summary.secondaryText,
+                  style: const TextStyle(
+                    color: RaasteShellColors.muted,
+                    fontSize: 12,
+                    height: 1.35,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MapPin {
+  final int dayNumber;
+  final int stopNumber;
+  final String title;
+  final LatLng point;
+
+  const _MapPin({
+    required this.dayNumber,
+    required this.stopNumber,
+    required this.title,
+    required this.point,
+  });
+}
+
+class _TravelSummary {
+  final String primaryText;
+  final String secondaryText;
+
+  const _TravelSummary({
+    required this.primaryText,
+    required this.secondaryText,
+  });
+}
+
+List<_MapPin> _mapPinsForDay(ItineraryDay day) {
+  final pins = <_MapPin>[];
+  final seen = <String>{};
+
+  for (final stop in _visibleStops(day.stops)) {
+    final lat = stop.lat;
+    final lon = stop.lon;
+    if (lat == null || lon == null) continue;
+    if (lat.abs() < 0.0001 && lon.abs() < 0.0001) continue;
+
+    final key =
+        '${lat.toStringAsFixed(5)},${lon.toStringAsFixed(5)}:${stop.title.toLowerCase()}';
+    if (seen.contains(key)) continue;
+    seen.add(key);
+
+    pins.add(
+      _MapPin(
+        dayNumber: day.dayNumber,
+        stopNumber: pins.length + 1,
+        title:
+            stop.title.trim().isEmpty ? 'Stop ${pins.length + 1}' : stop.title,
+        point: LatLng(lat, lon),
+      ),
+    );
+  }
+
+  return pins;
+}
+
+LatLng _centerForPins(List<_MapPin> pins) {
+  if (pins.isEmpty) return const LatLng(20.5937, 78.9629);
+  final totalLat = pins.fold<double>(0, (sum, pin) => sum + pin.point.latitude);
+  final totalLon = pins.fold<double>(
+    0,
+    (sum, pin) => sum + pin.point.longitude,
+  );
+  return LatLng(totalLat / pins.length, totalLon / pins.length);
+}
+
+_TravelSummary _travelSummaryForGuide(DestinationGuide guide) {
+  final timingRoutes = guide.timingContext?.routes ?? const [];
+  final dayCount = math.max(guide.itineraryDays.length, 1);
+  final totalRouteMinutes = timingRoutes.fold<int>(
+    0,
+    (sum, route) => sum + math.max(route.durationMinutes, 0),
+  );
+
+  if (totalRouteMinutes > 0) {
+    final avg = (totalRouteMinutes / dayCount).round();
+    return _TravelSummary(
+      primaryText: 'Average travel time: ${_durationLabel(avg)} per day',
+      secondaryText:
+          'Based on ${timingRoutes.length} Google route estimate${timingRoutes.length == 1 ? '' : 's'} for this itinerary. Actual traffic may vary.',
+    );
+  }
+
+  final fallbackAverage = _fallbackDailyTravelAverage(guide.itineraryDays);
+  if (fallbackAverage <= 0) {
+    return const _TravelSummary(
+      primaryText: 'Average travel time: not enough mapped data',
+      secondaryText:
+          'Mapped stops are available, but there is not enough route data yet to estimate daily travel time.',
+    );
+  }
+
+  return _TravelSummary(
+    primaryText:
+        'Average travel time: ${_durationLabel(fallbackAverage)} per day',
+    secondaryText:
+        'Estimated from the spacing between mapped itinerary stops. Generate or edit the trip with Google route timing for sharper estimates.',
+  );
+}
+
+int _fallbackDailyTravelAverage(List<ItineraryDay> days) {
+  if (days.isEmpty) return 0;
+  final estimates = <int>[];
+  for (final day in days) {
+    final mappedStops =
+        _visibleStops(
+          day.stops,
+        ).where((stop) => stop.lat != null && stop.lon != null).toList();
+    if (mappedStops.length < 2) {
+      estimates.add(0);
+      continue;
+    }
+
+    var dayMinutes = 0;
+    for (var i = 0; i < mappedStops.length - 1; i++) {
+      dayMinutes += _roughTravelMinutes(
+        mappedStops[i].lat!,
+        mappedStops[i].lon!,
+        mappedStops[i + 1].lat!,
+        mappedStops[i + 1].lon!,
+      );
+    }
+    estimates.add(dayMinutes);
+  }
+
+  final total = estimates.fold<int>(0, (sum, item) => sum + item);
+  return (total / math.max(estimates.length, 1)).round();
+}
+
+int _roughTravelMinutes(double lat1, double lon1, double lat2, double lon2) {
+  const earthRadiusKm = 6371.0;
+  final dLat = _degreesToRadians(lat2 - lat1);
+  final dLon = _degreesToRadians(lon2 - lon1);
+  final a =
+      math.sin(dLat / 2) * math.sin(dLat / 2) +
+      math.cos(_degreesToRadians(lat1)) *
+          math.cos(_degreesToRadians(lat2)) *
+          math.sin(dLon / 2) *
+          math.sin(dLon / 2);
+  final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+  final km = earthRadiusKm * c;
+  return math.max(8, (km / 18 * 60).round());
+}
+
+double _degreesToRadians(double value) => value * math.pi / 180;
+
+String _durationLabel(int minutes) {
+  if (minutes <= 0) return 'Not enough mapped data';
+  if (minutes < 60) return '$minutes min';
+  final hours = minutes ~/ 60;
+  final mins = minutes % 60;
+  if (mins == 0) return '${hours}h';
+  return '${hours}h ${mins}m';
 }
 
 class _ItineraryDayCard extends StatefulWidget {

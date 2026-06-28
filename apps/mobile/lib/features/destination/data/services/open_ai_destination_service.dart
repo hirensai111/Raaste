@@ -50,6 +50,7 @@ class OpenAiDestinationService {
     final guide = result.copyWith(
       intake: intake,
       destinationName: intake.destination,
+      timingContext: timingContext,
     );
 
     if (!_needsFullTripRetry(guide, expectedDays, intake.dates)) return guide;
@@ -65,7 +66,11 @@ class OpenAiDestinationService {
       fallbackIntake: intake,
       existingId: '',
     );
-    return retry.copyWith(intake: intake, destinationName: intake.destination);
+    return retry.copyWith(
+      intake: intake,
+      destinationName: intake.destination,
+      timingContext: timingContext,
+    );
   }
 
   Future<DestinationGuide> reviseGuide({
@@ -85,6 +90,7 @@ class OpenAiDestinationService {
 
     var revised = result.copyWith(
       id: currentGuide.id,
+      timingContext: timingContext,
       destinationName:
           result.destinationName.trim().isEmpty
               ? currentGuide.destinationName
@@ -109,6 +115,7 @@ class OpenAiDestinationService {
       );
       revised = result.copyWith(
         id: currentGuide.id,
+        timingContext: timingContext,
         destinationName:
             result.destinationName.trim().isEmpty
                 ? currentGuide.destinationName
@@ -224,6 +231,9 @@ ${jsonEncode(research.toPromptJson())}
 Computed Google route timing context:
 ${jsonEncode(timingContext.toJson())}
 
+Research usage guide:
+${_researchUsageGuide(research, intake)}
+
 Hard rules - never break these:
 1. Research first, always.
 - Use only the curated research JSON for recommendations, restaurants, tips, timings, transport info, prices, closures, crowd realities, and local knowledge.
@@ -264,6 +274,13 @@ ${_dayCountInstruction(intake.dates, expectedDays, forceFullLength)}
 - Balanced means 2-3 major attractions per day with comfortable spacing.
 - Packed means 3-4 major attractions per day with efficient routing and fewer gaps.
 - If the user names specific days as leisure or packed, reflect that day-by-day.
+
+Interest fit is a hard constraint.
+- User selected interests: ${intake.interests.join(', ')}.
+- Do not use the destination's default famous-monument circuit unless it matches these interests.
+- Pick attractions, areas, restaurants, shopping stops, evening zones, and rest breaks that directly serve the selected interests.
+- If the user selected Shopping, Nightlife, Food, City, Urban, Cafes, or Local Life, prioritize bazaars, markets, cafes, restaurants, promenades, modern districts, evening streets, and nightlife-safe areas. Use monuments only as anchors or backdrops when they support those interests.
+- If History or Spiritual is not selected, keep museum/temple/fort-heavy planning optional and limited.
 
 7. Google route timing is a hard constraint.
 - Use the computed Google route timing context above as minimum movement time between stay, arrival/departure hubs, attractions, and restaurants.
@@ -309,6 +326,109 @@ ${_dayCountInstruction(intake.dates, expectedDays, forceFullLength)}
 - Include 2-4 disclaimers. One must say: "Prices, timings, entry fees, availability, and travel conditions may vary. Details are based on Raaste's curated research; verify key details before visiting."
 
 Return only JSON matching the schema.
+''';
+  }
+
+  String _interestUsageGuide(TripIntake intake) {
+    final interests =
+        intake.interests
+            .map((interest) => interest.trim())
+            .where((interest) => interest.isNotEmpty)
+            .toList();
+    if (interests.isEmpty) {
+      return '- No interests were selected, so create a balanced first-timer plan without overloading famous monuments.';
+    }
+
+    final normalized = interests.join(' ').toLowerCase();
+    final lines = <String>[
+      '- User selected interests: ${interests.join(', ')}. Treat these as the primary trip brief, not decoration.',
+      '- At least two thirds of non-transfer stops should clearly match one or more selected interests.',
+      '- If a famous attraction does not match the selected interests, skip it or make it optional instead of forcing it into the main day.',
+    ];
+
+    final wantsShopping =
+        normalized.contains('shopping') ||
+        normalized.contains('market') ||
+        normalized.contains('bazaar');
+    final wantsNightlife =
+        normalized.contains('nightlife') ||
+        normalized.contains('night') ||
+        normalized.contains('bar') ||
+        normalized.contains('club');
+    final wantsCity =
+        normalized.contains('city') ||
+        normalized.contains('urban') ||
+        normalized.contains('local life') ||
+        normalized.contains('local');
+    final wantsHistory =
+        normalized.contains('history') ||
+        normalized.contains('heritage') ||
+        normalized.contains('museum') ||
+        normalized.contains('monument');
+    final wantsSpiritual =
+        normalized.contains('spiritual') ||
+        normalized.contains('temple') ||
+        normalized.contains('mosque');
+
+    if (wantsShopping) {
+      lines.add(
+        '- Shopping interest: prioritize markets, bazaars, crafts, malls, local shopping streets, bargaining tips, best shopping hours, and what to buy. Do not replace shopping time with museum time.',
+      );
+    }
+    if (wantsNightlife) {
+      lines.add(
+        '- Nightlife interest: include safe evening districts, late cafes/food streets, lake promenade or city-light stops, and realistic return-to-stay advice. Avoid isolated late-night monuments.',
+      );
+    }
+    if (wantsCity) {
+      lines.add(
+        '- City/urban interest: prioritize neighbourhood energy, cafes, promenades, markets, modern districts, metro/cab practicality, and local-life observations over passive sightseeing.',
+      );
+    }
+    if ((wantsShopping || wantsNightlife || wantsCity) &&
+        !wantsHistory &&
+        !wantsSpiritual) {
+      lines.add(
+        '- Because History/Spiritual were not selected, do not build a monument-heavy route. Use monuments only as short anchors/backdrops for markets, food lanes, views, or city atmosphere.',
+      );
+    }
+
+    return lines.join('\n');
+  }
+
+  String _researchUsageGuide(DestinationResearch research, TripIntake intake) {
+    final sourceId = research.sourceId.trim().toLowerCase();
+    final interestGuide = _interestUsageGuide(intake);
+    final base = '''
+Read the research like a planner, not like a search result list:
+- Start with research.itinerary_framework as the destination's recommended skeleton, then adapt it to the user's dates, arrival/departure times, stay area, pace, travel mode, interests, dietary preference, and Google route timing.
+$interestGuide
+- Build every day around area clusters. Do not mix far-apart clusters just because both places are famous.
+- Use research.attractions as the canonical attraction list. For each selected attraction, use its why_worth_it, best_time_to_visit, avoid_when, time_needed, crowd_reality, local_tip, accessibility, entry_fee, and coordinates where present.
+- Use research.when_to_visit.monthly_breakdown and festival_calendar to add seasonal warnings when relevant. If exact travel month is unclear, keep seasonal advice general.
+- Use research.local_transport, money, safety, packing, accommodation, and local_knowledge for practical details inside the stops, not as separate generic essays.
+- Use restaurantResearch.food_overview, street_food_guide, dietary_specific_guides, meal_planning_guide, budget_meal_planning, and restaurants together. RestaurantResearch.restaurants chooses the actual place; the guides explain when/why/how to eat there.
+- For every mapped stop, preserve lat/lon from attraction coordinates when available so the app can show map pins. If a restaurant has no coordinates, leave lat/lon null rather than inventing them.
+- If research.data_quality.fields_needing_verification names a fee, timing, fare, contact number, or operational detail, include a verify-before-travel note exactly where that detail appears.
+''';
+
+    if (sourceId != 'hyderabad') return base;
+
+    return '''
+$base
+Hyderabad-specific planning rules from the new Raaste research:
+- Treat Hyderabad as multiple cities in one: Old City heritage/food, Golconda-Qutb Shahi heritage, Tank Bund/Birla/Hussain Sagar evening zone, HITEC City/Jubilee/Banjara modern food and nightlife, and Ramoji/outer day trips. Keep days clustered around one or two nearby zones.
+- Old City cluster: Charminar, Laad Bazaar, Mecca Masjid, Chowmahalla Palace, Salar Jung Museum, Nimrah Cafe, Hotel Shadab, Madina/Moazzam Jahi/nearby food lanes. Schedule it early morning or evening; warn about crowds, modest dress, cash, bargaining, Friday/prayer/festival pressure, and very limited parking.
+- Golconda cluster: Golconda Fort plus Qutb Shahi Tombs. Respect steep steps, heat, water/shoes, light-show Monday closure, and the tombs' possible Friday verification note. Do not combine this with a rushed Old City lunch unless route timing makes it realistic.
+- Tank Bund/Birla cluster: Birla Mandir, Hussain Sagar, Necklace Road, Lumbini Park/NTR Gardens. This works best as sunset/evening pacing after a lighter afternoon.
+- Modern-west cluster: Shilparamam, Durgam Cheruvu, KBR National Park, Jubilee Hills/Banjara Hills/HITEC food. Use this for shopping, cafes, nightlife, city walks, and lower-chaos days.
+- Ramoji Film City is a full-day or near-full-day choice. Do not squeeze it between central-city attractions.
+- Use Hyderabad food research with strong opinions: choose by area and meal slot, prefer Old City food while already in Old City, use HITEC/Jubilee options when the day is west-side, and avoid sending users across town only for a meal unless it is the whole point of that day.
+- For Shopping + Nightlife + City interests, build around Laad Bazaar/Moazzam Jahi/Abids or Shilparamam during shopping hours, then Jubilee Hills/Banjara Hills/HITEC/Durgam Cheruvu/Necklace Road style evening zones. Do not make the day a Salar Jung/Golconda/temple/museum plan unless the user also selected History/Spiritual.
+- When Charminar appears for a shopping/nightlife/city plan, frame it as the gateway to Laad Bazaar, Old City street energy, lights, chai, and food lanes, not as a monument-climb history stop.
+- For biryani and iconic food, include what to order, best time for freshest batch, wait-time reality, quality/tourist-trap warnings, parking/seating/cash-UPI notes, and dietary compliance from restaurantResearch. Never suggest a generic lunch if a compliant curated restaurant exists.
+- Hyderabad heat and monsoon matter. In April-May, push outdoor walking to early morning/evening and use museums/restaurants/indoor breaks in the afternoon. In monsoon, add rain, traffic, and footwear cautions.
+- The voice should feel local and current: mention practical realities like Old City chaos, airport distance from the hotel, HITEC-to-Old-City distance, metro usefulness/limits, autos/cab negotiation, and the difference between legendary original outlets and weaker branches when research says so.
 ''';
   }
 

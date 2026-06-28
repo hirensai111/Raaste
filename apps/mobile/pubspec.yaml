@@ -48,6 +48,8 @@ dependencies:
 
   # Logging
   logger: ^2.5.0
+  flutter_map: ^8.3.0
+  latlong2: ^0.9.1
 
   # Maps (optional â€” enable when needed)
   # google_maps_flutter: ^2.10.1
