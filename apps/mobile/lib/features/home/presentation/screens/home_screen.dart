@@ -231,12 +231,16 @@ class _PlannerHeroState extends State<_PlannerHero> {
       _searchError = null;
     });
 
-    _debounce = Timer(const Duration(milliseconds: 900), () async {
+    _debounce = Timer(const Duration(milliseconds: 180), () async {
       try {
         final results = await _searchService.autocomplete(query);
         if (!mounted || _controller.text.trim() != query) return;
         setState(() {
           _suggestions = results;
+          _searchError =
+              results.isEmpty
+                  ? 'Raaste currently supports Hyderabad, Lonavala, and Varanasi.'
+                  : null;
           _isSearching = false;
         });
       } on DestinationSearchException catch (e) {
@@ -261,8 +265,11 @@ class _PlannerHeroState extends State<_PlannerHero> {
   }
 
   void _startPlanning() {
-    final suggestion = _selectedSuggestion;
-    final destination = suggestion?.name ?? _controller.text.trim();
+    final typedDestination = _controller.text.trim();
+    final suggestion =
+        _selectedSuggestion ??
+        _searchService.findCuratedDestination(typedDestination);
+    final destination = suggestion?.name ?? typedDestination;
     if (destination.isEmpty) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -279,7 +286,9 @@ class _PlannerHeroState extends State<_PlannerHero> {
         ..hideCurrentSnackBar()
         ..showSnackBar(
           const SnackBar(
-            content: Text('Choose a destination from the search results'),
+            content: Text(
+              'Choose Hyderabad, Lonavala, or Varanasi from Raaste destinations',
+            ),
           ),
         );
       return;
@@ -444,7 +453,7 @@ class _SearchBox extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
         decoration: const InputDecoration(
-          hintText: 'Search destinations in India',
+          hintText: 'Search Raaste destinations',
           hintStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.w400),
           prefixIcon: Icon(
             Icons.search_rounded,
@@ -499,7 +508,7 @@ class _SuggestionPanel extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  'Search by OpenStreetMap',
+                  'Raaste curated destinations',
                   style: TextStyle(
                     color: RaasteShellColors.muted,
                     fontSize: 10,
@@ -1247,13 +1256,18 @@ _TripDateRange? _parseTripDateRange(String raw, DateTime now) {
       .replaceAll('â€“', '-')
       .replaceAll('â€”', '-')
       // Separate a glued ordinal+word, e.g. "4thjuly" -> "4th july".
-      .replaceAll(RegExp(r'(\d)(st|nd|rd|th)([a-z])'), r'$1$2 $3')
+      // NOTE: replaceAll does NOT expand $1/$2 backreferences for String
+      // replacements, so we must use replaceAllMapped with a callback.
+      .replaceAllMapped(
+        RegExp(r'(\d)(st|nd|rd|th)([a-z])'),
+        (m) => '${m[1]}${m[2]} ${m[3]}',
+      )
       // Separate a digit glued to a non-ordinal word, e.g. "12august" ->
       // "12 august". Do NOT split ordinal suffixes ("1st", "4th") because the
       // date regexes below rely on them staying attached to the number.
-      .replaceAll(
+      .replaceAllMapped(
         RegExp(r'(\d)(?!st\b|nd\b|rd\b|th\b)([a-z])'),
-        r'$1 $2',
+        (m) => '${m[1]} ${m[2]}',
       )
       .replaceAll(RegExp(r'\s+'), ' ');
 

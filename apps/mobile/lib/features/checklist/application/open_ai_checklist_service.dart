@@ -13,8 +13,8 @@ class OpenAiChecklistException implements Exception {
   String toString() => message;
 }
 
-/// Generates rich, trip-specific checklist content via the OpenAI Responses
-/// API. The output is a normalized JSON map (see [_checklistSchema]) that the
+/// Generates rich, trip-specific checklist content via the OpenAI Responses API.
+/// The output is a normalized JSON map (see [_checklistSchema]) that the
 /// checklist UI renders directly as a checkable list.
 ///
 /// The repository falls back to its built-in static content if this throws,
@@ -128,29 +128,31 @@ class OpenAiChecklistService {
   /// Ensures every item carries a `done: false` flag so the UI has a
   /// consistent shape to toggle, and stamps the AI source.
   Map<String, dynamic> _normalize(Map<String, dynamic> decoded) {
-    final sections = (decoded['sections'] as List<dynamic>? ?? const [])
-        .whereType<Map>()
-        .map((section) {
-          final items = (section['items'] as List<dynamic>? ?? const [])
-              .whereType<Map>()
-              .map(
-                (item) => {
-                  'text': item['text'] ?? '',
-                  'detail': item['detail'] ?? '',
-                  'priority': item['priority'] ?? '',
-                  'action_label': item['action_label'] ?? '',
-                  'done': false,
-                },
-              )
-              .toList();
-          return {
-            'name': section['name'] ?? 'Checklist',
-            'emoji': section['emoji'] ?? '📋',
-            'context': section['context'] ?? '',
-            'items': items,
-          };
-        })
-        .toList();
+    final sections =
+        (decoded['sections'] as List<dynamic>? ?? const [])
+            .whereType<Map>()
+            .map((section) {
+              final items =
+                  (section['items'] as List<dynamic>? ?? const [])
+                      .whereType<Map>()
+                      .map(
+                        (item) => {
+                          'text': item['text'] ?? '',
+                          'detail': item['detail'] ?? '',
+                          'priority': item['priority'] ?? '',
+                          'action_label': item['action_label'] ?? '',
+                          'done': false,
+                        },
+                      )
+                      .toList();
+              return {
+                'name': section['name'] ?? 'Checklist',
+                'emoji': section['emoji'] ?? '📋',
+                'context': section['context'] ?? '',
+                'items': items,
+              };
+            })
+            .toList();
 
     return {
       'source': 'ai',
@@ -172,6 +174,18 @@ class OpenAiChecklistService {
         trip.destinationName.trim().isEmpty
             ? trip.guide.destinationName
             : trip.destinationName;
+    final tripDetails = jsonEncode({
+      'destination': destination,
+      'destination_address': trip.destinationAddress,
+      'dates': trip.dates.isNotEmpty ? trip.dates : intake.dates,
+      'people_count': trip.peopleCount,
+      'travel_mode': intake.travelMode,
+      'pace_preference': intake.pacePreference,
+      'interests': intake.interests,
+      'dietary_preference': intake.dietaryPreference,
+      'landing_time': intake.landingTime,
+      'departure_time': intake.departureTime,
+    });
 
     final phaseInstruction = switch (checklistType) {
       'pre_trip' =>
@@ -203,18 +217,7 @@ Generate a highly practical, trip-specific checklist.
 $phaseInstruction
 
 Trip details:
-${jsonEncode({
-          'destination': destination,
-          'destination_address': trip.destinationAddress,
-          'dates': trip.dates.isNotEmpty ? trip.dates : intake.dates,
-          'people_count': trip.peopleCount,
-          'travel_mode': intake.travelMode,
-          'pace_preference': intake.pacePreference,
-          'interests': intake.interests,
-          'dietary_preference': intake.dietaryPreference,
-          'landing_time': intake.landingTime,
-          'departure_time': intake.departureTime,
-        })}
+$tripDetails
 
 ${checklistType == 'in_trip_daily' ? 'Today\'s saved itinerary for Day ${dayNumber ?? 1}:\n${jsonEncode(_dayJson(trip, dayNumber))}\n' : ''}
 Requirements:
@@ -239,16 +242,17 @@ Return only JSON matching the schema.
       'dayNumber': day.dayNumber,
       'title': day.title,
       'subtitle': day.subtitle,
-      'stops': day.stops
-          .map(
-            (stop) => {
-              'time': stop.time,
-              'title': stop.title,
-              'description': stop.description,
-              'type': stop.type,
-            },
-          )
-          .toList(),
+      'stops':
+          day.stops
+              .map(
+                (stop) => {
+                  'time': stop.time,
+                  'title': stop.title,
+                  'description': stop.description,
+                  'type': stop.type,
+                },
+              )
+              .toList(),
     };
   }
 

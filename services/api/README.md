@@ -32,7 +32,7 @@ Apply the Supabase migration in `supabase/migrations/20260627000200_create_trip_
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `OPENAI_API_KEY`
-- `OPENAI_MODEL` (optional, defaults to `gpt-5.4-nano`)
+- `OPENAI_MODEL` (optional, defaults to `gpt-4o-mini`)
 - `CRON_SECRET`
 
 Render Cron can run daily at 6 AM IST and trigger checklist generation with either option:
@@ -51,3 +51,4 @@ curl -X POST "$API_URL/api/v1/checklists/cron/run-due" \
 ```
 
 The job generates checklists only when due and uses `(trip_id, checklist_type, checklist_date)` to avoid duplicates. Push notifications are intentionally not sent yet.
+

@@ -11,6 +11,7 @@ import 'package:raaste/features/home/presentation/screens/home_screen.dart';
 import 'package:raaste/features/home/presentation/screens/popular_attractions_screen.dart';
 import 'package:raaste/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:raaste/features/onboarding/presentation/screens/profile_setup_screen.dart';
+import 'package:raaste/features/profile/presentation/screens/personal_information_screen.dart';
 import 'package:raaste/features/profile/presentation/screens/profile_screen.dart';
 import 'package:raaste/features/splash/presentation/screens/splash_screen.dart';
 import 'package:raaste/features/trip/presentation/screens/itinerary_screen.dart';
@@ -36,6 +37,8 @@ class AppRoutes {
   static const String itinerary = '/itinerary';
   static const String companion = '/companion';
   static const String profile = '/profile';
+  static const String personalInformation = '/profile/personal-information';
+  static const String changePassword = '/profile/change-password';
 }
 
 class AppRouter {
@@ -117,6 +120,14 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.profile,
         builder: (_, __) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.personalInformation,
+        builder: (_, __) => const PersonalInformationScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.changePassword,
+        builder: (_, __) => const ChangePasswordScreen(),
       ),
     ],
   );

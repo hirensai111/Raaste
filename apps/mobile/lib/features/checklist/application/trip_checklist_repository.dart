@@ -28,12 +28,19 @@ class TripChecklistRepository {
     final user = _client.auth.currentUser;
     if (user == null) return const [];
 
-    // Generate any due checklists first, but don't let generation failures
-    // block loading whatever checklists already exist.
+    // Generate due checklists first. AI failures fall back to static content,
+    // but database/schema failures should be visible instead of looking like
+    // there are simply no checklists.
     try {
       await ensureDueChecklists();
+    } on TripChecklistException {
+      rethrow;
+    } on PostgrestException catch (e) {
+      throw TripChecklistException(_friendlyDatabaseMessage(e));
     } catch (_) {
-      // Swallow generation errors; load proceeds below.
+      throw const TripChecklistException(
+        'Could not generate your checklist right now.',
+      );
     }
 
     try {
@@ -138,22 +145,13 @@ class TripChecklistRepository {
         // Try AI generation first; fall back to built-in static content.
         final content = await _generateContent(trip, range, due, today);
 
-        try {
-          await _client.from('trip_checklists').upsert({
-            'trip_id': trip.id,
-            'user_id': user.id,
-            'checklist_type': due.type,
-            'checklist_date': _isoDate(due.date),
-            'day_number': due.dayNumber,
-            'destination_name': trip.destinationName,
-            'trip_dates': raw,
-            'content': content,
-            'generated_at': DateTime.now().toUtc().toIso8601String(),
-          }, onConflict: 'trip_id,checklist_type,checklist_date');
-        } catch (_) {
-          // Skip this checklist if the upsert fails; continue with others.
-          continue;
-        }
+        await _insertChecklist(
+          trip: trip,
+          userId: user.id,
+          rawDates: raw,
+          due: due,
+          content: content,
+        );
       }
 
       // Remove checklists that no longer belong to the trip's current phase,
@@ -172,6 +170,42 @@ class TripChecklistRepository {
     }
   }
 
+  Future<void> _insertChecklist({
+    required SavedTrip trip,
+    required String userId,
+    required String rawDates,
+    required _DueChecklist due,
+    required Map<String, dynamic> content,
+  }) async {
+    final payload = {
+      'trip_id': trip.id,
+      'user_id': userId,
+      'checklist_type': due.type,
+      'checklist_date': _isoDate(due.date),
+      'day_number': due.dayNumber,
+      'destination_name':
+          trip.destinationName.trim().isEmpty
+              ? trip.guide.destinationName
+              : trip.destinationName,
+      'trip_dates': rawDates,
+      'content': content,
+      'generated_at': DateTime.now().toUtc().toIso8601String(),
+    };
+
+    try {
+      await _client.from('trip_checklists').insert(payload);
+    } on PostgrestException catch (e) {
+      // If another refresh/device created the row between the existence check
+      // and insert, keep going. Any other database issue should be visible.
+      if (_isDuplicateChecklistError(e)) return;
+      throw TripChecklistException(_friendlyDatabaseMessage(e));
+    } catch (_) {
+      throw const TripChecklistException(
+        'Could not save the generated checklist. Please try again.',
+      );
+    }
+  }
+
   /// Returns the set of 'type|date' keys already stored for this trip.
   Future<Set<String>> _existingChecklistKeys(
     String tripId,
@@ -183,18 +217,15 @@ class TripChecklistRepository {
           .select('checklist_type, checklist_date')
           .eq('trip_id', tripId)
           .eq('user_id', userId);
-      return rows
-          .whereType<Map<String, dynamic>>()
-          .map((row) {
-            final type = row['checklist_type'] as String? ?? '';
-            final date = row['checklist_date'] as String? ?? '';
-            final normalized =
-                DateTime.tryParse(date) == null
-                    ? date
-                    : _isoDate(DateTime.parse(date));
-            return '$type|$normalized';
-          })
-          .toSet();
+      return rows.whereType<Map<String, dynamic>>().map((row) {
+        final type = row['checklist_type'] as String? ?? '';
+        final date = row['checklist_date'] as String? ?? '';
+        final normalized =
+            DateTime.tryParse(date) == null
+                ? date
+                : _isoDate(DateTime.parse(date));
+        return '$type|$normalized';
+      }).toSet();
     } catch (_) {
       return <String>{};
     }
@@ -214,8 +245,7 @@ class TripChecklistRepository {
         final matchingDays = trip.guide.itineraryDays.where(
           (item) => item.dayNumber == dayNumber,
         );
-        final dayTitle =
-            matchingDays.isEmpty ? null : matchingDays.first.title;
+        final dayTitle = matchingDays.isEmpty ? null : matchingDays.first.title;
         return await service.generateChecklist(
           trip: trip,
           checklistType: due.type,
@@ -239,9 +269,7 @@ class TripChecklistRepository {
     required List<_DueChecklist> dueItems,
   }) async {
     final keepKeys =
-        dueItems
-            .map((due) => '${due.type}|${_isoDate(due.date)}')
-            .toSet();
+        dueItems.map((due) => '${due.type}|${_isoDate(due.date)}').toSet();
 
     final rows = await _client
         .from('trip_checklists')
@@ -267,10 +295,14 @@ class TripChecklistRepository {
     }
 
     if (staleIds.isEmpty) return;
-    await _client
-        .from('trip_checklists')
-        .delete()
-        .inFilter('id', staleIds);
+    await _client.from('trip_checklists').delete().inFilter('id', staleIds);
+  }
+
+  bool _isDuplicateChecklistError(PostgrestException e) {
+    final message = e.message.toLowerCase();
+    return e.code == '23505' ||
+        message.contains('duplicate key') ||
+        message.contains('already exists');
   }
 
   String _friendlyDatabaseMessage(PostgrestException e) {
@@ -583,13 +615,18 @@ _TripDateRange? _parseTripDateRange(String raw, DateTime now) {
       .replaceAll('â€“', '-')
       .replaceAll('â€”', '-')
       // Separate a glued ordinal+word, e.g. "4thjuly" -> "4th july".
-      .replaceAll(RegExp(r'(\d)(st|nd|rd|th)([a-z])'), r'$1$2 $3')
+      // NOTE: replaceAll does NOT expand $1/$2 backreferences for String
+      // replacements, so we must use replaceAllMapped with a callback.
+      .replaceAllMapped(
+        RegExp(r'(\d)(st|nd|rd|th)([a-z])'),
+        (m) => '${m[1]}${m[2]} ${m[3]}',
+      )
       // Separate a digit glued to a non-ordinal word, e.g. "12august" ->
       // "12 august". Do NOT split ordinal suffixes ("1st", "4th") because the
       // date regexes below rely on them staying attached to the number.
-      .replaceAll(
+      .replaceAllMapped(
         RegExp(r'(\d)(?!st\b|nd\b|rd\b|th\b)([a-z])'),
-        r'$1 $2',
+        (m) => '${m[1]} ${m[2]}',
       )
       .replaceAll(RegExp(r'\s+'), ' ');
 

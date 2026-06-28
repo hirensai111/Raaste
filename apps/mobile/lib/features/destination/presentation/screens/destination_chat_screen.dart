@@ -6,9 +6,7 @@ import 'package:raaste/core/di/injection.dart';
 import 'package:raaste/features/destination/data/repositories/destination_guide_store.dart';
 import 'package:raaste/features/destination/data/services/destination_research_service.dart';
 import 'package:raaste/features/destination/data/services/open_ai_destination_service.dart';
-import 'package:raaste/features/destination/data/services/overpass_service.dart';
 import 'package:raaste/features/destination/domain/models/destination_guide.dart';
-import 'package:raaste/features/destination/domain/models/osm_place.dart';
 import 'package:raaste/features/destination/domain/models/trip_intake.dart';
 import 'package:raaste/features/trip/data/repositories/saved_trip_repository.dart';
 import 'package:raaste/shared/widgets/raaste_nav_shell.dart';
@@ -63,7 +61,6 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   final _guideStore = getIt<DestinationGuideStore>();
   final _openAi = getIt<OpenAiDestinationService>();
   final _research = getIt<DestinationResearchService>();
-  final _overpass = getIt<OverpassService>();
   final _savedTrips = getIt<SavedTripRepository>();
 
   _IntakeStep _step = _IntakeStep.dates;
@@ -276,7 +273,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
       _isLoading = true;
       _messages.add(
         _ChatMessage.assistant(
-          'I\'m checking curated research and map places to build your itinerary now.',
+          'I\'m checking Raaste\'s curated destination research to build your itinerary now.',
         ),
       );
     });
@@ -284,41 +281,24 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
 
     try {
       final research = await _research.loadForIntake(intake);
-      DestinationGuide guide;
-
-      if (research != null) {
-        if (mounted) {
-          setState(
-            () => _messages.add(
-              _ChatMessage.assistant(
-                'Using Raaste\'s curated ${research.destinationName} research for a richer itinerary.',
-              ),
-            ),
-          );
-          _scrollToEnd();
-        }
-
-        try {
-          guide = await _openAi.generateGuideFromResearch(intake, research);
-        } on OpenAiGuideException {
-          if (mounted) {
-            setState(
-              () => _messages.add(
-                _ChatMessage.assistant(
-                  'Curated research generation did not complete, so I\'m falling back to OpenStreetMap places.',
-                ),
-              ),
-            );
-            _scrollToEnd();
-          }
-          final places = await _fetchOverpassPlaces(intake);
-          guide = await _openAi.generateGuide(intake, places);
-        }
-      } else {
-        final places = await _fetchOverpassPlaces(intake);
-        guide = await _openAi.generateGuide(intake, places);
+      if (research == null) {
+        throw const OpenAiGuideException(
+          'Raaste can only plan trips for Hyderabad, Lonavala, and Varanasi right now.',
+        );
       }
 
+      if (mounted) {
+        setState(
+          () => _messages.add(
+            _ChatMessage.assistant(
+              'Using Raaste\'s curated ${research.destinationName} research for your itinerary.',
+            ),
+          ),
+        );
+        _scrollToEnd();
+      }
+
+      final guide = await _openAi.generateGuideFromResearch(intake, research);
       final guideId = await _guideStore.saveGuide(guide);
       if (mounted) context.go('${AppRoutes.destination}?id=$guideId');
     } on OpenAiGuideException catch (e) {
@@ -328,23 +308,6 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
         _step = _IntakeStep.dietary;
         _messages.add(_ChatMessage.assistant(e.message));
       });
-    }
-  }
-
-  Future<OsmPlaceBundle> _fetchOverpassPlaces(TripIntake intake) async {
-    final lat = intake.lat;
-    final lon = intake.lon;
-    if (lat == null || lon == null) {
-      return const OsmPlaceBundle(attractions: [], food: [], radiusMeters: 0);
-    }
-
-    try {
-      return await _overpass.fetchNearbyPlaces(lat: lat, lon: lon);
-    } on OverpassException catch (e) {
-      if (mounted) {
-        setState(() => _messages.add(_ChatMessage.assistant(e.message)));
-      }
-      return const OsmPlaceBundle(attractions: [], food: [], radiusMeters: 0);
     }
   }
 

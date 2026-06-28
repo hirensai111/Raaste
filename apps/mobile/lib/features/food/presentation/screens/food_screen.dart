@@ -19,16 +19,29 @@ class FoodScreen extends StatefulWidget {
 
 class _FoodScreenState extends State<FoodScreen> {
   final _repository = getIt<FoodRepository>();
+  final _searchController = TextEditingController();
   late Future<FoodDiscoveryData> _future;
+  String _mealFilter = 'all';
 
   @override
   void initState() {
     super.initState();
     _future = _repository.loadDiscovery();
+    _searchController.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _refresh() {
     setState(() => _future = _repository.loadDiscovery());
+  }
+
+  void _setMealFilter(String value) {
+    setState(() => _mealFilter = value);
   }
 
   @override
@@ -79,6 +92,13 @@ class _FoodScreenState extends State<FoodScreen> {
                         );
                       }
 
+                      final visibleRestaurants = _visibleRestaurants(
+                        data.restaurants,
+                        query: _searchController.text,
+                        mealFilter: _mealFilter,
+                      );
+                      final showEmptyResults = visibleRestaurants.isEmpty;
+
                       return RefreshIndicator(
                         color: RaasteShellColors.clay,
                         onRefresh: () async => _refresh(),
@@ -86,13 +106,28 @@ class _FoodScreenState extends State<FoodScreen> {
                           physics: const AlwaysScrollableScrollPhysics(
                             parent: BouncingScrollPhysics(),
                           ),
-                          itemCount: data.restaurants.length + 2,
+                          itemCount:
+                              visibleRestaurants.length +
+                              (showEmptyResults ? 4 : 3),
                           separatorBuilder:
                               (_, __) => const SizedBox(height: 14),
                           itemBuilder: (context, index) {
                             if (index == 0) return _FoodHeader(data: data);
-                            if (index == 1) return const _DiscoveryNotice();
-                            final restaurant = data.restaurants[index - 2];
+                            if (index == 1) {
+                              return _FoodSearchAndSort(
+                                controller: _searchController,
+                                mealFilter: _mealFilter,
+                                onMealFilterChanged: _setMealFilter,
+                                resultCount: visibleRestaurants.length,
+                              );
+                            }
+                            if (index == 2) return const _DiscoveryNotice();
+                            if (showEmptyResults && index == 3) {
+                              return const _FilteredEmptyState();
+                            }
+                            final restaurant =
+                                visibleRestaurants[index -
+                                    (showEmptyResults ? 4 : 3)];
                             return _RestaurantCard(
                               trip: data.trip!,
                               restaurant: restaurant,
@@ -234,6 +269,192 @@ class _FoodHeader extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _FoodSearchAndSort extends StatelessWidget {
+  final TextEditingController controller;
+  final String mealFilter;
+  final ValueChanged<String> onMealFilterChanged;
+  final int resultCount;
+
+  const _FoodSearchAndSort({
+    required this.controller,
+    required this.mealFilter,
+    required this.onMealFilterChanged,
+    required this.resultCount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFCF7),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: RaasteShellColors.outline),
+        boxShadow: const [
+          BoxShadow(
+            color: RaasteShellColors.shadow,
+            blurRadius: 16,
+            offset: Offset(0, 7),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  textInputAction: TextInputAction.search,
+                  decoration: InputDecoration(
+                    hintText: 'Search food places',
+                    prefixIcon: const Icon(Icons.search_rounded),
+                    suffixIcon:
+                        controller.text.isEmpty
+                            ? null
+                            : IconButton(
+                              tooltip: 'Clear search',
+                              onPressed: controller.clear,
+                              icon: const Icon(Icons.close_rounded),
+                            ),
+                    filled: true,
+                    fillColor: const Color(0xFFF7EFE4),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 14,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: RaasteShellColors.outline,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: RaasteShellColors.outline,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: RaasteShellColors.sage,
+                        width: 1.4,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              PopupMenuButton<String>(
+                tooltip: 'Meal filter',
+                initialValue: mealFilter,
+                color: const Color(0xFFFFFCF7),
+                onSelected: onMealFilterChanged,
+                itemBuilder:
+                    (context) => const [
+                      PopupMenuItem(value: 'all', child: Text('All')),
+                      PopupMenuItem(
+                        value: 'breakfast',
+                        child: Text('Breakfast'),
+                      ),
+                      PopupMenuItem(value: 'lunch', child: Text('Lunch')),
+                      PopupMenuItem(value: 'dinner', child: Text('Dinner')),
+                    ],
+                child: Container(
+                  height: 52,
+                  padding: const EdgeInsets.symmetric(horizontal: 13),
+                  decoration: BoxDecoration(
+                    color: RaasteShellColors.ink,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.tune_rounded,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 7),
+                      Text(
+                        _mealFilterLabel(mealFilter),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            '$resultCount ${resultCount == 1 ? 'place' : 'places'} shown',
+            style: const TextStyle(
+              color: RaasteShellColors.muted,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FilteredEmptyState extends StatelessWidget {
+  const _FilteredEmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFCF7),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: RaasteShellColors.outline),
+      ),
+      child: const Column(
+        children: [
+          Icon(
+            Icons.search_off_rounded,
+            color: RaasteShellColors.sage,
+            size: 42,
+          ),
+          SizedBox(height: 12),
+          Text(
+            'No matching food places',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: RaasteShellColors.ink,
+              fontFamily: 'serif',
+              fontSize: 25,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(height: 7),
+          Text(
+            'Try another search or switch the meal filter.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: RaasteShellColors.muted,
+              fontSize: 13,
+              height: 1.35,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -461,12 +682,6 @@ class _RestaurantCard extends StatelessWidget {
       builder:
           (sheetContext) => StatefulBuilder(
             builder: (context, setSheetState) {
-              final timeSuggestions = _timeSuggestionsFor(
-                trip,
-                selectedDay,
-                selectedMeal,
-              );
-
               return SafeArea(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.fromLTRB(
@@ -546,7 +761,7 @@ class _RestaurantCard extends StatelessWidget {
                         spacing: 8,
                         runSpacing: 8,
                         children:
-                            ['breakfast', 'lunch', 'snack', 'dinner']
+                            ['breakfast', 'lunch', 'dinner']
                                 .map(
                                   (slot) => ChoiceChip(
                                     selected: selectedMeal == slot,
@@ -564,58 +779,7 @@ class _RestaurantCard extends StatelessWidget {
                                 )
                                 .toList(),
                       ),
-                      const SizedBox(height: 14),
-                      const Text(
-                        'Time',
-                        style: TextStyle(
-                          color: RaasteShellColors.muted,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children:
-                            timeSuggestions
-                                .map(
-                                  (time) => ChoiceChip(
-                                    selected: selectedTime == time,
-                                    label: Text(time),
-                                    onSelected:
-                                        (_) => setSheetState(
-                                          () => selectedTime = time,
-                                        ),
-                                  ),
-                                )
-                                .toList(),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: RaasteShellColors.ink,
-                            side: const BorderSide(
-                              color: RaasteShellColors.outline,
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 13),
-                          ),
-                          onPressed: () async {
-                            final picked = await showTimePicker(
-                              context: context,
-                              initialTime: _timeOfDayFromText(selectedTime),
-                            );
-                            if (picked == null) return;
-                            setSheetState(
-                              () => selectedTime = _formatTimeOfDay(picked),
-                            );
-                          },
-                          icon: const Icon(Icons.schedule_rounded, size: 20),
-                          label: Text('Set time: $selectedTime'),
-                        ),
-                      ),
+
                       const SizedBox(height: 18),
                       SizedBox(
                         width: double.infinity,
@@ -940,21 +1104,134 @@ class _StatePanel extends StatelessWidget {
   }
 }
 
+List<RestaurantRecommendation> _visibleRestaurants(
+  List<RestaurantRecommendation> restaurants, {
+  required String query,
+  required String mealFilter,
+}) {
+  final normalizedQuery = query.trim().toLowerCase();
+  final filtered =
+      restaurants.where((restaurant) {
+        final matchesQuery =
+            normalizedQuery.isEmpty ||
+            _restaurantSearchText(restaurant).contains(normalizedQuery);
+        final matchesMeal =
+            mealFilter == 'all' || _mealScore(restaurant, mealFilter) > 0;
+        return matchesQuery && matchesMeal;
+      }).toList();
+
+  filtered.sort((a, b) {
+    if (mealFilter != 'all') {
+      final mealSort = _mealScore(
+        b,
+        mealFilter,
+      ).compareTo(_mealScore(a, mealFilter));
+      if (mealSort != 0) return mealSort;
+    }
+    if (a.isTouristTrap != b.isTouristTrap) return a.isTouristTrap ? 1 : -1;
+    return a.name.compareTo(b.name);
+  });
+  return filtered;
+}
+
+String _restaurantSearchText(RestaurantRecommendation restaurant) {
+  return [
+    restaurant.name,
+    restaurant.type,
+    restaurant.cuisine,
+    restaurant.speciality,
+    restaurant.description,
+    restaurant.area,
+    restaurant.landmark,
+    restaurant.address,
+    restaurant.bestTimeToVisit,
+    restaurant.localTip,
+    ...restaurant.bestFor,
+    ...restaurant.signatureDishes.expand(
+      (dish) => [dish.dish, dish.description, dish.price],
+    ),
+  ].join(' ').toLowerCase();
+}
+
+int _mealScore(RestaurantRecommendation restaurant, String mealSlot) {
+  final slot = mealSlot.toLowerCase();
+  final bestFor = restaurant.bestFor.map((item) => item.toLowerCase()).toList();
+  final text = _restaurantSearchText(restaurant);
+  var score = 0;
+
+  if (bestFor.contains(slot)) score += 8;
+  if (restaurant.bestTimeToVisit.toLowerCase().contains(slot)) score += 6;
+
+  for (final keyword in _mealKeywords(slot)) {
+    if (text.contains(keyword)) score += 2;
+  }
+
+  if (text.contains('anytime') || text.contains('all day')) score += 1;
+  return score;
+}
+
+List<String> _mealKeywords(String mealSlot) {
+  switch (mealSlot) {
+    case 'breakfast':
+      return const [
+        'breakfast',
+        'morning',
+        'early',
+        'chai',
+        'coffee',
+        'idli',
+        'dosa',
+        'vada',
+        'paya',
+        'nihari',
+        'keema roti',
+        'bun maska',
+        'tiffin',
+      ];
+    case 'lunch':
+      return const [
+        'lunch',
+        'afternoon',
+        'thali',
+        'meals',
+        'buffet',
+        'biryani',
+        'dalcha',
+        'banana leaf',
+      ];
+    case 'dinner':
+      return const [
+        'dinner',
+        'evening',
+        'night',
+        'late',
+        'kebab',
+        'grill',
+        'mandi',
+        'shawarma',
+        'haleem',
+      ];
+    default:
+      return const [];
+  }
+}
+
+String _mealFilterLabel(String value) {
+  switch (value) {
+    case 'breakfast':
+      return 'Breakfast';
+    case 'lunch':
+      return 'Lunch';
+    case 'dinner':
+      return 'Dinner';
+    default:
+      return 'All';
+  }
+}
+
 String _dietLabel(String value) {
   final label = value.trim().isEmpty ? 'Diet matched' : value.trim();
   return 'Filtered: $label';
-}
-
-List<String> _timeSuggestionsFor(
-  SavedTrip trip,
-  int dayNumber,
-  String mealSlot,
-) {
-  final values = <String>{
-    _defaultMealTimeFor(trip, dayNumber, mealSlot),
-    _fallbackMealTime(mealSlot),
-  };
-  return values.where((value) => value.trim().isNotEmpty).toList();
 }
 
 String _defaultMealTimeFor(SavedTrip trip, int dayNumber, String mealSlot) {
@@ -982,18 +1259,15 @@ String? _mealSlotForStop(ItineraryStop stop) {
       header.contains('meal') ||
       header.contains('breakfast') ||
       header.contains('lunch') ||
-      header.contains('snack') ||
       header.contains('dinner');
   if (!isMeal) return null;
 
   if (header.contains('breakfast')) return 'breakfast';
   if (header.contains('lunch')) return 'lunch';
-  if (header.contains('snack')) return 'snack';
   if (header.contains('dinner')) return 'dinner';
   final minutes = _minutesFromText(stop.time);
   if (minutes >= 6 * 60 && minutes <= 11 * 60) return 'breakfast';
   if (minutes >= 11 * 60 && minutes < 16 * 60) return 'lunch';
-  if (minutes >= 16 * 60 && minutes < 18 * 60) return 'snack';
   if (minutes >= 18 * 60 && minutes <= 23 * 60) return 'dinner';
   return null;
 }
@@ -1001,23 +1275,12 @@ String? _mealSlotForStop(ItineraryStop stop) {
 String _firstTimeLabel(String value) =>
     _formatClockMinutes(_minutesFromText(value));
 
-TimeOfDay _timeOfDayFromText(String value) {
-  final minutes = _minutesFromText(value) % (24 * 60);
-  return TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60);
-}
-
-String _formatTimeOfDay(TimeOfDay value) {
-  return _formatClockMinutes(value.hour * 60 + value.minute);
-}
-
 String _fallbackMealTime(String mealSlot) {
   switch (mealSlot) {
     case 'breakfast':
       return '9:00 AM';
     case 'lunch':
       return '1:00 PM';
-    case 'snack':
-      return '5:00 PM';
     case 'dinner':
     default:
       return '8:00 PM';
