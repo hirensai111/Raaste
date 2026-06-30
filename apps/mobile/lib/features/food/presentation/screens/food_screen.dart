@@ -704,6 +704,10 @@ class _RestaurantCard extends StatelessWidget {
     final totalDays =
         trip.guide.itineraryDays.isEmpty ? 1 : trip.guide.itineraryDays.length;
     var selectedTime = _defaultMealTimeFor(trip, selectedDay, selectedMeal);
+    // Capture the outer context before the sheet opens so the snackbar can be
+    // shown on the page scaffold after the sheet is popped (the sheet's own
+    // context is unmounted by then).
+    final pageContext = context;
 
     showModalBottomSheet<void>(
       context: context,
@@ -714,14 +718,14 @@ class _RestaurantCard extends StatelessWidget {
       ),
       builder:
           (sheetContext) => StatefulBuilder(
-            builder: (context, setSheetState) {
+            builder: (sheetStateContext, setSheetState) {
               return SafeArea(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.fromLTRB(
                     20,
                     18,
                     20,
-                    MediaQuery.of(context).viewInsets.bottom + 28,
+                    MediaQuery.of(sheetStateContext).viewInsets.bottom + 28,
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -832,7 +836,8 @@ class _RestaurantCard extends StatelessWidget {
                             );
                             if (!sheetContext.mounted) return;
                             Navigator.of(sheetContext).pop();
-                            ScaffoldMessenger.of(context)
+                            if (!pageContext.mounted) return;
+                            ScaffoldMessenger.of(pageContext)
                               ..hideCurrentSnackBar()
                               ..showSnackBar(
                                 SnackBar(

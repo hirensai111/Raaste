@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:raaste/features/checklist/application/open_ai_checklist_service.dart';
+import 'package:raaste/features/checklist/application/research_checklist_content_service.dart';
 import 'package:raaste/features/checklist/domain/models/trip_checklist.dart';
+import 'package:raaste/features/destination/data/services/destination_research_service.dart';
 import 'package:raaste/features/trip/domain/models/saved_trip.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -17,12 +19,19 @@ class TripChecklistException implements Exception {
 class TripChecklistRepository {
   final SupabaseClient _client;
   final OpenAiChecklistService? _checklistService;
+  final DestinationResearchService? _researchService;
+  final ResearchChecklistContentService _researchContentService;
 
   TripChecklistRepository({
     SupabaseClient? client,
     OpenAiChecklistService? checklistService,
+    DestinationResearchService? researchService,
+    ResearchChecklistContentService? researchContentService,
   }) : _client = client ?? Supabase.instance.client,
-       _checklistService = checklistService;
+       _checklistService = checklistService,
+       _researchService = researchService,
+       _researchContentService =
+           researchContentService ?? const ResearchChecklistContentService();
 
   Future<List<TripChecklist>> listChecklists() async {
     final user = _client.auth.currentUser;
@@ -172,9 +181,11 @@ class TripChecklistRepository {
 
   /// Refreshes checklist rows for a trip after its itinerary changes.
   ///
-  /// This intentionally uses the deterministic local checklist builder instead
-  /// of OpenAI so simple Companion edits do not spend tokens just to keep the
-  /// "Today's Plan" checklist section aligned with the updated itinerary.
+  /// This regenerates content through the same OpenAI path used for the very
+  /// first checklist (via [_generateContent]) so an edited trip produces a
+  /// checklist of the same quality as the original. The user's checked-off
+  /// items are preserved by re-applying their done state onto the freshly
+  /// generated content. OpenAI failures fall back to research-local content.
   Future<void> refreshTripChecklists(SavedTrip trip) async {
     final user = _client.auth.currentUser;
     if (user == null) return;
@@ -199,10 +210,11 @@ class TripChecklistRepository {
     for (final due in dueItems) {
       final key = _checklistKey(due.type, due.date);
       final existingChecklist = existing[key];
-      final content = _applyDoneState(
-        _fallbackContent(trip, range, due, today),
-        existingChecklist?.content,
-      );
+
+      // Regenerate with the full AI pipeline (same as initial generation),
+      // then carry over any items the user already checked off.
+      final generated = await _generateContent(trip, range, due, today);
+      final content = _applyDoneState(generated, existingChecklist?.content);
 
       if (existingChecklist == null) {
         await _insertChecklist(
@@ -359,6 +371,7 @@ class TripChecklistRepository {
     _DueChecklist due,
     DateTime today,
   ) async {
+    final research = await _researchService?.loadForIntake(trip.guide.intake);
     final service = _checklistService;
     if (service != null) {
       try {
@@ -373,11 +386,24 @@ class TripChecklistRepository {
           dayNumber: due.type == 'in_trip_daily' ? dayNumber : null,
           dayTitle: due.type == 'in_trip_daily' ? dayTitle : null,
           totalDays: range.totalDays,
+          researchContext: research?.toPromptJson(),
         );
       } catch (_) {
-        // Fall through to static content below.
+        // Fall through to research-local content below.
       }
     }
+
+    if (research != null) {
+      return _researchContentService.buildContent(
+        trip: trip,
+        research: research,
+        checklistType: due.type,
+        checklistDate: due.date,
+        dayNumber: due.dayNumber ?? range.dayNumber(today),
+        totalDays: range.totalDays,
+      );
+    }
+
     return _fallbackContent(trip, range, due, today);
   }
 

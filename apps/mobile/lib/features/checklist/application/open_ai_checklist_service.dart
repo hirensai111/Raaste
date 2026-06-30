@@ -45,6 +45,7 @@ class OpenAiChecklistService {
     int? dayNumber,
     String? dayTitle,
     int? totalDays,
+    Map<String, dynamic>? researchContext,
   }) async {
     final prompt = _buildPrompt(
       trip: trip,
@@ -52,6 +53,7 @@ class OpenAiChecklistService {
       dayNumber: dayNumber,
       dayTitle: dayTitle,
       totalDays: totalDays,
+      researchContext: researchContext,
     );
     return _request(prompt);
   }
@@ -168,6 +170,7 @@ class OpenAiChecklistService {
     int? dayNumber,
     String? dayTitle,
     int? totalDays,
+    Map<String, dynamic>? researchContext,
   }) {
     final intake = trip.guide.intake;
     final destination =
@@ -186,6 +189,12 @@ class OpenAiChecklistService {
       'landing_time': intake.landingTime,
       'departure_time': intake.departureTime,
     });
+
+    final researchDetails = _researchDetails(
+      researchContext,
+      trip: trip,
+      dayNumber: dayNumber,
+    );
 
     final phaseInstruction = switch (checklistType) {
       'pre_trip' =>
@@ -219,6 +228,7 @@ $phaseInstruction
 Trip details:
 $tripDetails
 
+${researchDetails.isEmpty ? '' : 'Curated Raaste research context:\n$researchDetails\n'}
 ${checklistType == 'in_trip_daily' ? 'Today\'s saved itinerary for Day ${dayNumber ?? 1}:\n${jsonEncode(_dayJson(trip, dayNumber))}\n' : ''}
 Requirements:
 - Produce 4 to 6 sections, each with a short emoji, a clear name, an optional one-line context, and 2 to 6 concrete items.
@@ -231,6 +241,136 @@ Return only JSON matching the schema.
 ''';
   }
 
+  String _researchDetails(
+    Map<String, dynamic>? context, {
+    required SavedTrip trip,
+    required int? dayNumber,
+  }) {
+    if (context == null || context.isEmpty) return '';
+
+    final research = _map(context['research']);
+    final restaurantResearch = _map(context['restaurantResearch']);
+    if (research.isEmpty && restaurantResearch.isEmpty) return '';
+
+    final stopNames = _dayStopNames(trip, dayNumber);
+    final localKnowledge = _map(research['local_knowledge']);
+    final compact = {
+      'money': research['money'],
+      'local_transport': research['local_transport'],
+      'connectivity': research['connectivity'],
+      'safety': research['safety'],
+      'packing': research['packing'],
+      'food': research['food'],
+      'local_knowledge': {
+        'dress_code': localKnowledge['dress_code'],
+        'cultural_etiquette': localKnowledge['cultural_etiquette'],
+        'tourist_traps': localKnowledge['tourist_traps'],
+        'local_scams': localKnowledge['local_scams'],
+        'photography_spots': localKnowledge['photography_spots'],
+        'hidden_gems': localKnowledge['hidden_gems'],
+      },
+      'matched_places': _compactNamedRecords(research, stopNames, limit: 12),
+      'restaurant_research': {
+        'food_overview': restaurantResearch['food_overview'],
+        'street_food_guide': restaurantResearch['street_food_guide'],
+        'dietary_specific_guides':
+            restaurantResearch['dietary_specific_guides'],
+        'restaurants': _compactNamedRecords(
+          restaurantResearch,
+          stopNames,
+          limit: 8,
+        ),
+      },
+    };
+    return jsonEncode(compact);
+  }
+
+  Set<String> _dayStopNames(SavedTrip trip, int? dayNumber) {
+    final number = dayNumber ?? 1;
+    final matching = trip.guide.itineraryDays.where(
+      (day) => day.dayNumber == number,
+    );
+    if (matching.isEmpty) return const <String>{};
+    return matching.first.stops
+        .map((stop) => _normalizeText(stop.title))
+        .where((text) => text.isNotEmpty)
+        .toSet();
+  }
+
+  List<Map<String, dynamic>> _compactNamedRecords(
+    Object? value,
+    Set<String> stopNames, {
+    required int limit,
+  }) {
+    final records = <Map<String, dynamic>>[];
+
+    void collect(Object? current) {
+      if (records.length >= limit) return;
+      if (current is List) {
+        for (final item in current) {
+          collect(item);
+          if (records.length >= limit) break;
+        }
+        return;
+      }
+
+      final map = _map(current);
+      if (map.isEmpty) return;
+      final name = _text(map['name'] ?? map['title']);
+      if (name.isNotEmpty) {
+        final normalized = _normalizeText(name);
+        final matchesStop =
+            stopNames.isEmpty ||
+            stopNames.any(
+              (stop) => stop.contains(normalized) || normalized.contains(stop),
+            );
+        if (matchesStop) {
+          records.add({
+            'name': name,
+            'type': map['type'],
+            'description':
+                map['description'] ??
+                map['why_worth_it'] ??
+                map['why_hidden'] ??
+                map['raaste_recommendation_reason'],
+            'best_time_to_visit': map['best_time_to_visit'],
+            'avoid_when': map['avoid_when'],
+            'entry_fee': map['entry_fee'],
+            'crowd_reality': map['crowd_reality'],
+            'local_tip': map['local_tip'],
+            'speciality': map['speciality'],
+            'wait_time_reality': map['wait_time_reality'],
+            'tourist_trap_warning': map['tourist_trap_warning'],
+            'tourist_trap_detail': map['tourist_trap_detail'],
+            'practical': map['practical'],
+          });
+        }
+      }
+
+      for (final item in map.values) {
+        collect(item);
+        if (records.length >= limit) break;
+      }
+    }
+
+    collect(value);
+    return records;
+  }
+
+  Map<String, dynamic> _map(Object? value) {
+    if (value is Map<String, dynamic>) return value;
+    if (value is Map) return Map<String, dynamic>.from(value);
+    return const <String, dynamic>{};
+  }
+
+  String _text(Object? value) => value is String ? value.trim() : '';
+
+  String _normalizeText(String value) =>
+      value
+          .toLowerCase()
+          .replaceAll(RegExp(r'[^a-z0-9]+'), ' ')
+          .replaceAll(RegExp(r'\s+'), ' ')
+          .trim();
   Map<String, dynamic> _dayJson(SavedTrip trip, int? dayNumber) {
     final number = dayNumber ?? 1;
     final matching = trip.guide.itineraryDays.where(

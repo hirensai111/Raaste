@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:raaste/config/routes.dart';
 import 'package:raaste/features/home/domain/models/popular_attraction.dart';
+import 'package:raaste/features/home/presentation/widgets/popular_destination_image.dart';
 import 'package:raaste/shared/widgets/raaste_nav_shell.dart';
 
 class PopularAttractionsScreen extends StatelessWidget {
@@ -126,11 +127,10 @@ class _TopAttractionCard extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  Image.asset(
-                    attraction.image,
+                  PopularDestinationImage(
+                    attraction: attraction,
                     height: 142,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+                    borderRadius: BorderRadius.zero,
                   ),
                   Positioned.fill(
                     child: DecoratedBox(

@@ -8,6 +8,7 @@ import 'package:raaste/core/di/injection.dart';
 import 'package:raaste/features/destination/data/services/destination_search_service.dart';
 import 'package:raaste/features/destination/domain/models/place_suggestion.dart';
 import 'package:raaste/features/home/domain/models/popular_attraction.dart';
+import 'package:raaste/features/home/presentation/widgets/popular_destination_image.dart';
 import 'package:raaste/features/trip/data/repositories/saved_trip_repository.dart';
 import 'package:raaste/features/trip/domain/models/saved_trip.dart';
 import 'package:raaste/shared/widgets/raaste_nav_shell.dart';
@@ -1584,15 +1585,11 @@ class _PopularCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
+              PopularDestinationImage(
+                attraction: attraction,
+                height: compact ? 104 : 150,
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(22),
-                ),
-                child: Image.asset(
-                  attraction.image,
-                  height: compact ? 104 : 150,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
                 ),
               ),
               Padding(
