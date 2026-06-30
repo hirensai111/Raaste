@@ -44,7 +44,7 @@ It's built around the Indian traveller specifically: Uber doesn't work everywher
 The app is organized around three travel phases:
 
 1. **Researcher (Before Trip)** — A specific, opinionated pre-trip briefing: how transport works, real costs, what's worth it vs. tourist traps, a day-by-day plan tuned to your interests, what to pack, and local customs.
-2. **Companion (During Trip)** — Ask the guide anything about where you are right now. It knows your preferences, so it won't send a Jain traveller to a non-veg place.
+2. **Companion (During Trip)** — Ask the guide anything about where you are right now. It knows your saved trip, your preferences, and your itinerary — so it won't send a Jain traveller to a non-veg place or suggest a 2-hour drive for a 30-minute window.
 3. **Debrief (After Trip)** — A quick review that feeds the knowledge base and improves the guide for the next traveller.
 
 > ⚠️ All prices and timings are a research starting point, not a real-time database — the app always tells you to confirm directly.
@@ -60,16 +60,18 @@ The app is organized around three travel phases:
 - ✅ **Authentication** — Email/password and Google sign-in via Supabase Auth.
 - ✅ **Onboarding & Profile Setup** — One-time travel style, dietary preference, companions, budget, and interests. These feed directly into AI prompts.
 - ✅ **Home Dashboard** — Personalized greeting, destination search, dietary/travel-style filters, trip phase cards, current trip, and popular destinations.
-- ✅ **Destination Detail + Chat** — Research-backed destination pages and a conversational chat that answers in the traveller's voice, respecting their profile. This is the app's strongest feature.
+- ✅ **Destination Detail + Destination Chat** — Research-backed destination pages and a conversational chat that builds a custom trip plan from your intake. This is the app's strongest feature.
 - ✅ **AI Itinerary Generation** — Day-by-day plans generated from bundled research, routing data (Google Route Matrix), and the user's interests + dietary rules.
-- ✅ **Food & Restaurants** — Restaurant recommendations filtered by dietary tags (Veg / Non-veg / Jain / Halal / Vegan / Eggetarian) with strict, non-negotiable filtering logic.
+- ✅ **Itinerary Curation** — Post-generation curation logic that removes duplicates, generic fillers, and off-brief stops by matching the AI plan back against the research catalog.
+- ✅ **Food & Restaurants** — Restaurant recommendations filtered by strict dietary tags (Veg / Non-veg / Jain / Halal / Vegan / Eggetarian).
+- ✅ **Stay Search** — Search for hotels/homestays via Nominatim (OpenStreetMap) with Google Geocoding fallback.
 - ✅ **Checklists** — AI-generated trip checklists synced via Supabase.
-- ✅ **My Trips** — Save and manage trips (Supabase-backed).
+- ✅ **My Trips** — Save and manage trips (Supabase-backed), open them in the in-trip companion, and revise them later.
+- ✅ **In-Trip Companion** — Full conversational companion for a saved trip. Supports local itinerary edits ("replace this stop with a museum nearby"), alternative suggestions, and AI fallback regeneration.
 - 🟡 **Explore** — UI exists, but the `explore` route currently renders the Food screen and most tiles show "Implementing Soon."
-- 🔲 **Companion (in-trip Q&A)** — Screen scaffolded; the ask handler is a `TODO`. The real conversational AI today lives in **Destination Chat**.
-- 🟡 **Profile** — View/edit basics; several settings rows are "Implementing Soon."
+- 🟡 **Profile** — View/edit basics and personal information; several settings rows are "Implementing Soon."
 
-> **Data coverage:** AI features are grounded in hand-curated research JSON. Today that covers **3 destinations — Lonavala, Varanasi, and Hyderabad.** Everything else is a placeholder.
+> **Data coverage:** AI features are grounded in hand-curated research JSON. Today that covers **3 destinations — Lonavala, Varanasi, and Hyderabad** — with restaurant data for Hyderabad. Everything else is a placeholder.
 
 ### Backend API (FastAPI) — *parallel track, not yet wired to the app*
 
@@ -92,6 +94,7 @@ A full FastAPI service exists (auth, destinations, trips, checklists, companion,
 | Auth & realtime | Supabase Auth / Supabase realtime |
 | Cache & tasks | Redis + Celery |
 | AI / LLM | OpenAI GPT |
+| Maps & routing | Google Maps Platform + OpenStreetMap (Nominatim) |
 
 ---
 
@@ -105,11 +108,11 @@ Raaste/
 │       │   ├── auth/
 │       │   ├── home/
 │       │   ├── explore/
-│       │   ├── destination/       # Destination detail + destination chat
+│       │   ├── destination/       # Destination detail + chat + itinerary curation
 │       │   ├── food/              # Restaurant recommendations
 │       │   ├── trip/              # Trip planning, itinerary, saved trips
 │       │   ├── checklist/         # AI-generated trip checklists
-│       │   ├── companion/         # AI travel companion
+│       │   ├── companion/         # In-trip AI companion + local itinerary edits
 │       │   ├── profile/
 │       │   └── onboarding/
 │       └── assets/research/       # Destination research JSON assets
@@ -150,12 +153,13 @@ Full details are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 - Docker & Docker Compose (for Postgres/Redis)
 - A Supabase project
 - An OpenAI API key
+- A Google Maps API key (for routing/geocoding)
 
 ### Mobile
 
 ```bash
 cd apps/mobile
-cp .env.example .env   # Add your SUPABASE_URL and SUPABASE_ANON_KEY
+cp .env.example .env   # Add SUPABASE_URL, SUPABASE_ANON_KEY, OPENAI_API_KEY, GOOGLE_MAPS_API_KEY
 flutter pub get
 flutter run
 ```
@@ -165,6 +169,8 @@ Required `.env` variables:
 ```env
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key
+OPENAI_API_KEY=sk-...
+GOOGLE_MAPS_API_KEY=...
 ```
 
 ### Backend
@@ -218,6 +224,22 @@ See [`docs/API_CONTRACTS.md`](docs/API_CONTRACTS.md) for the full contract.
 
 ---
 
+## 💰 Approximate Cost Per Trip
+
+Based on the current mobile-first flow (OpenAI + Google Maps + Supabase), at ~₹95/USD:
+
+| Scenario | Cost per trip |
+|---|---|
+| **Minimum** (small destination, Google free tier, no companion chat) | **₹1.50 – ₹2.00** |
+| **Typical** (Hyderabad, Google free, moderate companion use) | **₹15 – ₹25** |
+| **Worst case** (large destination, Google paid, heavy companion chat) | **₹30 – ₹40** |
+
+The biggest cost driver is OpenAI, because every guide and companion message resends a large destination-research JSON context. Moving AI calls behind the FastAPI backend (using `gpt-4o-mini`) would cut AI costs by ~60%.
+
+See the detailed cost breakdown in [`docs/STATUS.md`](docs/STATUS.md) or ask for the full calculation.
+
+---
+
 ## 🧪 Running Tests
 
 ### Backend
@@ -243,6 +265,7 @@ flutter analyze
 - [`docs/PRODUCT_CONTEXT.md`](docs/PRODUCT_CONTEXT.md) — Product vision, target audience, the three phases, and monetisation model
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — System architecture and tech decisions
 - [`docs/API_CONTRACTS.md`](docs/API_CONTRACTS.md) — Backend API contracts
+- [`docs/STATUS.md`](docs/STATUS.md) — Honest internal status, gaps, and launch blockers
 
 ---
 
@@ -251,20 +274,22 @@ flutter analyze
 **Working today (real, end-to-end):**
 - [x] Splash, onboarding, profile setup, auth (email + Google via Supabase)
 - [x] Home dashboard with search and filters
-- [x] Destination detail + **Destination Chat** (the real AI guide, profile-aware)
+- [x] Destination detail + **Destination Chat** (profile-aware AI guide)
 - [x] AI itinerary generation grounded in research + routing + dietary rules
-- [x] Restaurant recommendations with strict dietary filtering (Veg/Jain/Halal/Vegan/etc.)
+- [x] Itinerary curation against the research catalog
+- [x] Restaurant recommendations with strict dietary filtering
+- [x] Stay search (Nominatim + Google fallback)
 - [x] AI-generated checklists, synced via Supabase
-- [x] Saved trips (My Trips)
+- [x] Saved trips (**My Trips**)
+- [x] **In-trip Companion** with local itinerary edits and alternative suggestions
 - [x] A complete FastAPI backend (exists, runs, has tests — but unused by the app)
 - [x] Supabase migrations for trips, checklists, restaurants
 
 **Partial / scaffolded:**
 - [ ] **Explore** — UI exists but routes to the Food screen; most tiles are "Implementing Soon"
-- [ ] **Companion (in-trip)** — screen exists, ask handler is a `TODO`
 - [ ] **Profile settings** — several rows are placeholders
 
-**Not started:**
+**Not started / launch blockers:**
 - [ ] **Backend ↔ mobile integration** (today the app calls OpenAI + Supabase directly)
 - [ ] **Securing the OpenAI key** behind the backend ← do this first
 - [ ] **Post-trip Debrief / review flow** in the app
