@@ -230,7 +230,7 @@ class _ScreenHeader extends StatelessWidget {
                 style: TextStyle(
                   color: RaasteShellColors.ink,
                   fontFamily: 'serif',
-                  fontSize: 36,
+                  fontSize: 32,
                   fontWeight: FontWeight.w700,
                   height: 1,
                 ),
@@ -308,7 +308,7 @@ class _ProgressCard extends StatelessWidget {
             style: const TextStyle(
               color: RaasteShellColors.ink,
               fontFamily: 'serif',
-              fontSize: 28,
+              fontSize: 22,
               fontWeight: FontWeight.w700,
               height: 1.05,
             ),
@@ -711,7 +711,7 @@ class _StatePanel extends StatelessWidget {
               style: const TextStyle(
                 color: RaasteShellColors.ink,
                 fontFamily: 'serif',
-                fontSize: 28,
+                fontSize: 22,
                 fontWeight: FontWeight.w700,
                 height: 1.05,
               ),

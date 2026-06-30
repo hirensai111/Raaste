@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'package:raaste/features/destination/data/services/itinerary_curation_service.dart';
 import 'package:raaste/features/destination/domain/models/destination_guide.dart';
 import 'package:raaste/features/destination/domain/models/destination_research.dart';
 import 'package:raaste/features/destination/domain/models/itinerary_timing_context.dart';
@@ -14,6 +15,28 @@ class OpenAiGuideException implements Exception {
 
   @override
   String toString() => message;
+}
+
+class TripAlternativeSuggestion {
+  final String title;
+  final String reason;
+  final String editRequest;
+
+  const TripAlternativeSuggestion({
+    required this.title,
+    required this.reason,
+    required this.editRequest,
+  });
+
+  bool get isValid => title.trim().isNotEmpty && editRequest.trim().isNotEmpty;
+
+  factory TripAlternativeSuggestion.fromJson(Map<String, dynamic> json) {
+    return TripAlternativeSuggestion(
+      title: json['title'] as String? ?? '',
+      reason: json['reason'] as String? ?? '',
+      editRequest: json['editRequest'] as String? ?? '',
+    );
+  }
 }
 
 class OpenAiDestinationService {
@@ -47,10 +70,13 @@ class OpenAiDestinationService {
       fallbackIntake: intake,
       existingId: '',
     );
-    final guide = result.copyWith(
-      intake: intake,
-      destinationName: intake.destination,
-      timingContext: timingContext,
+    final guide = _curateGeneratedGuide(
+      result.copyWith(
+        intake: intake,
+        destinationName: intake.destination,
+        timingContext: timingContext,
+      ),
+      research,
     );
 
     if (!_needsFullTripRetry(guide, expectedDays, intake.dates)) return guide;
@@ -66,10 +92,23 @@ class OpenAiDestinationService {
       fallbackIntake: intake,
       existingId: '',
     );
-    return retry.copyWith(
-      intake: intake,
-      destinationName: intake.destination,
-      timingContext: timingContext,
+    return _curateGeneratedGuide(
+      retry.copyWith(
+        intake: intake,
+        destinationName: intake.destination,
+        timingContext: timingContext,
+      ),
+      research,
+    );
+  }
+
+  DestinationGuide _curateGeneratedGuide(
+    DestinationGuide guide,
+    DestinationResearch research,
+  ) {
+    return const ItineraryCurationService().curateGeneratedGuide(
+      guide: guide,
+      research: research,
     );
   }
 
@@ -77,12 +116,14 @@ class OpenAiDestinationService {
     required DestinationGuide currentGuide,
     required String editRequest,
     required ItineraryTimingContext timingContext,
+    DestinationResearch? research,
   }) async {
     var result = await _requestGuide(
       prompt: _revisionPrompt(
         currentGuide,
         editRequest,
         timingContext: timingContext,
+        research: research,
       ),
       fallbackIntake: currentGuide.intake,
       existingId: currentGuide.id,
@@ -107,6 +148,7 @@ class OpenAiDestinationService {
           currentGuide,
           editRequest,
           timingContext: timingContext,
+          research: research,
           forceFullLength: true,
           fallbackExpectedDays: expectedDays ?? 2,
         ),
@@ -436,6 +478,7 @@ Hyderabad-specific planning rules from the new Raaste research:
     DestinationGuide guide,
     String editRequest, {
     required ItineraryTimingContext timingContext,
+    DestinationResearch? research,
     bool forceFullLength = false,
     int? fallbackExpectedDays,
   }) {
@@ -448,6 +491,23 @@ Hyderabad-specific planning rules from the new Raaste research:
         forceFullLength || expectedDays != null
             ? _dayCountInstruction(dateBasis, expectedDays, forceFullLength)
             : '- If the edit request changes trip dates or trip length, update intake.dates and infer the full revised trip length. Otherwise keep the existing number of days.';
+    final researchBlock =
+        research == null
+            ? ''
+            : '''
+
+Curated Raaste research JSON:
+${jsonEncode(research.toPromptJson())}
+
+Research usage guide:
+${_researchUsageGuide(research, guide.intake)}
+
+Research-grounded edit rules:
+- For every replacement, alternative, restaurant, mall, shopping stop, cafe, activity, or area, choose a concrete named option from the curated research JSON or the existing itinerary. Search all research fields, not only attractions.
+- If the user asks for a broad category such as "some mall", "a cafe", "shopping", "market", or "something modern", pick the best matching named place from research. Never write generic placeholders like "choose a good mall", "visit a nearby mall", "ask locally", or "find a cafe".
+- For Hyderabad shopping/mall-style requests, prefer named researched options that fit the route and context, such as Shilparamam, Laad Bazaar, GVK One mall, Inorbit, Forum, Durgam Cheruvu, HITEC/Jubilee/Banjara zones, or other named options present in the research. Include any research warnings, such as mall restaurants being overpriced, when relevant.
+- If there is no exact named match in research, choose the closest named researched place and explain the compromise inside the stop description. Do not invent a new place name.
+''';
 
     return '''
 You are Raaste, a careful local trip-planning assistant for India.
@@ -460,7 +520,7 @@ ${jsonEncode(guide.toJson())}
 
 Computed Google route timing context for the revised/current stay and travel mode:
 ${jsonEncode(timingContext.toJson())}
-
+$researchBlock
 Requirements:
 - Keep the same destination unless the user explicitly asks to change it.
 - The intake is editable. If the user asks to change dates, arrival/landing time, departure time, stay/hotel/base, travel mode, traveller count, pace preference, interests, or dietary preference, update the matching intake field in the JSON response.
@@ -471,7 +531,7 @@ $lengthInstruction
 - Use the computed Google route timing context as hard minimum travel time. Add buffer when needed, but do not create overlapping or impossible stop times.
 - Do not write "sourceId", "Source IDs", "research:...", JSON keys, or raw source references inside visible text fields. The sourceId property is the only place source IDs belong.
 - Do not repeat the same specific attraction, restaurant, or food stop across multiple days unless it is the stay/base, arrival hub, departure hub, or a required transfer.
-- Return an intake object with all fields filled: destination, sourceId, displayAddress, lat, lon, dates, landingTime, departureTime, stayNameOrAddress, peopleCount, travelMode, pacePreference, interests, and dietaryPreference.
+- Return an intake object with all fields filled: destination, sourceId, displayAddress, lat, lon, dates, landingTime, departureTime, stayNameOrAddress, stayLat, stayLon, peopleCount, travelMode, pacePreference, interests, and dietaryPreference.
 - Maintain the same disclaimer behavior: prices, timings, availability, and travel conditions may vary and should be verified before travel.
 Return only JSON matching the schema.
 ''';
@@ -532,6 +592,231 @@ Return only JSON matching the schema.
     return null;
   }
 
+  Future<List<TripAlternativeSuggestion>> suggestTripAlternatives({
+    required DestinationGuide guide,
+    required Map<String, dynamic> researchContext,
+    required String request,
+  }) async {
+    final apiKey = dotenv.env['OPENAI_API_KEY']?.trim();
+    if (apiKey == null || apiKey.isEmpty) {
+      throw const OpenAiGuideException(
+        'Add OPENAI_API_KEY in .env to suggest trip alternatives.',
+      );
+    }
+
+    final model = dotenv.env['OPENAI_MODEL']?.trim();
+
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        '/responses',
+        data: {
+          'model': model?.isNotEmpty == true ? model : 'gpt-4.1-mini',
+          'input': _alternativePrompt(
+            guide: guide,
+            researchContext: researchContext,
+            request: request,
+          ),
+          'text': {
+            'format': {
+              'type': 'json_schema',
+              'name': 'trip_alternatives',
+              'strict': true,
+              'schema': _alternativesSchema,
+            },
+          },
+        },
+        options: Options(headers: {'Authorization': 'Bearer $apiKey'}),
+      );
+
+      final text = _extractOutputText(response.data ?? <String, dynamic>{});
+      final decoded = jsonDecode(text) as Map<String, dynamic>;
+      final alternatives =
+          (decoded['alternatives'] as List<dynamic>? ?? const [])
+              .whereType<Map<String, dynamic>>()
+              .map(TripAlternativeSuggestion.fromJson)
+              .where((item) => item.isValid)
+              .take(4)
+              .toList();
+      if (alternatives.isEmpty) {
+        throw const OpenAiGuideException(
+          'I could not find useful alternatives for that stop. Try naming the place you want to replace.',
+        );
+      }
+      return alternatives;
+    } on OpenAiGuideException {
+      rethrow;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw const OpenAiGuideException(
+          'OpenAI rejected the API key. Check OPENAI_API_KEY in .env.',
+        );
+      }
+      final detail = _openAiErrorMessage(e.response?.data);
+      if (detail != null) {
+        throw OpenAiGuideException('Could not suggest alternatives: $detail');
+      }
+      throw const OpenAiGuideException(
+        'Could not suggest alternatives right now. Please try again.',
+      );
+    } on FormatException {
+      throw const OpenAiGuideException(
+        'The alternatives response was not in the expected format. Please try again.',
+      );
+    }
+  }
+
+  String _alternativePrompt({
+    required DestinationGuide guide,
+    required Map<String, dynamic> researchContext,
+    required String request,
+  }) {
+    return '''
+You are Raaste, an itinerary editing assistant for India.
+
+The traveller asked for alternatives before changing the saved itinerary.
+User request:
+$request
+
+Current saved itinerary JSON:
+${jsonEncode(guide.toJson())}
+
+Curated local research JSON:
+${jsonEncode(researchContext)}
+
+Return 2 to 4 practical alternatives that can replace the place, meal, or activity the traveller is asking about.
+Rules:
+- Use only the curated research or places already present in the saved itinerary. Search all research fields, including attractions, itinerary frameworks, local knowledge, accommodation areas, money/trap notes, shopping notes, and restaurants.
+- If the user asks for a broad category such as "some mall", "a cafe", "shopping", "market", or "something modern", return concrete named options from research that match the category. Do not tell the user to choose a mall or find one nearby.
+- For Hyderabad shopping/mall-style requests, valid researched options may include Shilparamam, Laad Bazaar, GVK One mall, Inorbit, Forum, Durgam Cheruvu, HITEC/Jubilee/Banjara zones, or other named places present in the research. Prefer options that fit the current route and timing.
+- Respect the traveller's dietary preference: ${guide.intake.dietaryPreference}.
+- Do not change trip dates, arrival time, departure time, hotel/stay, people count, pace, interests, or travel mode.
+- Each title must be a concrete place, restaurant, area, or activity name from research. Never use generic titles such as "Nearby mall", "Good cafe", "Shopping option", or "Choose a mall".
+- Each editRequest must be ready to pass into an itinerary revision call. It should explicitly say what to replace, which day/time if known, the selected named alternative, and that nearby timings should be adjusted without changing dates or trip length.
+- If research warns about the option, include that warning in the reason, for example overpriced mall restaurants.
+Return only JSON matching the schema.
+''';
+  }
+
+  Future<String> askCompanion({
+    required Map<String, dynamic> tripContext,
+    required Map<String, dynamic> researchContext,
+    required List<Map<String, String>> history,
+    required String question,
+  }) async {
+    final apiKey = dotenv.env['OPENAI_API_KEY']?.trim();
+    if (apiKey == null || apiKey.isEmpty) {
+      throw const OpenAiGuideException(
+        'Add OPENAI_API_KEY in .env to use the companion.',
+      );
+    }
+
+    final model = dotenv.env['OPENAI_MODEL']?.trim();
+    final systemPrompt = _companionSystemPrompt(tripContext, researchContext);
+
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        '/responses',
+        data: {
+          'model': model?.isNotEmpty == true ? model : 'gpt-4.1-mini',
+          'instructions': systemPrompt,
+          'input': _companionConversationInput(history, question),
+          'max_output_tokens': 600,
+        },
+        options: Options(headers: {'Authorization': 'Bearer $apiKey'}),
+      );
+
+      final content = _extractOutputText(response.data ?? <String, dynamic>{});
+      if (content.trim().isEmpty) {
+        throw const OpenAiGuideException(
+          'Empty response from companion. Please try again.',
+        );
+      }
+      return content.trim();
+    } on OpenAiGuideException {
+      rethrow;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw const OpenAiGuideException(
+          'OpenAI rejected the API key. Check OPENAI_API_KEY in .env.',
+        );
+      }
+      final detail = _openAiErrorMessage(e.response?.data);
+      if (detail != null) {
+        throw OpenAiGuideException('Companion could not answer: $detail');
+      }
+      throw const OpenAiGuideException(
+        'Companion could not reach AI right now. Check your connection and try again.',
+      );
+    }
+  }
+
+  String _companionConversationInput(
+    List<Map<String, String>> history,
+    String question,
+  ) {
+    final buffer = StringBuffer();
+    if (history.isNotEmpty) {
+      buffer.writeln('Recent conversation:');
+      for (final message in history) {
+        final rawRole = message['role'] ?? 'user';
+        final role = rawRole == 'assistant' ? 'Raaste companion' : 'Traveller';
+        final content = message['content']?.trim();
+        if (content == null || content.isEmpty) continue;
+        buffer.writeln('$role: $content');
+      }
+      buffer.writeln();
+    }
+
+    buffer.writeln('Traveller question:');
+    buffer.write(question.trim());
+    return buffer.toString();
+  }
+
+  String? _openAiErrorMessage(Object? data) {
+    if (data is Map) {
+      final error = data['error'];
+      if (error is Map) {
+        final message = error['message'];
+        if (message is String && message.trim().isNotEmpty) {
+          return message.trim();
+        }
+      }
+      final message = data['message'];
+      if (message is String && message.trim().isNotEmpty) {
+        return message.trim();
+      }
+    }
+    return null;
+  }
+
+  String _companionSystemPrompt(
+    Map<String, dynamic> trip,
+    Map<String, dynamic> research,
+  ) {
+    return '''
+You are Raaste — a well-travelled local friend who has already been to this destination and is travelling with this person right now. You know their trip inside out: where they are staying, what they eat, what they want to do, and what today's plan is.
+
+Your job is to answer their questions exactly like a knowledgeable local friend would — specific, direct, honest, and useful. Not a customer service bot. Not a brochure. A friend who says "skip that one, it's a tourist trap, go here instead."
+
+This person's trip context:
+${jsonEncode(trip)}
+
+Curated local knowledge for this destination (research, restaurants, transport, tips, prices, crowd realities):
+${jsonEncode(research)}
+
+How to answer:
+- Use the research as your source of truth. If a fact isn't in the research, say "I don't have verified info on that — best to check locally" rather than guessing.
+- Dietary preference is non-negotiable: ${trip['dietary_preference'] ?? 'not specified'}. Never recommend a place that doesn't meet it.
+- For restaurant questions, use the restaurant research. Mention what to order, cash/UPI reality, wait times, and any tourist-trap warnings from the research.
+- For transport questions, use local_transport and how_to_reach from the research. Mention negotiation, apps that work, apps that don't, and real fares where available.
+- For cost questions, give the research figure with "this may have changed — confirm before paying."
+- For "what should I do now / this evening / today" questions, use today's itinerary day from the trip context and the user's interests: ${(trip['interests'] as List?)?.join(', ') ?? 'not specified'}.
+- Keep answers concise — 3 to 6 sentences unless the question genuinely needs more. The person is on their phone, probably standing somewhere.
+- Don't repeat what you just said in the previous message. Don't start every reply with "Great question!" or similar filler.
+- If you don't know, say so briefly and suggest how to find out locally.
+''';
+  }
+
   bool _clearlyOneDay(String rawDates) {
     final text = rawDates.toLowerCase();
     return text.contains('one day') ||
@@ -540,6 +825,28 @@ Return only JSON matching the schema.
         text.contains('day trip');
   }
 
+  static const Map<String, dynamic> _alternativesSchema = {
+    'type': 'object',
+    'additionalProperties': false,
+    'required': ['alternatives'],
+    'properties': {
+      'alternatives': {
+        'type': 'array',
+        'minItems': 1,
+        'maxItems': 4,
+        'items': {
+          'type': 'object',
+          'additionalProperties': false,
+          'required': ['title', 'reason', 'editRequest'],
+          'properties': {
+            'title': {'type': 'string'},
+            'reason': {'type': 'string'},
+            'editRequest': {'type': 'string'},
+          },
+        },
+      },
+    },
+  };
   static const Map<String, dynamic> _guideSchema = {
     'type': 'object',
     'additionalProperties': false,
@@ -565,6 +872,8 @@ Return only JSON matching the schema.
           'landingTime',
           'departureTime',
           'stayNameOrAddress',
+          'stayLat',
+          'stayLon',
           'peopleCount',
           'travelMode',
           'pacePreference',
@@ -585,6 +894,12 @@ Return only JSON matching the schema.
           'landingTime': {'type': 'string'},
           'departureTime': {'type': 'string'},
           'stayNameOrAddress': {'type': 'string'},
+          'stayLat': {
+            'type': ['number', 'null'],
+          },
+          'stayLon': {
+            'type': ['number', 'null'],
+          },
           'peopleCount': {'type': 'integer'},
           'travelMode': {'type': 'string'},
           'pacePreference': {'type': 'string'},

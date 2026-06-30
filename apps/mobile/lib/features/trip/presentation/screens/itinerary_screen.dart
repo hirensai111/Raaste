@@ -51,11 +51,6 @@ class ItineraryScreen extends StatelessWidget {
                 },
               ),
             ),
-            ElevatedButton(
-              onPressed:
-                  () => context.go('${AppRoutes.companion}?tripId=$tripId'),
-              child: const Text('Open trip companion'),
-            ),
           ],
         ),
       ),

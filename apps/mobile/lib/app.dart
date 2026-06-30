@@ -30,6 +30,20 @@ class RaasteApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.light,
         routerConfig: AppRouter.router,
+        builder: (context, child) {
+          // Clamp system text scaling so accessibility settings don't
+          // break the fixed-height cards and hero layouts.
+          final mq = MediaQuery.of(context);
+          return MediaQuery(
+            data: mq.copyWith(
+              textScaler: mq.textScaler.clamp(
+                minScaleFactor: 1.0,
+                maxScaleFactor: 1.1,
+              ),
+            ),
+            child: child!,
+          );
+        },
       ),
     );
   }

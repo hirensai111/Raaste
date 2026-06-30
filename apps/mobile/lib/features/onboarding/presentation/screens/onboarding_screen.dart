@@ -25,9 +25,18 @@ class OnboardingScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5EFE0),
+      // Extend behind system bars so the welcome art fills every pixel.
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final screenSize = Size(constraints.maxWidth, constraints.maxHeight);
+          // Use the full display size including system bar areas so the
+          // tap-target math stays in sync with the rendered image.
+          final media = MediaQuery.of(context);
+          final screenSize = Size(
+            media.size.width,
+            media.size.height,
+          );
 
           return Stack(
             fit: StackFit.expand,
@@ -35,6 +44,7 @@ class OnboardingScreen extends StatelessWidget {
               Image.asset(
                 'assets/images/raaste_welcomescreen.png',
                 fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
               ),
               _ImageTapTarget(
                 imageRect: _getStartedRect,

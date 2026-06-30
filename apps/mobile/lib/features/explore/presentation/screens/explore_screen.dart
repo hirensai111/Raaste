@@ -78,7 +78,7 @@ class _ExploreHeader extends StatelessWidget {
                 style: TextStyle(
                   color: RaasteShellColors.ink,
                   fontFamily: 'serif',
-                  fontSize: 38,
+                  fontSize: 32,
                   fontWeight: FontWeight.w700,
                   height: 1,
                 ),

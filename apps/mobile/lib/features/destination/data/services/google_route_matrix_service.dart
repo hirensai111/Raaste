@@ -47,12 +47,7 @@ class GoogleRouteMatrixService {
       );
     }
 
-    final stay = await _geocodePlace(
-      '$stayText, ${research.destinationName}, India',
-      apiKey,
-      fallbackName: stayText,
-      type: 'stay',
-    );
+    final stay = await _stayPlace(intake, research, apiKey);
 
     final travelMode = _normalizedTravelMode(intake.travelMode);
     final hub = await _arrivalDepartureHub(research, travelMode, apiKey);
@@ -93,9 +88,17 @@ class GoogleRouteMatrixService {
       );
     }
 
-    final routes = await Future.wait(
-      pairs.map((pair) => _routePair(pair, apiKey, travelMode)),
+    final routeResults = await Future.wait(
+      pairs.map((pair) => _routePairResult(pair, apiKey, travelMode)),
     );
+    final routes = routeResults.map((result) => result.entry).toList();
+    final routeNotes =
+        routeResults.map((result) => result.note).whereType<String>().toList();
+    if (routes.isEmpty) {
+      throw const RouteTimingException(
+        'I could not calculate any usable route timings for this itinerary.',
+      );
+    }
 
     return ItineraryTimingContext(
       destinationName: research.destinationName,
@@ -108,8 +111,35 @@ class GoogleRouteMatrixService {
         'Google route durations are planning estimates, not live traffic guarantees.',
         'Use these durations as minimum movement buffers; add extra time for check-in, luggage, queues, parking, crowds, and weather.',
         'For flights, keep airport security and boarding buffers separate from the road transfer duration.',
+        ...routeNotes,
       ],
       generatedAt: DateTime.now(),
+    );
+  }
+
+  Future<RoutePlace> _stayPlace(
+    TripIntake intake,
+    DestinationResearch research,
+    String apiKey,
+  ) async {
+    final stayText = intake.stayNameOrAddress.trim();
+    final stayLat = intake.stayLat;
+    final stayLon = intake.stayLon;
+    if (stayLat != null && stayLon != null && stayLat != 0 && stayLon != 0) {
+      return RoutePlace(
+        name: stayText,
+        address: stayText,
+        lat: stayLat,
+        lon: stayLon,
+        type: 'stay',
+      );
+    }
+
+    return _geocodePlace(
+      '$stayText, ${research.destinationName}, India',
+      apiKey,
+      fallbackName: stayText,
+      type: 'stay',
     );
   }
 
@@ -274,6 +304,59 @@ class GoogleRouteMatrixService {
     }
   }
 
+  Future<_RouteResult> _routePairResult(
+    _RoutePair pair,
+    String apiKey,
+    String travelMode,
+  ) async {
+    try {
+      return _RouteResult(await _routePair(pair, apiKey, travelMode));
+    } on RouteTimingException catch (e) {
+      final lower = e.message.toLowerCase();
+      if (lower.contains('api_key') || lower.contains('rejected')) rethrow;
+      return _RouteResult(
+        _estimatedRoutePair(pair, travelMode),
+        'Estimated ${pair.label} because Google Maps could not return an exact route. Confirm this transfer locally.',
+      );
+    }
+  }
+
+  RouteTimingEntry _estimatedRoutePair(_RoutePair pair, String travelMode) {
+    final straightLineMeters = _straightLineMeters(
+      pair.origin,
+      pair.destination,
+    );
+    final adjustedMeters = math.max(1000, (straightLineMeters * 1.45).round());
+    final minutes = math.max(8, ((adjustedMeters / 1000) / 18 * 60).ceil());
+    return RouteTimingEntry(
+      label: pair.label,
+      origin: pair.origin,
+      destination: pair.destination,
+      mode: '$travelMode estimate',
+      durationMinutes: minutes,
+      durationText: _formatDuration(minutes),
+      distanceMeters: adjustedMeters,
+      distanceText: _formatDistance(adjustedMeters),
+    );
+  }
+
+  int _straightLineMeters(RoutePlace origin, RoutePlace destination) {
+    const earthRadiusMeters = 6371000.0;
+    final originLat = _toRadians(origin.lat);
+    final destinationLat = _toRadians(destination.lat);
+    final deltaLat = _toRadians(destination.lat - origin.lat);
+    final deltaLon = _toRadians(destination.lon - origin.lon);
+    final a =
+        math.sin(deltaLat / 2) * math.sin(deltaLat / 2) +
+        math.cos(originLat) *
+            math.cos(destinationLat) *
+            math.sin(deltaLon / 2) *
+            math.sin(deltaLon / 2);
+    final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+    return (earthRadiusMeters * c).round();
+  }
+
+  double _toRadians(double degrees) => degrees * math.pi / 180;
   Map<String, dynamic> _routeWaypoint(RoutePlace place) => {
     'waypoint': {
       'location': {
@@ -441,6 +524,13 @@ class GoogleRouteMatrixService {
     final text = value.toString().trim();
     return text.isEmpty ? null : text;
   }
+}
+
+class _RouteResult {
+  final RouteTimingEntry entry;
+  final String? note;
+
+  const _RouteResult(this.entry, [this.note]);
 }
 
 class _RoutePair {

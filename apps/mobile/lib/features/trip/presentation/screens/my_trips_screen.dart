@@ -112,7 +112,7 @@ class _TripsHeader extends StatelessWidget {
                 style: TextStyle(
                   color: RaasteShellColors.ink,
                   fontFamily: 'serif',
-                  fontSize: 36,
+                  fontSize: 32,
                   fontWeight: FontWeight.w700,
                   height: 1,
                 ),
@@ -149,101 +149,166 @@ class _TripCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: const Color(0xFFFFFCF7),
-      borderRadius: BorderRadius.circular(22),
-      child: InkWell(
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFCF7),
+        border: Border.all(color: RaasteShellColors.outline),
         borderRadius: BorderRadius.circular(22),
-        onTap: () => context.go('${AppRoutes.destination}?tripId=${trip.id}'),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: RaasteShellColors.outline),
-            borderRadius: BorderRadius.circular(22),
-            boxShadow: const [
-              BoxShadow(
-                color: RaasteShellColors.shadow,
-                blurRadius: 18,
-                offset: Offset(0, 8),
-              ),
-            ],
+        boxShadow: const [
+          BoxShadow(
+            color: RaasteShellColors.shadow,
+            blurRadius: 18,
+            offset: Offset(0, 8),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(22),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
+            child: SizedBox(
+              height: 168,
+              width: double.infinity,
+              child: _TripImage(trip: trip),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${trip.destinationName} Trip',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: RaasteShellColors.ink,
+                    fontFamily: 'serif',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    height: 1.05,
+                  ),
                 ),
-                child: SizedBox(
-                  height: 168,
-                  width: double.infinity,
-                  child: _TripImage(trip: trip),
+                const SizedBox(height: 8),
+                Text(
+                  trip.destinationAddress.isEmpty
+                      ? trip.destinationName
+                      : trip.destinationAddress,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: RaasteShellColors.muted,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            '${trip.destinationName} Trip',
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: RaasteShellColors.ink,
-                              fontFamily: 'serif',
-                              fontSize: 26,
-                              fontWeight: FontWeight.w700,
-                              height: 1.05,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        const Icon(
-                          Icons.chevron_right_rounded,
-                          color: RaasteShellColors.clay,
-                          size: 28,
-                        ),
-                      ],
+                    _TripChip(
+                      icon: Icons.calendar_month_outlined,
+                      label: trip.dates.isEmpty ? 'Dates saved' : trip.dates,
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      trip.destinationAddress.isEmpty
-                          ? trip.destinationName
-                          : trip.destinationAddress,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: RaasteShellColors.muted,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    _TripChip(
+                      icon: Icons.group_outlined,
+                      label:
+                          '${trip.peopleCount} traveller${trip.peopleCount == 1 ? '' : 's'}',
                     ),
-                    const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        _TripChip(
-                          icon: Icons.calendar_month_outlined,
-                          label:
-                              trip.dates.isEmpty ? 'Dates saved' : trip.dates,
-                        ),
-                        _TripChip(
-                          icon: Icons.group_outlined,
-                          label:
-                              '${trip.peopleCount} traveller${trip.peopleCount == 1 ? '' : 's'}',
-                        ),
-                        const _TripChip(
-                          icon: Icons.edit_note_rounded,
-                          label: 'Editable',
-                        ),
-                      ],
+                    const _TripChip(
+                      icon: Icons.edit_note_rounded,
+                      label: 'Editable',
                     ),
                   ],
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _TripCardAction(
+                        label: 'Itinerary',
+                        icon: Icons.map_outlined,
+                        filled: false,
+                        onTap:
+                            () => context.go(
+                              '${AppRoutes.destination}?tripId=${Uri.encodeComponent(trip.id)}',
+                            ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _TripCardAction(
+                        label: 'Companion',
+                        icon: Icons.chat_bubble_outline_rounded,
+                        filled: true,
+                        onTap:
+                            () => context.go(
+                              '${AppRoutes.companion}?tripId=${Uri.encodeComponent(trip.id)}',
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TripCardAction extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool filled;
+  final VoidCallback onTap;
+
+  const _TripCardAction({
+    required this.label,
+    required this.icon,
+    required this.filled,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final background = filled ? const Color(0xFF2F6F68) : Colors.white;
+    final foreground = filled ? Colors.white : RaasteShellColors.ink;
+
+    return Material(
+      color: background,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Container(
+          height: 46,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color:
+                  filled ? const Color(0xFF2F6F68) : RaasteShellColors.outline,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 18, color: foreground),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: foreground,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
             ],
@@ -418,7 +483,7 @@ class _StatePanel extends StatelessWidget {
               style: const TextStyle(
                 color: RaasteShellColors.ink,
                 fontFamily: 'serif',
-                fontSize: 28,
+                fontSize: 22,
                 fontWeight: FontWeight.w700,
                 height: 1.05,
               ),

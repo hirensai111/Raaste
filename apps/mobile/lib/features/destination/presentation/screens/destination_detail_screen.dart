@@ -134,7 +134,6 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                         ),
                       ),
                       _GuideActions(
-                        guide: guide,
                         savedTrip: savedTrip,
                         isSaving: _isSaving,
                         onSave: () => _saveToTrips(guide),
@@ -189,7 +188,7 @@ class _GuideHeader extends StatelessWidget {
                 style: const TextStyle(
                   color: RaasteShellColors.ink,
                   fontFamily: 'serif',
-                  fontSize: 34,
+                  fontSize: 28,
                   fontWeight: FontWeight.w700,
                   height: 1.02,
                 ),
@@ -1097,7 +1096,7 @@ class _ItineraryDayCardState extends State<_ItineraryDayCard> {
                         day.dayNumber.toString(),
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 26,
+                          fontSize: 20,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -1470,13 +1469,11 @@ class _BodyText extends StatelessWidget {
 }
 
 class _GuideActions extends StatelessWidget {
-  final DestinationGuide guide;
   final SavedTrip? savedTrip;
   final bool isSaving;
   final VoidCallback onSave;
 
   const _GuideActions({
-    required this.guide,
     required this.savedTrip,
     required this.isSaving,
     required this.onSave,
@@ -1504,18 +1501,6 @@ class _GuideActions extends StatelessWidget {
             color: RaasteShellColors.ink,
             onTap: () => context.go(AppRoutes.trips),
           ),
-        const SizedBox(height: 12),
-        _ActionButton(
-          label: 'Edit with AI',
-          icon: Icons.auto_awesome_rounded,
-          color: RaasteShellColors.clay,
-          onTap: () {
-            final tripParam = trip == null ? '' : '&tripId=${trip.id}';
-            context.go(
-              '${AppRoutes.destinationChat}?guideId=${guide.id}$tripParam',
-            );
-          },
-        ),
       ],
     );
   }
@@ -1632,7 +1617,7 @@ class _StateMessage extends StatelessWidget {
               style: const TextStyle(
                 color: RaasteShellColors.ink,
                 fontFamily: 'serif',
-                fontSize: 28,
+                fontSize: 22,
                 fontWeight: FontWeight.w700,
               ),
             ),

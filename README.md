@@ -37,39 +37,43 @@
 
 ## ✨ What is Raaste?
 
-Raaste is your AI travel companion for discovering and experiencing India. It combines curated destination research, smart itinerary planning, an AI companion, restaurant recommendations, and interactive checklists — all tailored for Indian domestic travel.
+Raaste is an AI travel guide for Indian domestic travel — like having a well-travelled local friend who's already been everywhere and tells you what's actually worth it, how transport really works, what things should cost, and where the locals eat. **Not a booking app. Not a delivery app. A guide.**
+
+It's built around the Indian traveller specifically: Uber doesn't work everywhere, local cab rates are negotiable, Jain/Halal/Veg requirements are serious, monsoon changes what's accessible, and a ₹500 trip and a ₹5,000 trip need completely different advice.
 
 The app is organized around three travel phases:
 
-1. **Researcher (Before Trip)** — Discover destinations, read detailed guides, browse attractions, and build a personalized itinerary.
-2. **Companion (During Trip)** — Ask the AI guide anything, find nearby restaurants, manage your trip checklist, and access saved trips offline.
-3. **Debrief (After Trip)** — Share reviews and feedback that improve recommendations for future travelers.
+1. **Researcher (Before Trip)** — A specific, opinionated pre-trip briefing: how transport works, real costs, what's worth it vs. tourist traps, a day-by-day plan tuned to your interests, what to pack, and local customs.
+2. **Companion (During Trip)** — Ask the guide anything about where you are right now. It knows your preferences, so it won't send a Jain traveller to a non-veg place.
+3. **Debrief (After Trip)** — A quick review that feeds the knowledge base and improves the guide for the next traveller.
+
+> ⚠️ All prices and timings are a research starting point, not a real-time database — the app always tells you to confirm directly.
 
 ---
 
 ## 🚀 Features
 
+> Legend: ✅ working · 🟡 partial / wired but thin · 🔲 placeholder / planned
+
 ### Mobile App (Flutter)
 
-- **Authentication** — Email/password and Google sign-in via Supabase Auth.
-- **Home Dashboard** — Personalized greeting, smart destination search, dietary/travel-style filters, trip phase cards, current trip, and popular destinations.
-- **Explore** — Browse by category (Mountains, Beaches, Heritage, Spiritual, Hill Stations), trending destinations, interests, and regions.
-- **Destination Details** — Rich destination pages with research-backed guides and a conversational **Destination Chat** to ask questions.
-- **Food & Restaurants** — Curated restaurant recommendations for destinations, filtered by dietary preferences and local cuisine.
-- **Trip Planning** — Plan multi-day trips with day-by-day itineraries and packing checklists.
-- **My Trips** — Save, view, and manage upcoming and past trips.
-- **Checklists** — AI-generated packing and trip checklists, synced via Supabase.
-- **AI Companion** — Ask travel questions and get contextual answers powered by OpenAI.
-- **Profile** — Manage account details, preferences, and settings.
+- ✅ **Authentication** — Email/password and Google sign-in via Supabase Auth.
+- ✅ **Onboarding & Profile Setup** — One-time travel style, dietary preference, companions, budget, and interests. These feed directly into AI prompts.
+- ✅ **Home Dashboard** — Personalized greeting, destination search, dietary/travel-style filters, trip phase cards, current trip, and popular destinations.
+- ✅ **Destination Detail + Chat** — Research-backed destination pages and a conversational chat that answers in the traveller's voice, respecting their profile. This is the app's strongest feature.
+- ✅ **AI Itinerary Generation** — Day-by-day plans generated from bundled research, routing data (Google Route Matrix), and the user's interests + dietary rules.
+- ✅ **Food & Restaurants** — Restaurant recommendations filtered by dietary tags (Veg / Non-veg / Jain / Halal / Vegan / Eggetarian) with strict, non-negotiable filtering logic.
+- ✅ **Checklists** — AI-generated trip checklists synced via Supabase.
+- ✅ **My Trips** — Save and manage trips (Supabase-backed).
+- 🟡 **Explore** — UI exists, but the `explore` route currently renders the Food screen and most tiles show "Implementing Soon."
+- 🔲 **Companion (in-trip Q&A)** — Screen scaffolded; the ask handler is a `TODO`. The real conversational AI today lives in **Destination Chat**.
+- 🟡 **Profile** — View/edit basics; several settings rows are "Implementing Soon."
 
-### Backend API (FastAPI)
+> **Data coverage:** AI features are grounded in hand-curated research JSON. Today that covers **3 destinations — Lonavala, Varanasi, and Hyderabad.** Everything else is a placeholder.
 
-- **Destinations** — Browse and search destinations with rich detail.
-- **Trips** — Create trips and retrieve generated itineraries.
-- **Checklists** — Generate and manage AI-powered trip checklists.
-- **Companion** — Contextual AI Q&A using trip and destination data.
-- **Reviews** — Submit post-trip reviews.
-- **Auth / Profile** — JWT-based auth and user profile management.
+### Backend API (FastAPI) — *parallel track, not yet wired to the app*
+
+A full FastAPI service exists (auth, destinations, trips, checklists, companion, reviews, profile) but **the mobile app does not currently call it.** The app talks to **OpenAI and Supabase directly.** The backend is the intended home for AI calls and shared data, but that migration hasn't happened yet — see [Honest Status](#-honest-status--what-is-actually-built).
 
 ---
 
@@ -127,9 +131,11 @@ Raaste/
 
 ## 🏗 Architecture
 
-- **Mobile:** Feature-first, Clean Architecture-inspired folders (`data`, `domain`, `presentation`). BLoC handles auth state; screens use `StatefulWidget` + repositories for local/remote data. `go_router` manages deep links and tab navigation.
-- **Backend:** Layered FastAPI app — endpoints depend on services, services depend on SQLAlchemy models. Pydantic schemas validate requests and responses.
-- **Data flow:** Destination research is stored as JSON assets in the mobile app for fast offline access; trip data, checklists, and restaurants sync with Supabase/Postgres; AI features call OpenAI via the backend or directly from the mobile app depending on the feature.
+- **Mobile:** Feature-first, Clean Architecture-inspired folders (`data`, `domain`, `presentation`). BLoC handles auth state; screens use `StatefulWidget` + repositories. `go_router` manages navigation.
+- **Backend:** Layered FastAPI app — endpoints → services → SQLAlchemy models, with Pydantic schemas. Currently developed in parallel and **not yet consumed by the mobile app.**
+- **Actual data flow today:** Destination research ships as JSON assets in the app. Trips, checklists, and saved data sync with **Supabase** directly. **AI features call OpenAI directly from the device** using a key in the app's `.env`.
+
+> 🔐 **Security note:** Calling OpenAI directly from the mobile app means the API key is shipped inside the build and can be extracted. Before any real release, AI calls must be proxied through the FastAPI backend (which already exists) so the key stays server-side. This is the single most important pre-launch fix.
 
 Full details are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
@@ -240,27 +246,32 @@ flutter analyze
 
 ---
 
-## 🗺 Roadmap / Current Status
+## 🧭 Honest Status — what is actually built
 
-Implemented:
-- [x] Splash, onboarding, auth (email + Google)
+**Working today (real, end-to-end):**
+- [x] Splash, onboarding, profile setup, auth (email + Google via Supabase)
 - [x] Home dashboard with search and filters
-- [x] Explore with categories, trending, and regions
-- [x] Destination detail and destination chat
-- [x] Trip planning and itinerary
+- [x] Destination detail + **Destination Chat** (the real AI guide, profile-aware)
+- [x] AI itinerary generation grounded in research + routing + dietary rules
+- [x] Restaurant recommendations with strict dietary filtering (Veg/Jain/Halal/Vegan/etc.)
+- [x] AI-generated checklists, synced via Supabase
 - [x] Saved trips (My Trips)
-- [x] AI-generated checklists
-- [x] Restaurant / food recommendations
-- [x] AI companion
-- [x] Profile and settings
-- [x] FastAPI backend with destinations, trips, companion, reviews, checklists, profile
-- [x] Supabase migrations
+- [x] A complete FastAPI backend (exists, runs, has tests — but unused by the app)
+- [x] Supabase migrations for trips, checklists, restaurants
 
-In progress / planned:
-- [ ] Full backend-mobile API integration for all features
-- [ ] Offline mode for core destination content
-- [ ] Post-trip review flow in the mobile app
-- [ ] Monetisation features (trip passes, partner listings)
+**Partial / scaffolded:**
+- [ ] **Explore** — UI exists but routes to the Food screen; most tiles are "Implementing Soon"
+- [ ] **Companion (in-trip)** — screen exists, ask handler is a `TODO`
+- [ ] **Profile settings** — several rows are placeholders
+
+**Not started:**
+- [ ] **Backend ↔ mobile integration** (today the app calls OpenAI + Supabase directly)
+- [ ] **Securing the OpenAI key** behind the backend ← do this first
+- [ ] **Post-trip Debrief / review flow** in the app
+- [ ] **Real offline mode** beyond the 3 bundled research files
+- [ ] **Monetisation** — trip passes (₹29–49), contextual ads, verified partners
+- [ ] **Data coverage** — only 3 destinations have research; the core promise needs a content pipeline
+- [ ] **Automated content generation** — research is hand-curated JSON; this won't scale to "all of India" manually
 
 ---
 

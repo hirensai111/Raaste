@@ -50,17 +50,26 @@ class AppRouter {
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.splash,
     routes: [
-      GoRoute(path: AppRoutes.splash, builder: (_, __) => const SplashScreen()),
+      GoRoute(
+        path: AppRoutes.splash,
+        pageBuilder: (_, state) => _fadePage(state, const SplashScreen()),
+      ),
       GoRoute(
         path: AppRoutes.onboarding,
-        builder: (_, __) => const OnboardingScreen(),
+        pageBuilder: (_, state) => _fadePage(state, const OnboardingScreen()),
       ),
       GoRoute(
         path: AppRoutes.profileSetup,
-        builder: (_, __) => const ProfileSetupScreen(),
+        pageBuilder: (_, state) => _fadePage(state, const ProfileSetupScreen()),
       ),
-      GoRoute(path: AppRoutes.signIn, builder: (_, __) => const SignInScreen()),
-      GoRoute(path: AppRoutes.home, builder: (_, __) => const HomeScreen()),
+      GoRoute(
+        path: AppRoutes.signIn,
+        pageBuilder: (_, state) => _fadePage(state, const SignInScreen()),
+      ),
+      GoRoute(
+        path: AppRoutes.home,
+        pageBuilder: (_, state) => _fadePage(state, const HomeScreen()),
+      ),
       GoRoute(
         path: AppRoutes.popularAttractions,
         builder: (_, __) => const PopularAttractionsScreen(),
@@ -130,5 +139,18 @@ class AppRouter {
         builder: (_, __) => const ChangePasswordScreen(),
       ),
     ],
+  );
+}
+
+CustomTransitionPage<void> _fadePage(GoRouterState state, Widget child) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: const Duration(milliseconds: 380),
+    reverseTransitionDuration: const Duration(milliseconds: 280),
+    transitionsBuilder: (_, animation, __, child) => FadeTransition(
+      opacity: CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+      child: child,
+    ),
   );
 }

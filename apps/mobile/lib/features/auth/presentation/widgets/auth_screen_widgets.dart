@@ -28,6 +28,9 @@ class AuthScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AuthColors.background,
+      // Extend so the background colour fills behind the system nav bar,
+      // eliminating the white bar that appears on gesture-nav phones.
+      extendBody: true,
       body: SafeArea(
         bottom: false,
         child: LayoutBuilder(

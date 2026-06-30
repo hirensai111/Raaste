@@ -161,7 +161,7 @@ class _FoodHeader extends StatelessWidget {
           style: TextStyle(
             color: RaasteShellColors.ink,
             fontFamily: 'serif',
-            fontSize: 40,
+            fontSize: 32,
             fontWeight: FontWeight.w700,
             height: 1,
           ),
@@ -223,7 +223,7 @@ class _FoodHeader extends StatelessWidget {
                           style: const TextStyle(
                             color: RaasteShellColors.ink,
                             fontFamily: 'serif',
-                            fontSize: 27,
+                            fontSize: 22,
                             fontWeight: FontWeight.w700,
                             height: 1.05,
                           ),
@@ -438,7 +438,7 @@ class _FilteredEmptyState extends StatelessWidget {
             style: TextStyle(
               color: RaasteShellColors.ink,
               fontFamily: 'serif',
-              fontSize: 25,
+              fontSize: 20,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -539,7 +539,7 @@ class _RestaurantCard extends StatelessWidget {
                       style: const TextStyle(
                         color: RaasteShellColors.ink,
                         fontFamily: 'serif',
-                        fontSize: 27,
+                        fontSize: 22,
                         fontWeight: FontWeight.w700,
                         height: 1.05,
                       ),
@@ -712,7 +712,7 @@ class _RestaurantCard extends StatelessWidget {
                         style: const TextStyle(
                           color: RaasteShellColors.ink,
                           fontFamily: 'serif',
-                          fontSize: 28,
+                          fontSize: 22,
                           fontWeight: FontWeight.w700,
                           height: 1.05,
                         ),
@@ -1073,7 +1073,7 @@ class _StatePanel extends StatelessWidget {
               style: const TextStyle(
                 color: RaasteShellColors.ink,
                 fontFamily: 'serif',
-                fontSize: 28,
+                fontSize: 22,
                 fontWeight: FontWeight.w700,
                 height: 1.05,
               ),

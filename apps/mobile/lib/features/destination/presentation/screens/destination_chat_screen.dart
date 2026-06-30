@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:raaste/config/routes.dart';
@@ -7,7 +9,9 @@ import 'package:raaste/features/destination/data/repositories/destination_guide_
 import 'package:raaste/features/destination/data/services/destination_research_service.dart';
 import 'package:raaste/features/destination/data/services/google_route_matrix_service.dart';
 import 'package:raaste/features/destination/data/services/open_ai_destination_service.dart';
+import 'package:raaste/features/destination/data/services/stay_search_service.dart';
 import 'package:raaste/features/destination/domain/models/destination_guide.dart';
+import 'package:raaste/features/destination/domain/models/place_suggestion.dart';
 import 'package:raaste/features/destination/domain/models/trip_intake.dart';
 import 'package:raaste/features/trip/data/repositories/saved_trip_repository.dart';
 import 'package:raaste/shared/widgets/raaste_nav_shell.dart';
@@ -64,6 +68,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   final _openAi = getIt<OpenAiDestinationService>();
   final _research = getIt<DestinationResearchService>();
   final _routeTiming = getIt<GoogleRouteMatrixService>();
+  final _staySearch = getIt<StaySearchService>();
   final _savedTrips = getIt<SavedTripRepository>();
 
   _IntakeStep _step = _IntakeStep.dates;
@@ -77,6 +82,8 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   String? _departureTime;
   String? _travelMode;
   String? _stayNameOrAddress;
+  double? _stayLat;
+  double? _stayLon;
   int? _peopleCount;
   String? _pacePreference;
   final Set<String> _selectedInterests = {};
@@ -87,16 +94,26 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   String? _pendingEditEndDateAnswer;
   String? _pendingEditDepartureTime;
   String? _pendingEditStayNameOrAddress;
+  double? _pendingEditStayLat;
+  double? _pendingEditStayLon;
   bool _pendingEditStartedWithStartDate = false;
+
+  Timer? _staySearchDebounce;
+  List<PlaceSuggestion> _staySuggestions = const [];
+  bool _isSearchingStay = false;
+  String? _staySearchError;
 
   @override
   void initState() {
     super.initState();
+    _controller.addListener(_handleComposerChanged);
     _loadInitialState();
   }
 
   @override
   void dispose() {
+    _staySearchDebounce?.cancel();
+    _controller.removeListener(_handleComposerChanged);
     _controller.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -153,6 +170,16 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
       _continueWithSelectedInterests();
       return;
     }
+    if (_isDatePromptActive) {
+      _addAssistant(
+        'Use the date selector below so I can keep the trip dates valid.',
+      );
+      return;
+    }
+    if (_isStaySelectionActive) {
+      await _handleStaySearchSubmit(text);
+      return;
+    }
     if (text.isEmpty) return;
     _controller.clear();
 
@@ -170,19 +197,29 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
   void _handleIntakeText(String text) {
     switch (_step) {
       case _IntakeStep.dates:
-        _dates = text;
-        _step = _IntakeStep.landingTime;
-        _addAssistant('What time do you land or arrive there?');
+        _addAssistant(
+          'Use the date selector below so I can keep the trip dates valid.',
+        );
         return;
       case _IntakeStep.landingTime:
-        _landingTime = text;
+        final time = _normalizeTimeInput(text);
+        if (time == null) {
+          _addAssistant(_timeValidationMessage);
+          return;
+        }
+        _landingTime = time;
         _step = _IntakeStep.departureTime;
         _addAssistant(
           'What time do you plan to depart or leave on the last day?',
         );
         return;
       case _IntakeStep.departureTime:
-        _departureTime = text;
+        final time = _normalizeTimeInput(text);
+        if (time == null) {
+          _addAssistant(_timeValidationMessage);
+          return;
+        }
+        _departureTime = time;
         _step = _IntakeStep.travelMode;
         _addAssistant(
           'How are you travelling there: car, bus, train, aeroplane, or some other way?',
@@ -191,14 +228,15 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
       case _IntakeStep.travelMode:
         _travelMode = text;
         _step = _IntakeStep.stay;
+        _clearStaySearch();
         _addAssistant(
-          'Where are you staying? Hotel name, area, or address is fine.',
+          'Search for your hotel, stay, or area and choose one of the map results.',
         );
         return;
       case _IntakeStep.stay:
-        _stayNameOrAddress = text;
-        _step = _IntakeStep.people;
-        _addAssistant('How many people are travelling?');
+        _addAssistant(
+          'Search for your hotel, stay, or area and choose one of the map results.',
+        );
         return;
       case _IntakeStep.people:
         final count = int.tryParse(text.replaceAll(RegExp(r'[^0-9]'), ''));
@@ -274,6 +312,8 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
       landingTime: _landingTime ?? '',
       departureTime: _departureTime ?? '',
       stayNameOrAddress: _stayNameOrAddress ?? '',
+      stayLat: _stayLat,
+      stayLon: _stayLon,
       peopleCount: _peopleCount ?? 1,
       travelMode: _travelMode ?? 'Not specified',
       pacePreference: _pacePreference ?? 'Balanced',
@@ -358,8 +398,9 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
                 _editNeedsRouteTiming(text))) {
           _pendingEditRequest = text;
           _editFollowUpStep = _EditFollowUpStep.stay;
+          _clearStaySearch();
           _addAssistant(
-            'What hotel, area, or address should I use as your stay base for retiming?',
+            'Search for the hotel, stay, or area I should use as your new base, then choose a map result.',
           );
           return;
         }
@@ -373,10 +414,9 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
               'Got it. What time will you land or arrive on the revised start date?',
             );
           } else {
-            _pendingEditEndDateAnswer = text;
-            _editFollowUpStep = _EditFollowUpStep.departureTime;
+            _editFollowUpStep = _EditFollowUpStep.endDate;
             _addAssistant(
-              'Got it. What time do you plan to depart or leave on the revised end date?',
+              'Choose the revised end date from the date selector below.',
             );
           }
           return;
@@ -384,39 +424,40 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
         await _reviseGuide(text);
         return;
       case _EditFollowUpStep.landingTime:
-        _pendingEditLandingTime = text;
+        final time = _normalizeTimeInput(text);
+        if (time == null) {
+          _addAssistant(_timeValidationMessage);
+          return;
+        }
+        _pendingEditLandingTime = time;
         _editFollowUpStep = _EditFollowUpStep.endDate;
         final currentDates = _editingGuide?.intake.dates.trim();
         _addAssistant(
           currentDates?.isNotEmpty == true
-              ? 'Your trip is currently saved as $currentDates. Is the current end date still correct, or do you want to change it too? Send "same" or the new end date.'
-              : 'Is the current end date still correct, or do you want to change it too? Send "same" or the new end date.',
+              ? 'Your trip is currently saved as $currentDates. Keep that end date or choose a new one below.'
+              : 'Keep the current end date or choose a new one below.',
         );
         return;
       case _EditFollowUpStep.endDate:
-        _pendingEditEndDateAnswer = text;
-        if (_keepsCurrentEndDate(text)) {
-          final request = _buildDateEditRequest();
-          _clearPendingDateEdit();
-          await _reviseGuide(request);
-          return;
-        }
-        _editFollowUpStep = _EditFollowUpStep.departureTime;
         _addAssistant(
-          'What time do you plan to depart or leave on the revised end date?',
+          'Use the date selector below so I can keep the trip dates valid.',
         );
         return;
       case _EditFollowUpStep.departureTime:
-        _pendingEditDepartureTime = text;
+        final time = _normalizeTimeInput(text);
+        if (time == null) {
+          _addAssistant(_timeValidationMessage);
+          return;
+        }
+        _pendingEditDepartureTime = time;
         final request = _buildDateEditRequest();
         _clearPendingDateEdit();
         await _reviseGuide(request);
         return;
       case _EditFollowUpStep.stay:
-        _pendingEditStayNameOrAddress = text;
-        final request = _buildStayEditRequest();
-        _clearPendingStayEdit();
-        await _reviseGuide(request);
+        _addAssistant(
+          'Search for the updated hotel, stay, or area and choose one of the map results.',
+        );
         return;
     }
   }
@@ -509,7 +550,7 @@ class _DestinationChatScreenState extends State<DestinationChatScreen> {
     final endInstruction =
         keepsEnd
             ? 'Keep the current end date from the existing itinerary ($currentDates).'
-            : _pendingEditStartedWithStartDate
+            : endDateAnswer.isNotEmpty
             ? 'Change the end date to: $endDateAnswer.'
             : 'Apply the end-date change from the original request.';
     final departureInstruction =
@@ -534,12 +575,20 @@ Apply these changes to the trip intake. Update intake.dates to the full revised 
     final original = _pendingEditRequest?.trim() ?? '';
     final stay = _pendingEditStayNameOrAddress?.trim() ?? '';
 
+    final lat = _pendingEditStayLat;
+    final lon = _pendingEditStayLon;
+    final coordinateInstructions =
+        lat != null && lon != null
+            ? '- Set intake.stayLat to: $lat.\n- Set intake.stayLon to: $lon.'
+            : '- Keep existing stay coordinates only if they still match the selected stay.';
+
     return '''
 Original user edit request:
 $original
 
 Follow-up answers:
 - Set intake.stayNameOrAddress to: $stay.
+$coordinateInstructions
 
 Apply these changes to the trip intake. Regenerate route-aware itinerary timings around the revised stay/base, arrival/departure transfers, and daily movement.
 ''';
@@ -548,6 +597,8 @@ Apply these changes to the trip intake. Regenerate route-aware itinerary timings
   void _clearPendingStayEdit() {
     _pendingEditRequest = null;
     _pendingEditStayNameOrAddress = null;
+    _pendingEditStayLat = null;
+    _pendingEditStayLon = null;
     _editFollowUpStep = _EditFollowUpStep.none;
   }
 
@@ -557,6 +608,8 @@ Apply these changes to the trip intake. Regenerate route-aware itinerary timings
     _pendingEditEndDateAnswer = null;
     _pendingEditDepartureTime = null;
     _pendingEditStayNameOrAddress = null;
+    _pendingEditStayLat = null;
+    _pendingEditStayLon = null;
     _pendingEditStartedWithStartDate = false;
     _editFollowUpStep = _EditFollowUpStep.none;
   }
@@ -577,6 +630,10 @@ Apply these changes to the trip intake. Regenerate route-aware itinerary timings
         _extractPromptValue(editRequest, 'stayNameOrAddress') ??
         _extractStayFromPlainText(editRequest) ??
         current.stayNameOrAddress;
+    final stayLat =
+        _extractPromptDouble(editRequest, 'stayLat') ?? current.stayLat;
+    final stayLon =
+        _extractPromptDouble(editRequest, 'stayLon') ?? current.stayLon;
     final landing =
         _extractPromptValue(editRequest, 'landingTime') ?? current.landingTime;
     final departure =
@@ -586,6 +643,8 @@ Apply these changes to the trip intake. Regenerate route-aware itinerary timings
 
     return current.copyWith(
       stayNameOrAddress: stay,
+      stayLat: stayLat,
+      stayLon: stayLon,
       landingTime: landing,
       departureTime: departure,
       travelMode: travelMode,
@@ -600,6 +659,11 @@ Apply these changes to the trip intake. Regenerate route-aware itinerary timings
     final match = pattern.firstMatch(text);
     final value = match?.group(1)?.trim();
     return value == null || value.isEmpty ? null : value;
+  }
+
+  double? _extractPromptDouble(String text, String fieldName) {
+    final value = _extractPromptValue(text, fieldName);
+    return value == null ? null : double.tryParse(value);
   }
 
   String? _extractStayFromPlainText(String text) {
@@ -666,6 +730,7 @@ Apply these changes to the trip intake. Regenerate route-aware itinerary timings
         currentGuide: guide,
         editRequest: editRequest,
         timingContext: timingContext,
+        research: research,
       );
       final guideId = await _guideStore.saveGuide(updated);
       final saved = updated.copyWith(id: guideId);
@@ -715,8 +780,9 @@ Apply these changes to the trip intake. Regenerate route-aware itinerary timings
       _step = _IntakeStep.stay;
       _messages.add(_ChatMessage.user(value));
     });
+    _clearStaySearch();
     _addAssistant(
-      'Where are you staying? Hotel name, area, or address is fine.',
+      'Search for your hotel, stay, or area and choose one of the map results.',
     );
   }
 
@@ -739,6 +805,333 @@ Apply these changes to the trip intake. Regenerate route-aware itinerary timings
       _messages.add(_ChatMessage.user(value));
     });
     _generateGuide();
+  }
+
+  bool get _isTripDatePromptActive {
+    return !_isLoading && !widget.isEditMode && _step == _IntakeStep.dates;
+  }
+
+  bool get _isEndDatePromptActive {
+    return !_isLoading &&
+        widget.isEditMode &&
+        _editFollowUpStep == _EditFollowUpStep.endDate;
+  }
+
+  bool get _isDatePromptActive =>
+      _isTripDatePromptActive || _isEndDatePromptActive;
+
+  bool get _hidesComposer => _isTimePromptActive || _isDatePromptActive;
+  bool get _isStaySelectionActive {
+    if (_isLoading) return false;
+    if (widget.isEditMode) return _editFollowUpStep == _EditFollowUpStep.stay;
+    return _step == _IntakeStep.stay;
+  }
+
+  bool get _isTimePromptActive {
+    if (_isLoading) return false;
+    if (widget.isEditMode) {
+      return _editFollowUpStep == _EditFollowUpStep.landingTime ||
+          _editFollowUpStep == _EditFollowUpStep.departureTime;
+    }
+    return _step == _IntakeStep.landingTime ||
+        _step == _IntakeStep.departureTime;
+  }
+
+  void _submitSelectedDateRange(DateTimeRange range) {
+    final label = _formatDateRange(range);
+    setState(() {
+      _dates = label;
+      _step = _IntakeStep.landingTime;
+      _messages.add(_ChatMessage.user(label));
+    });
+    _scrollToEnd();
+    _addAssistant('What time do you land or arrive there?');
+  }
+
+  Future<void> _keepCurrentEndDate() async {
+    if (!_isEndDatePromptActive || _isLoading) return;
+    final label = 'Keep current end date';
+    setState(() => _messages.add(_ChatMessage.user(label)));
+    _scrollToEnd();
+
+    _pendingEditEndDateAnswer = label;
+    final request = _buildDateEditRequest();
+    _clearPendingDateEdit();
+    await _reviseGuide(request);
+  }
+
+  void _submitSelectedEndDate(DateTime date) {
+    if (!_isEndDatePromptActive || _isLoading) return;
+    final label = _formatDate(date);
+    setState(() {
+      _pendingEditEndDateAnswer = label;
+      _editFollowUpStep = _EditFollowUpStep.departureTime;
+      _messages.add(_ChatMessage.user(label));
+    });
+    _scrollToEnd();
+    _addAssistant(
+      'What time do you plan to depart or leave on the revised end date?',
+    );
+  }
+
+  String _formatDateRange(DateTimeRange range) {
+    final start = range.start;
+    final end = range.end;
+    if (_isSameDate(start, end)) return _formatDate(start);
+    if (start.year == end.year && start.month == end.month) {
+      return '${start.day}-${end.day} ${_monthName(start.month)} ${start.year}';
+    }
+    if (start.year == end.year) {
+      return '${start.day} ${_monthName(start.month)} - ${end.day} ${_monthName(end.month)} ${start.year}';
+    }
+    return '${_formatDate(start)} - ${_formatDate(end)}';
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day} ${_monthName(date.month)} ${date.year}';
+  }
+
+  bool _isSameDate(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  String _monthName(int month) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1];
+  }
+
+  bool get _isDepartureTimePrompt {
+    return widget.isEditMode
+        ? _editFollowUpStep == _EditFollowUpStep.departureTime
+        : _step == _IntakeStep.departureTime;
+  }
+
+  String get _timePickerLabel {
+    return _isDepartureTimePrompt ? 'Departure time' : 'Arrival time';
+  }
+
+  String get _activeDestinationName {
+    if (widget.destinationName.trim().isNotEmpty) return widget.destinationName;
+    return _editingGuide?.destinationName ??
+        _editingGuide?.intake.destination ??
+        '';
+  }
+
+  double? get _activeDestinationLat => widget.lat ?? _editingGuide?.intake.lat;
+  double? get _activeDestinationLon => widget.lon ?? _editingGuide?.intake.lon;
+
+  String get _timeValidationMessage =>
+      'Please choose a valid time like 10:30 AM, 6 PM, or 18:30. Times such as 25 PM are not valid.';
+
+  void _handleComposerChanged() {
+    if (!_isStaySelectionActive) return;
+    _scheduleStaySearch(_controller.text);
+  }
+
+  void _scheduleStaySearch(String query) {
+    _staySearchDebounce?.cancel();
+    final clean = query.trim();
+    if (clean.length < 2) {
+      if (_staySuggestions.isNotEmpty ||
+          _staySearchError != null ||
+          _isSearchingStay) {
+        setState(() {
+          _staySuggestions = const [];
+          _staySearchError = null;
+          _isSearchingStay = false;
+        });
+      }
+      return;
+    }
+
+    _staySearchDebounce = Timer(
+      const Duration(milliseconds: 350),
+      () => _runStaySearch(clean),
+    );
+  }
+
+  Future<void> _runStaySearch(String query) async {
+    if (!_isStaySelectionActive || query.trim().length < 2) return;
+    final destination = _activeDestinationName;
+    if (destination.trim().isEmpty) return;
+
+    setState(() {
+      _isSearchingStay = true;
+      _staySearchError = null;
+    });
+
+    try {
+      final results = await _staySearch.search(
+        query: query,
+        destinationName: destination,
+        destinationLat: _activeDestinationLat,
+        destinationLon: _activeDestinationLon,
+      );
+      if (!mounted || !_isStaySelectionActive) return;
+      if (_controller.text.trim() != query.trim()) return;
+      setState(() {
+        _staySuggestions = results;
+        _isSearchingStay = false;
+        _staySearchError =
+            results.isEmpty
+                ? 'No map results yet. Try a more specific hotel or area.'
+                : null;
+      });
+    } on StaySearchException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _staySuggestions = const [];
+        _isSearchingStay = false;
+        _staySearchError = e.message;
+      });
+    }
+  }
+
+  Future<void> _handleStaySearchSubmit(String text) async {
+    final query = text.trim();
+    if (query.isEmpty) {
+      _addAssistant(
+        'Start typing your hotel, stay, or area, then choose one of the map results.',
+      );
+      return;
+    }
+
+    final match = _matchingStaySuggestion(query);
+    if (match != null) {
+      await _selectStaySuggestion(match);
+      return;
+    }
+
+    await _runStaySearch(query);
+    _addAssistant(
+      'Choose the matching hotel or area from the map results below. If it is not listed, type a more specific name.',
+    );
+  }
+
+  PlaceSuggestion? _matchingStaySuggestion(String query) {
+    final normalized = query.trim().toLowerCase();
+    for (final suggestion in _staySuggestions) {
+      if (suggestion.name.trim().toLowerCase() == normalized ||
+          suggestion.displayAddress.trim().toLowerCase() == normalized) {
+        return suggestion;
+      }
+    }
+    return null;
+  }
+
+  Future<void> _selectStaySuggestion(PlaceSuggestion suggestion) async {
+    final label = _stayLabel(suggestion);
+    _staySearchDebounce?.cancel();
+    _controller.clear();
+
+    setState(() {
+      _staySuggestions = const [];
+      _staySearchError = null;
+      _isSearchingStay = false;
+      _messages.add(_ChatMessage.user(label));
+    });
+    _scrollToEnd();
+
+    if (widget.isEditMode) {
+      _pendingEditStayNameOrAddress = label;
+      _pendingEditStayLat = suggestion.lat;
+      _pendingEditStayLon = suggestion.lon;
+      final request = _buildStayEditRequest();
+      _clearPendingStayEdit();
+      await _reviseGuide(request);
+      return;
+    }
+
+    setState(() {
+      _stayNameOrAddress = label;
+      _stayLat = suggestion.lat;
+      _stayLon = suggestion.lon;
+      _step = _IntakeStep.people;
+      _messages.add(_ChatMessage.assistant('How many people are travelling?'));
+    });
+    _scrollToEnd();
+  }
+
+  String _stayLabel(PlaceSuggestion suggestion) {
+    final address = suggestion.displayAddress.trim();
+    if (address.isEmpty || address == suggestion.name) return suggestion.name;
+    return '${suggestion.name} - $address';
+  }
+
+  void _clearStaySearch() {
+    _staySearchDebounce?.cancel();
+    _staySuggestions = const [];
+    _staySearchError = null;
+    _isSearchingStay = false;
+  }
+
+  Future<void> _submitSelectedTime(String normalized) async {
+    if (_isLoading) return;
+    setState(() => _messages.add(_ChatMessage.user(normalized)));
+    _scrollToEnd();
+
+    if (widget.isEditMode) {
+      await _handleEditText(normalized);
+      return;
+    }
+    _handleIntakeText(normalized);
+  }
+
+  String? _normalizeTimeInput(String input) {
+    final text = input
+        .trim()
+        .toUpperCase()
+        .replaceAll('.', '')
+        .replaceAll(RegExp(r'\s+'), ' ');
+    if (text == 'NOON') return '12:00 PM';
+    if (text == 'MIDNIGHT') return '12:00 AM';
+
+    final twelveHour = RegExp(
+      r'^(\d{1,2})(?::(\d{1,2}))?\s*([AP]M)$',
+    ).firstMatch(text);
+    if (twelveHour != null) {
+      final rawHour = int.tryParse(twelveHour.group(1)!);
+      final rawMinute = int.tryParse(twelveHour.group(2) ?? '0');
+      final marker = twelveHour.group(3)!;
+      if (rawHour == null || rawMinute == null) return null;
+      if (rawHour < 1 || rawHour > 12 || rawMinute < 0 || rawMinute > 59) {
+        return null;
+      }
+      var hour = rawHour % 12;
+      if (marker == 'PM') hour += 12;
+      return _formatClockTime(hour, rawMinute);
+    }
+
+    final twentyFourHour = RegExp(r'^(\d{1,2}):(\d{2})$').firstMatch(text);
+    if (twentyFourHour != null) {
+      final hour = int.tryParse(twentyFourHour.group(1)!);
+      final minute = int.tryParse(twentyFourHour.group(2)!);
+      if (hour == null || minute == null) return null;
+      if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
+      return _formatClockTime(hour, minute);
+    }
+
+    return null;
+  }
+
+  String _formatClockTime(int hour24, int minute) {
+    final marker = hour24 >= 12 ? 'PM' : 'AM';
+    var hour = hour24 % 12;
+    if (hour == 0) hour = 12;
+    return '$hour:${minute.toString().padLeft(2, '0')} $marker';
   }
 
   void _addAssistant(String text) {
@@ -844,64 +1237,87 @@ Apply these changes to the trip intake. Regenerate route-aware itinerary timings
                 selected: {if (_dietaryPreference != null) _dietaryPreference!},
                 onTap: _selectDietary,
               ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(18, 10, 18, bottomPadding + 14),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      enabled:
-                          !_isLoading &&
-                          (!widget.isEditMode || _editingGuide != null),
-                      minLines: 1,
-                      maxLines: 4,
-                      textInputAction: TextInputAction.send,
-                      onSubmitted: (_) => _sendMessage(),
-                      decoration: InputDecoration(
-                        hintText: _hintText,
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: const BorderSide(
-                            color: RaasteShellColors.outline,
+            if (_isTripDatePromptActive)
+              _DateRangeSelectorPanel(onSubmit: _submitSelectedDateRange),
+            if (_isEndDatePromptActive)
+              _EndDateSelectorPanel(
+                currentDates: _editingGuide?.intake.dates,
+                onKeepCurrent: _keepCurrentEndDate,
+                onSubmit: _submitSelectedEndDate,
+              ),
+            if (_isTimePromptActive)
+              _TimeSelectorPanel(
+                key: ValueKey(_timePickerLabel),
+                label: _timePickerLabel,
+                initialPm: _isDepartureTimePrompt,
+                onSubmit: _submitSelectedTime,
+              ),
+            if (_isStaySelectionActive)
+              _StaySearchPanel(
+                isSearching: _isSearchingStay,
+                suggestions: _staySuggestions,
+                errorText: _staySearchError,
+                onSelect: _selectStaySuggestion,
+              ),
+            if (!_hidesComposer)
+              Padding(
+                padding: EdgeInsets.fromLTRB(18, 10, 18, bottomPadding + 14),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _controller,
+                        enabled:
+                            !_isLoading &&
+                            (!widget.isEditMode || _editingGuide != null),
+                        minLines: 1,
+                        maxLines: 4,
+                        textInputAction: TextInputAction.send,
+                        onSubmitted: (_) => _sendMessage(),
+                        decoration: InputDecoration(
+                          hintText: _hintText,
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: const BorderSide(
+                              color: RaasteShellColors.outline,
+                            ),
                           ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: const BorderSide(
-                            color: RaasteShellColors.outline,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: const BorderSide(
+                              color: RaasteShellColors.outline,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Material(
-                    color: RaasteShellColors.clay,
-                    shape: const CircleBorder(),
-                    child: IconButton(
-                      onPressed: _isLoading ? null : _sendMessage,
-                      icon:
-                          _isLoading
-                              ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
+                    const SizedBox(width: 10),
+                    Material(
+                      color: RaasteShellColors.clay,
+                      shape: const CircleBorder(),
+                      child: IconButton(
+                        onPressed: _isLoading ? null : _sendMessage,
+                        icon:
+                            _isLoading
+                                ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                                : const Icon(
+                                  Icons.send_rounded,
                                   color: Colors.white,
                                 ),
-                              )
-                              : const Icon(
-                                Icons.send_rounded,
-                                color: Colors.white,
-                              ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -918,7 +1334,7 @@ Apply these changes to the trip intake. Regenerate route-aware itinerary timings
         case _EditFollowUpStep.departureTime:
           return 'Example: 6:00 PM';
         case _EditFollowUpStep.stay:
-          return 'Example: Taj Deccan, Banjara Hills';
+          return 'Search hotel or area';
         case _EditFollowUpStep.none:
           return 'Ask for a change...';
       }
@@ -934,7 +1350,7 @@ Apply these changes to the trip intake. Regenerate route-aware itinerary timings
       case _IntakeStep.travelMode:
         return 'Example: Train, car, bus, or flight';
       case _IntakeStep.stay:
-        return 'Example: Taj Deccan, Banjara Hills';
+        return 'Search hotel or area';
       case _IntakeStep.people:
         return 'Example: 2';
       case _IntakeStep.pace:
@@ -1050,6 +1466,673 @@ class _ChoiceChips extends StatelessWidget {
               }).toList(),
         ),
       ),
+    );
+  }
+}
+
+class _DateRangeSelectorPanel extends StatefulWidget {
+  final ValueChanged<DateTimeRange> onSubmit;
+
+  const _DateRangeSelectorPanel({required this.onSubmit});
+
+  @override
+  State<_DateRangeSelectorPanel> createState() =>
+      _DateRangeSelectorPanelState();
+}
+
+class _DateRangeSelectorPanelState extends State<_DateRangeSelectorPanel> {
+  DateTimeRange? _range;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 0, 18, 14),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: RaasteShellColors.outline),
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: const [
+            BoxShadow(
+              color: RaasteShellColors.shadow,
+              blurRadius: 12,
+              offset: Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                const Icon(
+                  Icons.calendar_month_rounded,
+                  color: RaasteShellColors.clay,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    _range == null ? 'Travel dates' : _rangeLabel,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: RaasteShellColors.ink,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            OutlinedButton.icon(
+              onPressed: _pickRange,
+              icon: const Icon(Icons.date_range_rounded, size: 18),
+              label: Text(
+                _range == null ? 'Choose travel dates' : 'Change dates',
+              ),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: RaasteShellColors.ink,
+                side: const BorderSide(color: RaasteShellColors.outline),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed:
+                    _range == null ? null : () => widget.onSubmit(_range!),
+                style: FilledButton.styleFrom(
+                  backgroundColor: RaasteShellColors.clay,
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: RaasteShellColors.outline,
+                  disabledForegroundColor: RaasteShellColors.muted,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 13),
+                ),
+                child: const Text(
+                  'Continue',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickRange() async {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: today,
+      lastDate: DateTime(today.year + 2, today.month, today.day),
+      initialDateRange: _range,
+      helpText: 'Select travel dates',
+      saveText: 'Done',
+    );
+    if (picked == null || !mounted) return;
+    setState(() => _range = picked);
+  }
+
+  String get _rangeLabel {
+    final range = _range!;
+    final start = range.start;
+    final end = range.end;
+    if (_sameDate(start, end)) return _dateLabel(start);
+    if (start.year == end.year && start.month == end.month) {
+      return '${start.day}-${end.day} ${_monthName(start.month)} ${start.year}';
+    }
+    if (start.year == end.year) {
+      return '${start.day} ${_monthName(start.month)} - ${end.day} ${_monthName(end.month)} ${start.year}';
+    }
+    return '${_dateLabel(start)} - ${_dateLabel(end)}';
+  }
+}
+
+class _EndDateSelectorPanel extends StatelessWidget {
+  final String? currentDates;
+  final Future<void> Function() onKeepCurrent;
+  final ValueChanged<DateTime> onSubmit;
+
+  const _EndDateSelectorPanel({
+    required this.currentDates,
+    required this.onKeepCurrent,
+    required this.onSubmit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final subtitle = currentDates?.trim();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 0, 18, 14),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: RaasteShellColors.outline),
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: const [
+            BoxShadow(
+              color: RaasteShellColors.shadow,
+              blurRadius: 12,
+              offset: Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Row(
+              children: [
+                Icon(
+                  Icons.event_available_rounded,
+                  color: RaasteShellColors.clay,
+                  size: 20,
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'End date',
+                    style: TextStyle(
+                      color: RaasteShellColors.ink,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (subtitle != null && subtitle.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Text(
+                'Current: $subtitle',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: RaasteShellColors.muted),
+              ),
+            ],
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: onKeepCurrent,
+                    icon: const Icon(Icons.check_rounded, size: 18),
+                    label: const Text('Keep current'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: RaasteShellColors.ink,
+                      side: const BorderSide(color: RaasteShellColors.outline),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: () => _pickEndDate(context),
+                    icon: const Icon(Icons.calendar_month_rounded, size: 18),
+                    label: const Text('Choose date'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: RaasteShellColors.clay,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickEndDate(BuildContext context) async {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final picked = await showDatePicker(
+      context: context,
+      firstDate: today,
+      lastDate: DateTime(today.year + 2, today.month, today.day),
+      initialDate: today,
+      helpText: 'Select end date',
+    );
+    if (picked != null) onSubmit(picked);
+  }
+}
+
+bool _sameDate(DateTime a, DateTime b) {
+  return a.year == b.year && a.month == b.month && a.day == b.day;
+}
+
+String _dateLabel(DateTime date) {
+  return '${date.day} ${_monthName(date.month)} ${date.year}';
+}
+
+String _monthName(int month) {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  return months[month - 1];
+}
+
+class _TimeSelectorPanel extends StatefulWidget {
+  final String label;
+  final bool initialPm;
+  final ValueChanged<String> onSubmit;
+
+  const _TimeSelectorPanel({
+    super.key,
+    required this.label,
+    required this.initialPm,
+    required this.onSubmit,
+  });
+
+  @override
+  State<_TimeSelectorPanel> createState() => _TimeSelectorPanelState();
+}
+
+class _TimeSelectorPanelState extends State<_TimeSelectorPanel> {
+  late int _hour;
+  late int _minute;
+  late String _period;
+
+  @override
+  void initState() {
+    super.initState();
+    _hour = widget.initialPm ? 6 : 10;
+    _minute = 0;
+    _period = widget.initialPm ? 'PM' : 'AM';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 0, 18, 14),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: RaasteShellColors.outline),
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: const [
+            BoxShadow(
+              color: RaasteShellColors.shadow,
+              blurRadius: 12,
+              offset: Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                const Icon(
+                  Icons.schedule_rounded,
+                  color: RaasteShellColors.clay,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    widget.label,
+                    style: const TextStyle(
+                      color: RaasteShellColors.ink,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+                Text(
+                  _formattedTime,
+                  style: const TextStyle(
+                    color: RaasteShellColors.muted,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Expanded(
+                  child: _TimeDropdown<int>(
+                    label: 'Hour',
+                    value: _hour,
+                    values: List<int>.generate(12, (index) => index + 1),
+                    display: (value) => value.toString(),
+                    onChanged: (value) => setState(() => _hour = value),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _TimeDropdown<int>(
+                    label: 'Minute',
+                    value: _minute,
+                    values: List<int>.generate(12, (index) => index * 5),
+                    display: (value) => value.toString().padLeft(2, '0'),
+                    onChanged: (value) => setState(() => _minute = value),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                _PeriodToggle(
+                  period: _period,
+                  onChanged: (value) => setState(() => _period = value),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () => widget.onSubmit(_formattedTime),
+                style: FilledButton.styleFrom(
+                  backgroundColor: RaasteShellColors.clay,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 13),
+                ),
+                child: const Text(
+                  'Continue',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String get _formattedTime =>
+      '$_hour:${_minute.toString().padLeft(2, '0')} $_period';
+}
+
+class _TimeDropdown<T> extends StatelessWidget {
+  final String label;
+  final T value;
+  final List<T> values;
+  final String Function(T value) display;
+  final ValueChanged<T> onChanged;
+
+  const _TimeDropdown({
+    required this.label,
+    required this.value,
+    required this.values,
+    required this.display,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8F2EC),
+        border: Border.all(color: RaasteShellColors.outline),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: RaasteShellColors.muted,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          DropdownButtonHideUnderline(
+            child: DropdownButton<T>(
+              value: value,
+              isExpanded: true,
+              icon: const Icon(Icons.keyboard_arrow_down_rounded),
+              items:
+                  values
+                      .map(
+                        (item) => DropdownMenuItem<T>(
+                          value: item,
+                          child: Text(
+                            display(item),
+                            style: const TextStyle(
+                              color: RaasteShellColors.ink,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+              onChanged: (value) {
+                if (value != null) onChanged(value);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PeriodToggle extends StatelessWidget {
+  final String period;
+  final ValueChanged<String> onChanged;
+
+  const _PeriodToggle({required this.period, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8F2EC),
+        border: Border.all(color: RaasteShellColors.outline),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _PeriodButton(
+            label: 'AM',
+            active: period == 'AM',
+            onTap: () => onChanged('AM'),
+          ),
+          _PeriodButton(
+            label: 'PM',
+            active: period == 'PM',
+            onTap: () => onChanged('PM'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PeriodButton extends StatelessWidget {
+  final String label;
+  final bool active;
+  final VoidCallback onTap;
+
+  const _PeriodButton({
+    required this.label,
+    required this.active,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 160),
+        width: 54,
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: active ? RaasteShellColors.ink : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: TextStyle(
+            color: active ? Colors.white : RaasteShellColors.muted,
+            fontWeight: FontWeight.w800,
+            fontSize: 12,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StaySearchPanel extends StatelessWidget {
+  final bool isSearching;
+  final List<PlaceSuggestion> suggestions;
+  final String? errorText;
+  final ValueChanged<PlaceSuggestion> onSelect;
+
+  const _StaySearchPanel({
+    required this.isSearching,
+    required this.suggestions,
+    required this.errorText,
+    required this.onSelect,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isSearching && suggestions.isEmpty && errorText == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 0, 18, 8),
+      child: Container(
+        constraints: const BoxConstraints(maxHeight: 260),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: RaasteShellColors.outline),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: RaasteShellColors.shadow,
+              blurRadius: 12,
+              offset: Offset(0, 5),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    if (isSearching && suggestions.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 18,
+              width: 18,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: RaasteShellColors.clay,
+              ),
+            ),
+            SizedBox(width: 12),
+            Text(
+              'Searching map results...',
+              style: TextStyle(color: RaasteShellColors.muted),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (suggestions.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text(
+          errorText ?? 'No results found.',
+          style: const TextStyle(color: RaasteShellColors.muted),
+        ),
+      );
+    }
+
+    return ListView.separated(
+      shrinkWrap: true,
+      padding: EdgeInsets.zero,
+      itemCount: suggestions.length,
+      separatorBuilder:
+          (_, __) => const Divider(height: 1, color: RaasteShellColors.outline),
+      itemBuilder: (context, index) {
+        final suggestion = suggestions[index];
+        return ListTile(
+          dense: true,
+          leading: const Icon(
+            Icons.location_on_outlined,
+            color: RaasteShellColors.clay,
+          ),
+          title: Text(
+            suggestion.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: RaasteShellColors.ink,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          subtitle: Text(
+            suggestion.displayAddress,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: RaasteShellColors.muted),
+          ),
+          onTap: () => onSelect(suggestion),
+        );
+      },
     );
   }
 }

@@ -8,6 +8,8 @@ class TripIntake {
   final String landingTime;
   final String departureTime;
   final String stayNameOrAddress;
+  final double? stayLat;
+  final double? stayLon;
   final int peopleCount;
   final String travelMode;
   final String pacePreference;
@@ -24,6 +26,8 @@ class TripIntake {
     required this.landingTime,
     required this.departureTime,
     required this.stayNameOrAddress,
+    required this.stayLat,
+    required this.stayLon,
     required this.peopleCount,
     required this.travelMode,
     required this.pacePreference,
@@ -41,6 +45,8 @@ class TripIntake {
     String? landingTime,
     String? departureTime,
     String? stayNameOrAddress,
+    double? stayLat,
+    double? stayLon,
     int? peopleCount,
     String? travelMode,
     String? pacePreference,
@@ -57,6 +63,8 @@ class TripIntake {
       landingTime: landingTime ?? this.landingTime,
       departureTime: departureTime ?? this.departureTime,
       stayNameOrAddress: stayNameOrAddress ?? this.stayNameOrAddress,
+      stayLat: stayLat ?? this.stayLat,
+      stayLon: stayLon ?? this.stayLon,
       peopleCount: peopleCount ?? this.peopleCount,
       travelMode: travelMode ?? this.travelMode,
       pacePreference: pacePreference ?? this.pacePreference,
@@ -75,6 +83,8 @@ class TripIntake {
     'landingTime': landingTime,
     'departureTime': departureTime,
     'stayNameOrAddress': stayNameOrAddress,
+    'stayLat': stayLat,
+    'stayLon': stayLon,
     'peopleCount': peopleCount,
     'travelMode': travelMode,
     'pacePreference': pacePreference,
@@ -97,6 +107,13 @@ class TripIntake {
         json['hotelNameOrAddress'] as String? ??
         json['stay'] as String? ??
         '',
+    stayLat:
+        (json['stayLat'] as num?)?.toDouble() ??
+        (json['hotelLat'] as num?)?.toDouble(),
+    stayLon:
+        (json['stayLon'] as num?)?.toDouble() ??
+        (json['stayLng'] as num?)?.toDouble() ??
+        (json['hotelLon'] as num?)?.toDouble(),
     peopleCount: (json['peopleCount'] as num?)?.toInt() ?? 1,
     travelMode: json['travelMode'] as String? ?? 'Not specified',
     pacePreference: json['pacePreference'] as String? ?? 'Balanced',
