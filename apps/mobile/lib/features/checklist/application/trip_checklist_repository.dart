@@ -170,6 +170,68 @@ class TripChecklistRepository {
     }
   }
 
+  /// Refreshes checklist rows for a trip after its itinerary changes.
+  ///
+  /// This intentionally uses the deterministic local checklist builder instead
+  /// of OpenAI so simple Companion edits do not spend tokens just to keep the
+  /// "Today's Plan" checklist section aligned with the updated itinerary.
+  Future<void> refreshTripChecklists(SavedTrip trip) async {
+    final user = _client.auth.currentUser;
+    if (user == null) return;
+
+    final raw = _tripDateText(trip);
+    final today = _dateOnly(DateTime.now());
+    final range = _parseTripDateRange(raw, today);
+    if (range == null) return;
+
+    final dueItems = _dueChecklists(range, today);
+    if (dueItems.isEmpty) {
+      await _pruneStaleChecklists(
+        tripId: trip.id,
+        userId: user.id,
+        dueItems: dueItems,
+      );
+      return;
+    }
+
+    final existing = await _existingChecklistsByKey(trip.id, user.id);
+
+    for (final due in dueItems) {
+      final key = _checklistKey(due.type, due.date);
+      final existingChecklist = existing[key];
+      final content = _applyDoneState(
+        _fallbackContent(trip, range, due, today),
+        existingChecklist?.content,
+      );
+
+      if (existingChecklist == null) {
+        await _insertChecklist(
+          trip: trip,
+          userId: user.id,
+          rawDates: raw,
+          due: due,
+          content: content,
+        );
+        continue;
+      }
+
+      await _updateChecklist(
+        checklist: existingChecklist,
+        trip: trip,
+        userId: user.id,
+        rawDates: raw,
+        due: due,
+        content: content,
+      );
+    }
+
+    await _pruneStaleChecklists(
+      tripId: trip.id,
+      userId: user.id,
+      dueItems: dueItems,
+    );
+  }
+
   Future<void> _insertChecklist({
     required SavedTrip trip,
     required String userId,
@@ -206,6 +268,40 @@ class TripChecklistRepository {
     }
   }
 
+  Future<void> _updateChecklist({
+    required TripChecklist checklist,
+    required SavedTrip trip,
+    required String userId,
+    required String rawDates,
+    required _DueChecklist due,
+    required Map<String, dynamic> content,
+  }) async {
+    final payload = {
+      'destination_name':
+          trip.destinationName.trim().isEmpty
+              ? trip.guide.destinationName
+              : trip.destinationName,
+      'trip_dates': rawDates,
+      'day_number': due.dayNumber,
+      'content': content,
+      'generated_at': DateTime.now().toUtc().toIso8601String(),
+    };
+
+    try {
+      await _client
+          .from('trip_checklists')
+          .update(payload)
+          .eq('id', checklist.id)
+          .eq('user_id', userId);
+    } on PostgrestException catch (e) {
+      throw TripChecklistException(_friendlyDatabaseMessage(e));
+    } catch (_) {
+      throw const TripChecklistException(
+        'Could not refresh your checklist right now.',
+      );
+    }
+  }
+
   /// Returns the set of 'type|date' keys already stored for this trip.
   Future<Set<String>> _existingChecklistKeys(
     String tripId,
@@ -228,6 +324,31 @@ class TripChecklistRepository {
       }).toSet();
     } catch (_) {
       return <String>{};
+    }
+  }
+
+  Future<Map<String, TripChecklist>> _existingChecklistsByKey(
+    String tripId,
+    String userId,
+  ) async {
+    try {
+      final rows = await _client
+          .from('trip_checklists')
+          .select()
+          .eq('trip_id', tripId)
+          .eq('user_id', userId);
+      final result = <String, TripChecklist>{};
+      for (final row in rows.whereType<Map<String, dynamic>>()) {
+        final checklist = TripChecklist.fromSupabase(row);
+        result[_checklistKey(
+              checklist.checklistType,
+              checklist.checklistDate,
+            )] =
+            checklist;
+      }
+      return result;
+    } catch (_) {
+      return const <String, TripChecklist>{};
     }
   }
 
@@ -361,6 +482,61 @@ List<_DueChecklist> _dueChecklists(_TripDateRange range, DateTime today) {
   }
 
   return due;
+}
+
+String _checklistKey(String type, DateTime date) => '$type|${_isoDate(date)}';
+
+Map<String, dynamic> _applyDoneState(
+  Map<String, dynamic> content,
+  Map<String, dynamic>? existingContent,
+) {
+  if (existingContent == null) return content;
+
+  final doneByText = _doneItemsByText(existingContent);
+  if (doneByText.isEmpty) return content;
+
+  final updated = jsonDecode(jsonEncode(content)) as Map<String, dynamic>;
+  for (final sectionKey in const ['sections', 'categories']) {
+    final sections = updated[sectionKey];
+    if (sections is! List) continue;
+
+    for (final section in sections.whereType<Map>()) {
+      final items = section['items'];
+      if (items is! List) continue;
+
+      for (final item in items.whereType<Map>()) {
+        final key = _normalizedChecklistText(item['text']);
+        if (key.isEmpty) continue;
+        final done = doneByText[key];
+        if (done != null) item['done'] = done;
+      }
+    }
+  }
+  return updated;
+}
+
+Map<String, bool> _doneItemsByText(Map<String, dynamic> content) {
+  final result = <String, bool>{};
+  for (final sectionKey in const ['sections', 'categories']) {
+    final sections = content[sectionKey];
+    if (sections is! List) continue;
+
+    for (final section in sections.whereType<Map>()) {
+      final items = section['items'];
+      if (items is! List) continue;
+
+      for (final item in items.whereType<Map>()) {
+        final key = _normalizedChecklistText(item['text']);
+        if (key.isNotEmpty && item['done'] == true) result[key] = true;
+      }
+    }
+  }
+  return result;
+}
+
+String _normalizedChecklistText(Object? value) {
+  if (value is! String) return '';
+  return value.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
 }
 
 String _tripDateText(SavedTrip trip) {
@@ -502,7 +678,7 @@ Map<String, dynamic> _fallbackContent(
       (item) => item.dayNumber == dayNumber,
     );
     final day = matchingDays.isEmpty ? null : matchingDays.first;
-    final stops = day?.stops.take(5).toList() ?? const [];
+    final stops = day?.stops.take(6).toList() ?? const [];
     return {
       'day_number': dayNumber,
       'date': _isoDate(today),

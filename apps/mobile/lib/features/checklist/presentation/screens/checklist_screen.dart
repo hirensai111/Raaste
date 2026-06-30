@@ -132,9 +132,7 @@ class _ActiveChecklistViewState extends State<_ActiveChecklistView> {
   @override
   void didUpdateWidget(covariant _ActiveChecklistView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.checklist.id != widget.checklist.id) {
-      _checklist = widget.checklist;
-    }
+    _checklist = widget.checklist;
   }
 
   Future<void> _toggle(ChecklistItem item) async {

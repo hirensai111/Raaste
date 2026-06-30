@@ -1,3 +1,4 @@
+import 'package:raaste/features/checklist/application/trip_checklist_repository.dart';
 import 'package:raaste/features/destination/domain/models/destination_guide.dart';
 import 'package:raaste/features/trip/data/services/place_image_service.dart';
 import 'package:raaste/features/trip/domain/models/saved_trip.dart';
@@ -15,10 +16,15 @@ class SavedTripException implements Exception {
 class SavedTripRepository {
   final SupabaseClient _client;
   final PlaceImageService _imageService;
+  final TripChecklistRepository? _checklistRepository;
 
-  SavedTripRepository({SupabaseClient? client, PlaceImageService? imageService})
-    : _client = client ?? Supabase.instance.client,
-      _imageService = imageService ?? PlaceImageService();
+  SavedTripRepository({
+    SupabaseClient? client,
+    PlaceImageService? imageService,
+    TripChecklistRepository? checklistRepository,
+  }) : _client = client ?? Supabase.instance.client,
+       _imageService = imageService ?? PlaceImageService(),
+       _checklistRepository = checklistRepository;
 
   Future<List<SavedTrip>> listTrips() async {
     final user = _client.auth.currentUser;
@@ -139,11 +145,24 @@ class SavedTripRepository {
               .eq('user_id', user.id)
               .select()
               .single();
-      return SavedTrip.fromSupabase(row);
+      final savedTrip = SavedTrip.fromSupabase(row);
+      await _refreshChecklists(savedTrip);
+      return savedTrip;
     } on PostgrestException catch (e) {
       throw SavedTripException(_friendlyDatabaseMessage(e));
     } catch (_) {
       throw const SavedTripException('Could not update this trip right now.');
+    }
+  }
+
+  Future<void> _refreshChecklists(SavedTrip trip) async {
+    final repository = _checklistRepository;
+    if (repository == null) return;
+
+    try {
+      await repository.refreshTripChecklists(trip);
+    } catch (_) {
+      // Checklist refresh should never roll back a successful itinerary save.
     }
   }
 

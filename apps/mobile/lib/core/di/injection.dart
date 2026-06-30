@@ -66,17 +66,6 @@ Future<void> configureDependencies() async {
     () => const LocalItineraryEditService(),
   );
 
-  // Saved trips
-  getIt.registerLazySingleton<PlaceImageService>(() => PlaceImageService());
-  getIt.registerLazySingleton<SavedTripRepository>(
-    () => SavedTripRepository(imageService: getIt<PlaceImageService>()),
-  );
-
-  // Food discovery
-  getIt.registerLazySingleton<FoodRepository>(
-    () => FoodRepository(savedTrips: getIt<SavedTripRepository>()),
-  );
-
   // Checklists
   getIt.registerLazySingleton<OpenAiChecklistService>(
     () => OpenAiChecklistService(),
@@ -85,5 +74,19 @@ Future<void> configureDependencies() async {
     () => TripChecklistRepository(
       checklistService: getIt<OpenAiChecklistService>(),
     ),
+  );
+
+  // Saved trips
+  getIt.registerLazySingleton<PlaceImageService>(() => PlaceImageService());
+  getIt.registerLazySingleton<SavedTripRepository>(
+    () => SavedTripRepository(
+      imageService: getIt<PlaceImageService>(),
+      checklistRepository: getIt<TripChecklistRepository>(),
+    ),
+  );
+
+  // Food discovery
+  getIt.registerLazySingleton<FoodRepository>(
+    () => FoodRepository(savedTrips: getIt<SavedTripRepository>()),
   );
 }

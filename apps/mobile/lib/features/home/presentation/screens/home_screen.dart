@@ -176,10 +176,7 @@ class _Header extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 12),
-        _RoundIconButton(
-          icon: Icons.person_rounded,
-          onTap: () => showImplementingSoon(context),
-        ),
+        _ProfileInitialAvatar(firstName: firstName),
       ],
     );
   }
@@ -883,67 +880,65 @@ class _CurrentTripTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: RaasteShellColors.surfaceAlt,
-      borderRadius: BorderRadius.circular(22),
-      child: InkWell(
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: RaasteShellColors.surfaceAlt,
+        border: Border.all(color: RaasteShellColors.outline),
         borderRadius: BorderRadius.circular(22),
-        onTap: () => _openTrip(context),
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            border: Border.all(color: RaasteShellColors.outline),
-            borderRadius: BorderRadius.circular(22),
-            boxShadow: const [
-              BoxShadow(
-                color: RaasteShellColors.shadow,
-                blurRadius: 16,
-                offset: Offset(0, 8),
-              ),
+        boxShadow: const [
+          BoxShadow(
+            color: RaasteShellColors.shadow,
+            blurRadius: 16,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final compact = constraints.maxWidth < 340;
+          final imageWidget = _CurrentTripImage(trip: trip, compact: compact);
+          final content = _CurrentTripContent(
+            trip: trip,
+            range: range,
+            compact: compact,
+          );
+
+          if (compact) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [imageWidget, const SizedBox(height: 12), content],
+            );
+          }
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              imageWidget,
+              const SizedBox(width: 12),
+              Expanded(child: content),
             ],
-          ),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final compact = constraints.maxWidth < 340;
-              final imageWidget = _CurrentTripImage(
-                trip: trip,
-                compact: compact,
-              );
-              final content = _CurrentTripContent(
-                trip: trip,
-                range: range,
-                compact: compact,
-              );
-
-              if (compact) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [imageWidget, const SizedBox(height: 12), content],
-                );
-              }
-
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  imageWidget,
-                  const SizedBox(width: 12),
-                  Expanded(child: content),
-                ],
-              );
-            },
-          ),
-        ),
+          );
+        },
       ),
     );
   }
+}
 
-  void _openTrip(BuildContext context) {
-    final uri = Uri(
-      path: AppRoutes.destination,
-      queryParameters: {'tripId': trip.id},
-    );
-    context.go(uri.toString());
-  }
+void _openCurrentTripItinerary(BuildContext context, SavedTrip trip) {
+  final uri = Uri(
+    path: AppRoutes.destination,
+    queryParameters: {'tripId': trip.id},
+  );
+  context.go(uri.toString());
+}
+
+void _openCurrentTripCompanion(BuildContext context, SavedTrip trip) {
+  final uri = Uri(
+    path: AppRoutes.companion,
+    queryParameters: {'tripId': trip.id},
+  );
+  context.go(uri.toString());
 }
 
 class _CurrentTripImage extends StatelessWidget {
@@ -1076,18 +1071,19 @@ class _CurrentTripContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        const Wrap(
+        Wrap(
           spacing: 6,
           runSpacing: 6,
           children: [
             _SmallAction(
               icon: Icons.calendar_month_outlined,
-              label: "Today's Plan",
+              label: 'Itinerary',
+              onTap: () => _openCurrentTripItinerary(context, trip),
             ),
-            _SmallAction(icon: Icons.download_rounded, label: 'Offline Guide'),
             _SmallAction(
               icon: Icons.chat_bubble_outline_rounded,
               label: 'Ask Guide',
+              onTap: () => _openCurrentTripCompanion(context, trip),
             ),
           ],
         ),
@@ -1700,28 +1696,36 @@ class _PopularTag extends StatelessWidget {
   }
 }
 
-class _RoundIconButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
+class _ProfileInitialAvatar extends StatelessWidget {
+  final String firstName;
 
-  const _RoundIconButton({required this.icon, required this.onTap});
+  const _ProfileInitialAvatar({required this.firstName});
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: RaasteShellColors.surface,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onTap,
-        child: Container(
-          height: 48,
-          width: 48,
-          decoration: BoxDecoration(
-            border: Border.all(color: RaasteShellColors.outline),
-            shape: BoxShape.circle,
+    final trimmedName = firstName.trim();
+    final initial =
+        trimmedName.isEmpty ? '?' : trimmedName.substring(0, 1).toUpperCase();
+
+    return Semantics(
+      label: trimmedName.isEmpty ? 'Profile' : 'Profile for $trimmedName',
+      child: Container(
+        height: 52,
+        width: 52,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: RaasteShellColors.surface,
+          border: Border.all(color: RaasteShellColors.outline),
+          shape: BoxShape.circle,
+        ),
+        child: Text(
+          initial,
+          style: const TextStyle(
+            color: RaasteShellColors.ink,
+            fontSize: 22,
+            fontWeight: FontWeight.w800,
+            height: 1,
           ),
-          child: Icon(icon, color: RaasteShellColors.ink, size: 24),
         ),
       ),
     );
@@ -1826,8 +1830,13 @@ class _ChipTextIcon extends StatelessWidget {
 class _SmallAction extends StatelessWidget {
   final IconData icon;
   final String label;
+  final VoidCallback onTap;
 
-  const _SmallAction({required this.icon, required this.label});
+  const _SmallAction({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1835,7 +1844,7 @@ class _SmallAction extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
-        onTap: () => showImplementingSoon(context),
+        onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
           decoration: BoxDecoration(
@@ -1849,6 +1858,8 @@ class _SmallAction extends StatelessWidget {
               const SizedBox(width: 5),
               Text(
                 label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   color: RaasteShellColors.muted,
                   fontSize: 11,

@@ -10,6 +10,8 @@ import 'package:raaste/features/trip/domain/models/saved_trip.dart';
 import 'package:raaste/shared/widgets/raaste_nav_shell.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+const MethodChannel _mapsChannel = MethodChannel('raaste/maps');
+
 class FoodScreen extends StatefulWidget {
   const FoodScreen({super.key});
 
@@ -478,7 +480,7 @@ class _DiscoveryNotice extends StatelessWidget {
           SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Discovery only. No ordering or delivery. Directions copy a Google Maps search, and adding a place updates your saved itinerary.',
+              'Discovery only. No ordering or delivery. Directions open Google Maps, and adding a place updates your saved itinerary.',
               style: TextStyle(
                 color: RaasteShellColors.muted,
                 fontSize: 13,
@@ -640,7 +642,7 @@ class _RestaurantCard extends StatelessWidget {
                     side: const BorderSide(color: RaasteShellColors.outline),
                     padding: const EdgeInsets.symmetric(vertical: 13),
                   ),
-                  onPressed: () => _copyDirections(context),
+                  onPressed: () => _openDirections(context),
                   icon: const Icon(Icons.directions_rounded, size: 20),
                   label: const Text('Directions'),
                 ),
@@ -652,17 +654,48 @@ class _RestaurantCard extends StatelessWidget {
     );
   }
 
-  void _copyDirections(BuildContext context) {
-    Clipboard.setData(ClipboardData(text: restaurant.googleMapsQuery));
+  Future<void> _openDirections(BuildContext context) async {
+    final query = _mapsQueryFor(restaurant);
+
+    try {
+      final didOpen =
+          await _mapsChannel.invokeMethod<bool>('openGoogleMapsDirections', {
+            'query': query,
+          }) ??
+          false;
+
+      if (!context.mounted) return;
+      if (didOpen) {
+        _showDirectionsSnackBar(context, 'Opening Google Maps for $query');
+        return;
+      }
+    } catch (_) {
+      // Fall back to copying below if the native launcher is unavailable.
+    }
+
+    await Clipboard.setData(ClipboardData(text: query));
+    if (!context.mounted) return;
+    _showDirectionsSnackBar(
+      context,
+      'Could not open Google Maps. Search copied: $query',
+    );
+  }
+
+  String _mapsQueryFor(RestaurantRecommendation restaurant) {
+    final directQuery = restaurant.googleMapsQuery.trim();
+    if (directQuery.isNotEmpty) return directQuery;
+
+    return [
+      restaurant.name,
+      restaurant.area,
+      restaurant.address,
+    ].where((part) => part.trim().isNotEmpty).join(', ');
+  }
+
+  void _showDirectionsSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(
-            'Google Maps search copied: ${restaurant.googleMapsQuery}',
-          ),
-        ),
-      );
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _showAddSheet(BuildContext context) {
